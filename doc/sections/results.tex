@@ -1,0 +1,189 @@
+\section{Results}\label{sec:results}
+\subsection{FMCW Data Processing}\label{sec:res_SLC}
+In order to assess the processing quality and to appreciate the effect of the beam squint correction, in  \autoref{fig:tcr_mph} the oversampled impulse response of the 90 cm TCR at 659 m slant range is plotted. The plots on the left side (\autoref{fig:tcr_mph:HH_uncorr}, \autoref{fig:tcr_mph:VV_uncorr}) contain the response obtained by directly range compressing the dechirped data. The phase displays interesting patterns, with the equiphase contours forming a cross shape centered at the center of the reflector. The shift between the HH and the VV channel is visible too, as the response for the one channel is shifted with respect to the other plot.\\ A visual comparison with the same response obtained enabling the squint compensation, shows an improvement in both the range and the azimuth resolutions; this is confirmed numerically by fitting a spline on the azimuth and range responses and computing its 3 dB width. The numerical results are shown above each plot of \autoref{fig:tcr_mph}; signficant improvements in both range and azimuth are clear, especially so for the HH channel, that shows a range resolution improvement of 0.24 m. This gain is reduced to only 0.17 m for the VV channel.\\ Similarly, a reduction in the phase variation is visible especially for the HH channel, (\autoref{fig:tcr_mph:HH_corr}) while the phase response of VV channel shows a residual phase ramp in azimuth direction (\autoref{fig:tcr_mph:HH_corr}).
+\begin{figure*}[h]
+	\begin{subfigure}[b]{0.6\columnwidth}
+		\centering
+		\includegraphics[scale=0.7]{2014-2016_GPRI_HIL_Calibration_20140910_144113_810_8046_AAAl_chan_mph_plot}
+		\subcaption{HH channel without beam squint correction.}
+		\label{fig:tcr_mph:HH_uncorr}
+	\end{subfigure}~
+	\begin{subfigure}[b]{0.6\columnwidth}
+		\centering
+		\includegraphics[scale=0.7]{2014-2016_GPRI_HIL_Calibration_20140910_144113_810_8046_AAAl_desq_mph_plot}
+		\subcaption{HH channel with squint correction.}
+		\label{fig:tcr_mph:HH_corr}
+	\end{subfigure}~
+	\begin{subfigure}[b]{0.6\columnwidth}
+		\centering
+		\includegraphics[scale=0.7]{2014-2016_GPRI_HIL_Calibration_20140910_144113_810_8046_AAAl_corr_mph_plot}
+		\subcaption{HH channel with squint and azimuth ramp correction.}
+		\label{fig:tcr_mph:HH_corr_ph}
+	\end{subfigure}\\
+	\begin{subfigure}[b]{0.6\columnwidth}
+		\centering
+		\includegraphics[scale=0.7]{2014-2016_GPRI_HIL_Calibration_20140910_144113_810_8046_BBBl_chan_mph_plot}
+		\subcaption{VV channel without beam squint correction.}
+		\label{fig:tcr_mph:VV_uncorr}
+	\end{subfigure}~
+	\begin{subfigure}[b]{0.6\columnwidth}
+		\centering
+		\includegraphics[scale=0.7]{2014-2016_GPRI_HIL_Calibration_20140910_144113_810_8046_BBBl_desq_mph_plot}
+		\subcaption{VV channel with squint correction.}
+		\label{fig:tcr_mph:VV_corr}
+	\end{subfigure}~
+	\begin{subfigure}[b]{0.6\columnwidth}
+		\centering
+		\includegraphics[scale=0.7]{2014-2016_GPRI_HIL_Calibration_20140910_144113_810_8046_BBBl_corr_mph_plot}
+		\subcaption{VV channel with squint and azimuth ramp correction.}
+		\label{fig:tcr_mph:VV_corr_ph}
+	\end{subfigure}~
+
+	\caption{Oversampled phase and amplitude response for the trihedral corner reflector.}
+	\label{fig:tcr_mph}
+\end{figure*}
+\subsection{Azimuth Processing}
+This residual phase is problematic in two manners: \begin{enumerate*}
+	\item because of the coherent average of pixels affected by the phase ramp\label{item:SNR}  $\sigma$ after azimuth averaging (see \autoref{sec:proc_SLC}) will appear smaller than it actually is.
+  \item because of the different phase behavior of the antennas, the coherence magnitude of polarimetric phase differences will be reduced; the resulting coherence phase will be affected by a residual phase variation. For example, if the HH-VV phase is needed for calibration in the method described in \autoref{sec:proc_polcal} and the azimuth variation is not taken into account, the additional phase will lead to incorrect calibration parameters.\label{item:phase_variation}\end{enumerate*}
+The ramp are caused by the antennas being mounted offset from the rotation center of the  radar~\cite{Lee2014}, so that during the scan the distance from the antenna phase center to a fixed point in the scene changes as a function of the antenna azimuth position. From a geometrical perspective it can be interpreted as a radar moving along a circular trajectory of radius $L_{arm}$. In SAR system the phase variation is exploited to synthesize a large aperture by increasing the antenna beamwidth and the length of the trajectory, so that the illumination time of the point is maximized. In contrast to that case, the illumination time here is to short to allow synthesizing an aperture larger than the antennas physical beamwidth and the only effect of the circular trajectory is the azimuth phase modulation.\\
+To quantify the phase modulation, consider the antenna configuration in \autoref{fig:real_aperture_signal_model_geometry}:
+The antennas are mounted on a lever arm of length $L_{arm} = 0.25$ m that connects them to the azimuth scanner. The phase center of the antenna is horizontally displaced from the lever arm attachment by $L_{ph}$, this parameter was added empirically to obtain better phase fits; it models antenna manufacturing imprecisions. A point target is considered, located at the slant range  of closest approach $R_{0}$, obtained when the phase center, the target and the lever arm all lie on a line. The antenna is now rotated by an angle $\theta_r$ relative to the situation of closest approach. The distance $R$ from the target will change during this movement and a corresponding variation of the phase will observed, according to:
+\begin{equation}\label{eq:range_phase}
+	\phi_{scan} = \frac{4 \pi}{\lambda}R\left(\theta_r\right).
+\end{equation}
+To compute $R$, the law of cosines is applied to the triangle of~\autoref{fig:real_aperture_signal_model_geometry}, with the included angle $\theta_r$, one side length $L_{ant} = \sqrt{L_{arm}^2 + L_{ph}^2}$ and the other side $c = L_{ant} + R_0$.  $L_{ant}$ is the equivalent antenna rotation arm for a system with no phase center shift.
+$R$, the range from the target to the antenna as a function of the rotation from the closest approach $\theta_r$ is:
+\begin{equation}\label{eq:range}
+	R = \sqrt{ c^2 +  L_{ant}^2 - 2 c L_{ant} \cos{\left(\theta_r - \alpha\right)}}.
+\end{equation}
+The function is shifted by the angle  $\alpha = \operatorname{\arctan}\left({\frac{L_{ph}}{L_{arm}}}\right)$ that describes the additional rotation needed for an antenna with nonzero $L_{ph}$ to be at closest approach with the target compared to the regular case. This shift is necessary because antenna rotation is measured assuming a zero $L_{ph}$; the azimuth position read at the encored of the antenna scanner does not correspond to the azimuth of the phase center.\\
+As seen in \autoref{eq:range}, the distance of each scatterer is a function of the relative rotation angle $\theta_r$ of the antenna. Thus azimuth and distance are coupled, this effect is known as Range Cell Migration RCM. In this case, the range resolution is small enough compared to the RCM that only the effect of the rotation on the phase (\autoref{eq:range_phase}) will be considered.\\
+The complete characterization of the azimuth phase requires the knowledge of the antenna phase center displacement $L_{ph}$. This value is generally not known a priori as it is assumed that the phase center is located at the midpoint of the array. However, when the experimental data was analyzed assuming this case to be true (which implies $L_{ant} = L_{arm}$),  \autoref{eq:range} failed to model the observed azimuth phase variation for the response of a trihedral corner reflector. The model was thus modified to account for the possibility of a displaced antenna phase center. The parameter $L_{ph}$ can be determined from the measured data of a point target. SLC images are generated according to the procedure described in \autoref{sec:proc_SLC}. The azimuth phase profile for the point target is then extracted and used in a nonlinear optimization problem with the phase simulated according to \autoref{eq:range}:
+\begin{equation}\label{eq:rph_estimation}
+	\hat{r_{ph}} = \underset{\left(L_{ph}, \phi_{off}\right)}{\operatorname{argmax}}{\vert\vert\phi_{meas} - \phi_{sim}\vert\vert}^2.
+\end{equation}
+Where $\phi_{sim} = \phi_{scan} + \phi_{off}$ is the simulated phase with an additional offset that accounts for the phase induced by the noise, the intrinsic scattering phase and the system.
+The model is tested by applying the fit procedure of \autoref{eq:rph_estimation} to the calibration array. For each reflector, the maximum in range and azimuth was identified and the samples corresponding to the half power beamwidth were extracted at the range of maximum intensity. The unwrapped phase was then used to estimate $r_{ph}$ according to the procedure described in \autoref{eq:rph_estimation}.
+\begin{table}[ht]
+	\begin{tabular}{lccl}
+		\hline
+		reflector & $R_0$ & $\hat{L_{ph}}$ & comments\\
+		1	& 107 m & -0.11 & \\
+		2  & 192 m & -0.15 & \\
+		3 & 299 m & -0.05 & Obscured by trees\\
+		4 & 402 m & -0.13 &\\
+		5 & 658 m & -0.13&\\
+		\hline
+	\end{tabular}
+	\caption{Result of fitting the phase center displacement for five trihedral corner reflectors.}
+	\label{tab:rph_fit}
+\end{table}
+The resulting fit values (\autoref{tab:rph_fit}) have a standard deviation of less than 2 \% of the antenna length, suggesting that the model is able to predict  most of the phase variation. The only exception is the 90 cm TCR at 299 m slant range were a large difference from the mean $L_{ph}$ is observed; the discrepancy is likely caused by its placement near to a row of trees.\\
+When $L_{ph}$ has been estimated, the azimuth phase variation is corrected using \autoref{eq:range} as a range-variant matched filter. Each azimuth line in the range compressed, squint corrected data $s_{d}$ is convolved with:
+\begin{equation}\label{eq:correction}
+	\begin{aligned}
+		s_{d}^{corr}\left(\theta, R_{0}\right) = &\int\limits_{-\frac{L_{int}}{2}}^{\frac{L_{int}}{2}}e^{\jmath \frac{4\pi}{\lambda}\left(R\left(\theta - \theta^{\prime}, R_{0}\right) - R_{0}\right)}\\
+		&s_{d}\left(\theta^\prime\right)w(\theta - \theta^{\prime}) d\theta^\prime,
+	\end{aligned}
+\end{equation}
+where $w$ is a windowing function. The formula replaces the incoherent azimuth averaging described in \autoref{sec:proc_SLC} the samples are now averaged with the appropriate phase factor so that the SNR improvement and the correction of the azimuth trend are combined in a single step. In computing the filter, the range of closest approach $R_{0}$ is subtracted from the current range $R$ to correct the relative phase variation only; this is important for interferometric processing where the absolute phase has to be preserved.\\
+The procedure is similar to the azimuth focusing of synthetic aperture data, where the cross-range resolution is obtained by the integration of the data in the azimuth-time direction. However, in the case of real aperture systems the resolution is limited by  physical antenna beamwidth and the response of a target ideally occupies a single azimuth sample. Integrating the data in azimuth degrades the resolution because samples that do not contain information on the same scatterer are combined together. To correct the phase variation without an excessive deterioration in azimuth resolution, the integration is limited to a window  $w$ of length $L_{int}$. The optimal trade-off was empirically determined to be $0.6^\circ$, slightly larger than $\theta_{3dB}$.\\
+The result of applying the correction to the TCR at 658 m is displayed in the rightmost column of \autoref{fig:tcr_mph}; the phase ramp is significantly reduced while the azimuth resolution is slightly degraded.
+The phase and amplitude responses for the 658 m TCR are plotted in \autoref{fig:phase_response_VV} for the VV channel. A linear variation of 30 degrees over the 3dB antenna beamwidth can be observed. The reflectors at 107 and 299 m show a large disagreement with the remaining three targets. The nearer reflector was likely too close to the antennas, so that it was not illuminated with the complete antenna pattern as the far field transition distance of the slotted array is expected to be of the order of 500 m. This situation could explain its distorted amplitude response as well. 
+\begin{figure}[ht]
+	\begin{subfigure}[t]{\columnwidth}
+		\includegraphics{2014-2016_GPRI_HIL_Calibration_20140910_144113_BBBl_coreg_phase_plot}
+		\subcaption{Azimuth phase ramp not corrected.}
+	\end{subfigure}
+	\begin{subfigure}[t]{\columnwidth}
+		\includegraphics{2014-2016_GPRI_HIL_Calibration_20140910_144113_BBBl_corr_phase_plot}
+		\subcaption{After azimuth filter.}
+	\end{subfigure}
+	\caption{Relative phase/amplitude response for all reflectors in the calibration array, VV channel. The phase at the azimuth of maxium intensity has been subtracted to make comparison easier. The dotted lines display the theoretical 3 dB resolution of the antennas $\theta_{3dB}$}
+	\label{fig:phase_response_VV}
+\end{figure}
+\subsection{Polarimetric Calibration}\label{sec:res_polcal}
+The methods described in the preceding sections were applied to prepare SLC images for each channel. For the final polarimetric calibration the procedure of \autoref{sec:proc_polcal} was used; one reflector in the scene was used as a calibration target, with the four remaining reflectors used for the determination of the calibration performance.\\
+An initial assessment of the data quality is made by plotting polarization signatures\cite{VanZyl1987} for the four corner reflectors. \autoref{fig:pol_signatures} shows the results for the four reflectors both before and after the proposed method.
+The signature in the uncorrected data is complex and cannot be easily interpreted as representing any known basic scattering mechanism. In the calibrated response, three of the four reflectors show a good correspondence with the expected polarization signature of a trihedral reflector. The signature of the third reflector from the top in \autoref{fig:pol_signatures:refl3}, located at 299 m from the radar appears to be more distorted, although an odd bounce scattering mechanism can still be distinguished. The irregularity is probably to be attributed to the vegetation in the line of sight path from the antennas to the reflector, as it was described in \autoref{sec:data}.\\
+As a quantitative assessment of the calibration,  $f$ and $\phi_r + \phi_t$ are re-estimated on the calibrated data at the location of the four reflectors. The results are shown in \autoref{fig:pol_signatures} in the caption under each signature. Generally, both the amplitude and the phase imbalance appear to be well corrected, with a RMS $f$ of 1.03 and $15^\circ$ for $\phi_r + \phi_t$. However, the result is heavily biased by reflector number 3 in \autoref{fig:pol_signatures:refl3}, where a large residual phase and amplitude imbalance is still visible. The discrepancy could again be explained by the presence of the trees in the line of sight to the calibration target, the effect being likely due to a combination of  direct and multiple scattering interactions. This is substantiated by the large difference in polarization purity for that reflector compared to the rest of the calibration array, suggesting the presence of multiple scattering mechanism within the resolution cell.\\
+Finally, to visualize the result of the calibration, RGB Pauli composites of the scene are shown in \autoref{fig:pauli_rgb}. Most of the natural surfaces such as trees and field appear blue-violet in the composite suggesting that in these object, a large odd bounce (surface scattering) contribution dominates, as confirmed by the mean Cloude-Pottier $\alpha$ angle of \autoref{fig:gc:alpha}. The dominance of surface scattering may be due a combination of the roughness of objects at the scale of the radar wavelength (1.7 cm) and the small penetration depth of high frequency EM radiation.\\ Some pink-purple objects are visible, for example in the two parallel features closer to the center of the image. They represent the roof of a building. The color suggests diehdral scattering with man-made structures, this is confirmed by analyzing $\alpha$, where an angle close to $90^\circ$ is observed.\\ 
+Interestingly, only very few pixels outside of noise seem to be representing volume scattering, the main exception being the linear features starting from the center of the image. These are the railing of a road overpass, their appearing as volume scatterers in the $\alpha$ image is most likely due to their orientation with respect to the radar line of sight.
+
+\begin{figure}[ht]
+	\begin{subfigure}[t]{\columnwidth}
+		\includegraphics{2014-2016_GPRI_HIL_Calibration_20140910_144113_l_cal_gc_pauli}
+		\subcaption{Calibrated Pauli RGB Composite.}
+		\label{fig:gc:pauli_rgb}
+	\end{subfigure}
+	\begin{subfigure}[t]{\columnwidth}
+		\includegraphics{2014-2016_GPRI_HIL_Calibration_20140910_144113_l_cal_gc_alpha}
+		\subcaption{Calibrated mean Cloude-Pottier $\alpha$ parameter.}
+		\label{fig:gc:alpha}
+	\end{subfigure}
+	\caption{Calibrated Pauli RGB and $\alpha$ parameter, geocoded with 1m pixel spacing.}
+	\label{fig:gc}
+\end{figure}
+
+\pgfplotstableread[col sep=comma]{../outputs/img/2014-2016_GPRI_HIL_Calibration_20140910_144113_76_883_l_cal_cal_params.csv}{\refI}
+\pgfplotstableread[col sep=comma]{../outputs/img/2014-2016_GPRI_HIL_Calibration_20140910_144113_197_410_l_cal_cal_params.csv}{\refII}
+\pgfplotstableread[col sep=comma]{../outputs/img/2014-2016_GPRI_HIL_Calibration_20140910_144113_332_737_l_cal_cal_params.csv}{\refIII}
+\pgfplotstableread[col sep=comma]{../outputs/img/2014-2016_GPRI_HIL_Calibration_20140910_144113_810_804_l_cal_cal_params.csv}{\refIV}
+\pgfplotstableset{ref style/.style={
+									display columns/0/.style={precision=2, column name=$\phi_r + \phi_t [\circ]$},
+									display columns/1/.style={precision=2, column name=$f$},
+									display columns/2/.style={precision=1, column name=$\frac{HH}{HV} [dB]$},
+									display columns/4/.style={precision=1, column name=$R_{0}$},
+									display columns/3/.style={precision=1, column name=$\beta_{0}$}
+				}}
+
+\newcommand\signatures[1]{
+						\begin{tikzpicture}[]
+							\node(copoluncal) at (0,0){\includegraphics{#1_flat_signature}};
+							\node[right  =  0.5cm  of copoluncal] (xpoluncal) {\includegraphics{#1_flat_signature_x}};
+							\node[below = 2 cm of copoluncal] (copolcal) at (0,0){\includegraphics{#1_cal_signature}};
+							\node[right  = 0.5cm of copolcal] (xpolcal) {\includegraphics{#1_cal_signature_x}};
+							\node[left = 0.1 cm of copoluncal.west, rotate = 90, above = 0.25cm of copoluncal.west ] (uncaltitle) {Uncalibrated};
+							\node[left = 0.1 cm of copolcal.west, rotate = 90, above = 0.25cm of copolcal.west] (caltitle) {Calibrated};
+						\end{tikzpicture}
+					}
+
+
+\begin{figure*}[hb]
+		\begin{subfigure}[t]{\columnwidth}
+		\centering
+			\signatures{2014-2016_GPRI_HIL_Calibration_20140910_144113_76_883_l}
+
+			\subcaption{Reflector 1\\ 
+					\pgfplotstabletypeset[ref style] {\refI}
+					}
+			\label{fig:pol_signatures:refl1}
+		\end{subfigure}
+		\begin{subfigure}[t]{\columnwidth}
+			\centering
+			\signatures{2014-2016_GPRI_HIL_Calibration_20140910_144113_197_410_l}
+			\subcaption{Reflector 2 \\  
+						\pgfplotstabletypeset[ref style] {\refII}
+						}
+			\label{fig:pol_signatures:refl2}
+		\end{subfigure}
+		\begin{subfigure}[t]{\columnwidth}
+			\centering
+			\signatures{2014-2016_GPRI_HIL_Calibration_20140910_144113_332_737_l}
+			\subcaption{Reflector 3\\ 						
+									\pgfplotstabletypeset[ref style] {\refIII}
+						}
+			\label{fig:pol_signatures:refl3}
+		\end{subfigure}
+		\begin{subfigure}[t]{\columnwidth}
+			\centering
+			\signatures{2014-2016_GPRI_HIL_Calibration_20140910_144113_810_804_l}
+			\subcaption{Reflector 4\\ 
+									\pgfplotstabletypeset[ref style] {\refIV}
+			           }
+			\label{fig:pol_signatures:refl4}
+		\end{subfigure}
+		\caption{Polarization signatures for the calibration array, acquired using the lower receiver. The top row for each subplot shows the response before the calibration procedure, the bottom one the calibrated response. Each caption contains the calibration parameters re-estimated after the calibration. The imbalances are in degrees, the slant range distance in meters.}
+		\label{fig:pol_signatures}
+\end{figure*}

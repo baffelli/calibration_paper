@@ -1,0 +1,72 @@
+{
+	"figdir":   "/home/baffelli/PhD/trunk/Calibration/Doc/img",
+    "datadir":  "/data/",
+    "style":    "/home/baffelli/PhD/trunk/Code/paper_rc.rc",
+	"pyrat":	"/home/baffelli/PhD/trunk/Code/pyrat/gpri_utils/",
+	"range_compression":	{
+			"rmin":		50,
+			"rmax":		1000,
+			"dec":		10,
+			"k":		5,
+			"z":		300,
+			"decimated_sample_spacing":		0.1
+	},
+	"list_of_reflectors": [
+							[[197, 4100], [2680516.36023053, 1251165.0244897, 521.441059025986]],
+							[[332, 7377], [2680271.63871318, 1251272.58077927, 518.52500197574]],
+							[[470, 6275], [2680236.40512099, 1251113.30165175, 526.974423017325]],
+							[[810, 8046], [2679901.79751308, 1251317.68784636, 528.282214638228]],
+							[[76, 8833], [2680455.77531021, 1251373.20756116, 519.46029724681]]
+							],
+	"coregistration":		{
+			"rlks":		"1",
+			"azlks":	"1",
+			"patch":	"128",
+			"rwin": 	"128",
+			"azwin":	"128",
+			"master_channel":	"AAAl",
+			"rpos": "672",
+			"azpos": "3606"
+	},
+    "channel_mapping":{
+              "TX_A_position": 0,
+              "TX_B_position": 0.125,
+              "RX_Au_position": 0.475,
+              "RX_Al_position": 0.725,
+              "RX_Bu_position": 0.6,
+              "RX_Bl_position": 0.85 },
+	"desquint":				{
+			"AAA_squint_rate":	4.21e-9,
+			"BBB_squint_rate":	3.92e-9,
+			"BAA_squint_rate":	3.9e-9,
+			"ABB_squint_rate":	3.9e-9,
+			"AAA_center_squint": 1,
+			"BBB_center_squint": 1,
+			"BAA_center_squint": 1,
+			"ABB_center_squint": 1
+	},
+	"phase_correction":		{
+			"integration_length":	0.7,
+			"AAA_phase_center_offset": 0.02,
+			"BBB_phase_center_offset": -0.12,
+			"ABB_phase_center_offset": -0.12,
+			"BAA_phase_center_offset": -0.12
+	},
+	"interferogram":		{
+		"rlks":	"1",
+		"azlks": "1"
+	},
+	"squint_rate":			{
+			"rwin":		5,
+			"azwin":	250
+	},
+	"calibration":			{
+			"reflector_index":		2,
+			"reflector_rcs":		48.4,
+			"correct_HV":           "True"
+	},
+	"geocoding":			{
+			"scan_heading":	"205",
+			"DEM"			: "/data/HIL/Geodata/swissALTI3D_15_Clip.dem"
+	}
+}

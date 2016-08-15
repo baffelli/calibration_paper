@@ -1,0 +1,485 @@
+\section{Methods}
+\subsection{Real Aperture Radar Processing}\label{sec:mode}
+These modifications to the hardware, together with the addition of the new horizontally polarized antennas requires to analyse and correct several effects in order to obtain usable polarimetric datasets starting from the raw data as acquired by the radar.\\
+To understand these effect and to describe the calibration procedure, it is necessary to study the processing steps used to produce KAPRI/GPRI data. For this purpose, it is useful to introduce a signal model for type II\cite{Caduff2015} (azimuth scanning real aperture) radar data using FMCW signaling\cite{Stove1992}.
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=1]{real_aperture_signal_model_geometry}
+	\caption{Geometry used to derive the FMCW signal model. $R$ is the slant range from the radar to the point scatterer, $\theta_{3dB}$ is the antenna half power beamwidth, which is represented by the gray triangle. The size of the antenna aperture is $L_{ant}$, the corresponding azimuth resolution (in distance units) is $\delta_{az}$. The inset figure is used to derive the azimuth phase variation. $r_{ph}$ is the phase center displacement, $r_{arm}$ is the antenna rotation lever arm, $R_{0}$ the range of closest approach and $\alpha$ the additional .}
+	\label{fig:real_aperture_signal_model_geometry}
+\end{figure}
+Consider a coordinate system with origin at the location of a radar as depicted in \autoref{fig:real_aperture_signal_model_geometry}. In this system, the antenna is mounted on a lever arm of length $l_{arm}$; its mainlobe is parallel to the $x$ axis when the pointing angle $\theta$ is 0. The radar images a scene with a complex reflectivity distribution $\rho\left(x,y\right)$ by measuring range profiles $\hat{\rho}\left(R, \theta_{i}\right)$ for a number of antenna rotation angles (azimuths) $\theta_{i} = \operatorname{arctan}\left(\frac{y}{x}\right)$ by rotating the antenna with the angular speed $\omega$. Each profile is measured by by transmitting a linearly modulated signal of duration $t_{chirp}$ with a bandwidth of $B$ and center frequency $f_c$:\\
+\begin{equation}
+	s_t\left(t\right) = e^{j 2 \pi \left( t f_{c} +  \frac{B}{t_{chirp}} t^2 \right)}.
+\end{equation}
+In the case of KAPRI, $f_c= 17.2~GHz$ and $B=200~MHz$.\\
+The total time that the signal takes to travel to a scatterer at range $R$ and back is $t_{c} = \frac{2 R}{c}$. The backscattered signal $s_r$ is a copy of the one being transmitted; delayed by $t_{c}$ and scaled by the complex reflectivity of the scatterer $\sigma$.
+\begin{equation}
+		s_r\left(t\right) = \sigma e^{j 2 \pi \left( \left(t - \frac{2 R}{c}\right) f_{c} +  \frac{B}{t_{chirp}} \left(t - \frac{2 R}{c}\right)^2 \right)}.
+\end{equation}
+In the deramp process the receiver mixes the transmitted chirp $s_t$ with the incoming signal scattered $s_r$ to remove the linear modulation; the remaining beat signal has a frequency $f_{b} = \frac{4 R B}{c t_{chirp}}$ proportional to the slant range $R$:
+\begin{equation}\label{eq:deramp}
+	\begin{aligned}
+	s_{d}\left(t\right) &=s_t\left(t\right)s_r\left(t\right)^* =\\ 
+	&\sigma e^{j 4 \pi \frac{ R}{c}f_c}  e^{j 4 \pi \frac{2 R B }{c t_{chirp}} t}  e^{j 4 \pi \frac{2 R^2 B}{c^2}}.
+	\end{aligned}
+\end{equation} 
+Two contributions to the phase can be identified: $ e^{j 4 \pi \frac{R}{c}f_c}$ is the two way propagation phase, the quantity of interest for  interferometric measurements. The second phase component is the residual video phase (RVP). This component needs to be compensated for SAR processing, where its variation during the aperture time may cause defocussing.\\
+By linearity, it follows from \autoref{eq:deramp} that the range profile $\hat{\sigma}\left(R, \theta_{i}\right)$ of a collection of targets with complex reflectivities $\rho_i$ located at ranges $R_{i}$ is recovered by taking the Fourier transform of the deramped signal $s_{d}\left(t\right)$.\\
+%One major advantage of the deramp-on-receive architecture can the be appreciated from equation \ref{eq:deramp}: because the frequency of the deramped signal, $f_{b}$ is proportional to the range, the required sampling rate is limited by the unambiguous range; in contrast the direct passband sampling of $s_{r}$  would need a minimum rate of twice the transmitted bandwidth $B$. Therefore, with the deramp-on-receive principle it is possible to obtain arbitrarily small range resolutions with a relatively slow and inexpensive ADC, the limiting factor being here the maxium range that can be imaged without ambiguity.\\
+In analogy to the pulsed radar case, the range resolution $\delta_{r}$ for a FMCW is inversely proportional to the bandwidth $B$,:
+\begin{equation}
+	\delta_R = \frac{c}{2 B}
+\end{equation}
+With $B=200 MHz$ KAPRI can achieve a range resolution of 0.75 m\cite{Strozzi2011}; the effective range resolution is lower because the dechirped data is windowed before the Fourier transform to mitigate range sidelobes. It is interesting to note that for FMCW system the sampling bandwidth differs from the Nyquist rate required for direct passband sampling of the received signal and is limited by the range extent to be imaged\cite{Meta2006}.\\
+To obtain two dimensional images, range profiles are acquired while the antenna is rotated with an angular velocity $\omega$.
+With the formula derived in \autoref{eq:deramp}, the samples obtained at a point target at slant range distance $R$ and azimuth position $\theta_{t}$ in the slow-time versus fast time domain are given by :
+\begin{equation}\label{eq:signal_model}
+	\begin{aligned}
+	& s_{d}\left(t,\tau\right) = \sigma e^{j 4 \pi \frac{ R}{c}f_c}   \\
+	& e^{j 4 \pi \frac{2 R B }{c t_{chirp}} t}  e^{j 4 \pi \frac{2 R^2 B}{c^2}} P\left(\tau \omega - \theta\right),
+	\end{aligned}
+\end{equation} 
+where $t$ is the fast time, $\tau = n t_{chirp}$ is the slow time variable and $P\left(\tau \omega\right)$ describes the two way antenna pattern. Its beamwidth is approximated by:
+\begin{equation}\label{eq:azimuth_resolution}
+	\theta_{3dB} = \frac{\lambda}{L_{ant}}
+\end{equation}
+where $L_{ant}$ is the size of the antenna aperture and $\lambda$ is the wavelength employed.
+Due to diffraction, the radiation beam emitted by the antenna broadens linearly with increasing distance,
+therefore, the effective spatial resolution in the cross-range direction, $\delta_{az}$ is a function of distance:
+\begin{equation}\label{eq:azimuth_ground_resolution}
+	\delta_{az} = \frac{R \lambda}{L_{ant}}.
+\end{equation}
+Because the typical applications of KAPRI require a ground resolution on the order of a few meters, \autoref{eq:azimuth_ground_resolution} implies that the antenna should be physically large; in this case $L_{ant} = 2m$ to obtain a beamwidth of $0.4^circ$ at $17.1 GHz$. The antenna is a traveling wave slotted waveguide array\cite{Hines1953a,Granet2007}; it constructed by cutting slots resonating at the design frequency in a section of rectangular waveguide. To enable full polarimetric imaging, two antennas with orthogonal polarisations are necessary in transmission and reception. This is achieved by cutting vertical slots on the broad or horizontal holes on the narrow side of the waveguide; the first case resulting in a horizontally polarized field. Two fundamental types of slotted waveguide antenna exist\cite{Enjiu2013}: the resonant and the traveling wave design. The second type has been chosen for KAPRI because it can be operated with a larger bandwidth in order to achieve a better range resolution.\\
+According to Babinet's principle\cite{kraus88}, each of the cuts behaves like a complimentary dipole radiator: an horizontal slot is equivalent to a vertically oriented dipole, a vertical slot to an horizontal dipole. The slots can be cut on the narrow (narrow-wall slots) or wide side (broad-wall slots) of the guide. For the fundamental $TE_{10}$ waveguide mode the broad wall slot produces a vertically polarized field; conversely a narrow side hole emits an horizontal polarized field\cite{Enjiu2013}.\\
+The spacing of the slots determines the relative phasing of the radiation emitted at each cut; the antenna can be seen as a phased array with a fixed beam steering factor, where the phasing is provided by the position of the slots relative to the maxima and minima of the mode of interest. To suppress sidelobes, an amplitude taper is constructed by varying the amount of field coupled by each slot. In the wide wall array this is accomplished by varying the vertical offset from the wall midline whereas in the narrow wall the angle of the slots to the vertical of the face is changed.\\ Two types of slotted waveguide antennas exist: resonant and non-resonant. In the first case, the waveguide is terminated with a short circuit, while in the non-resonant case the termination has a matched impedence. In the latter case there is not reflection from the waveguide end and no standing waves can arise, hence the name traveling wave.
+For KAPRI, the antennas are of the non-resonant type; this design is preferred because it offers a larger bandwidth compared to the standing-wave type.\\
+If the slot spacing $s$ is set to  half of the wavelength in the wavequide\autoref{fig:antenna_type} $\lambda_{g_{ij}}$\cite{kraus88} each slot will radiate in phase; their coherent combination will result in a narrow beam in the antenna boresight direction. The exact phasing of the signal at the slots is obtained only at the design wavelength of the waveguide $\lambda_{g_{ij}}$; however the transmitted signal occupies a bandwidth in the order of several hundred MHz. Thus the wavelength in the waveguide changes over the course of the chirp\footnote{A similar reasoning can be applied to pulsed system by applying Fourier analysis to the pulse\cite{Sarkar1989}}, consequently the phase at each slot is changed as well, broadening the antenna pattern and shifting the main lobe direction (the "electrical boresight") from the mechanical boresight by an angle $\theta_{sq}$.\\
+%\begin{figure}[ht]
+%	\begin{subfigure}{\columnwidth}
+%		\includegraphics{narrow_wall_slot.pdf}
+%		\subcaption{Narrow Wall Slot}
+%	\end{subfigure}
+%	\begin{subfigure}{\columnwidth}
+%		\includegraphics{wide_wall_slot.pdf}
+%		\subcaption{Wide Wall Slot}
+%	\end{subfigure}
+%	\label{fig:antenna_type}
+%\end{figure}
+The amount of deviation can be computed given the design parameters of the antenna:
+\begin{equation}\label{eq:squint_exact}
+	\theta_{sq} = \sin^{-1}\left({\frac{\lambda}{\lambda_{g_{ij}}} + \frac{k}{\frac{s}{\lambda}}}\right).
+\end{equation}
+where ${\lambda_g}_{ij}$ is the wavelength for the $ij$ mode of the waveguide, $\lambda$ is the freespace wavelength, $s$ is the element spacing and $k$ the mode number. Its value is $\frac{1}{2}$ for slots placed at $\frac{\lambda}{2}$.
+If the fundamental mode $TE_{10}$ is assumed , the wavelength inside the guide is:
+\begin{equation}
+\lambda_{g_{10}} = \frac{\lambda}{\sqrt{\epsilon - \left(\frac{\lambda}{2w}\right)^2 }}.
+\end{equation}.\\
+Because of the very short chirp duration, the frequency-dependent scanning of the antenna pattern is much faster than the azimuth scan that is obtained by mechanically rotating the array. This effect is beneficial where a fast scanning rate is of interest or when the number of moving parts has to be reduced. Several demonstrators of imaging radars based on frequency-scanning antennas exist\cite{Yang2014,Yang2012,Mayer2003,Alvarez2013}. However, this method imposes a trade-off between the cross-range and the range resolution: to separate the scatterers in azimuth, the transmitted bandwidth is split in a number of windows $N_{BW}$. The higher the number of windows, the better the azimuth resolution and the worse the range resolution\cite{Alvarez2013}. It can be shown\cite{Mayer2003} that the product of range and azimuth resolution is constant for a frequency scanning system.\\
+For the case of KAPRI, the bandwidth is not large enough to squint the beam in the range of angles necessary to image a large area. Splitting the chirp in sub-bands would only deteriorate the range resolution without the benefits of frequency scanning arrays operated at a much larger bandwidths.\\ 
+In this case, the beam scanning is a source of distortion because it interferes with the rotational scan. To see why, consider that the antenna is continuously rotated during the acquisition of the range profiles. If there were no frequency-induced scanning and if the angular rotation rate were small enough compared to the chirp duration, the small angular displacement induced by the mechanical scanning during the duration of the chirp would not have influence on the target response because during a single chirp it would still remain approximatively inside the mainlobe. On the other hand, if the mainlobe electronically moves during the chirp while the antenna is mechanically rotated, the target response will move in azimuth as the frequency is increased. The response of a single target, which is expected to stay inside the same azimuth cell for the entire duration of the chirp, will be spread over several azimuth cells. After the range FFT, the frequency-dependent angular spreading will broaden the azimuth response of the target and decrease the effective range resolution as only part of the transmitted bandwidth will be used to generate each subsequent range profile.\\
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.1]{squint_correction}
+	\caption{Illustration of the frequency-dependent antenna squint. When the antenna rotates during the electronical scan, the energy of the target is spread through several azimuth bins.}
+	\label{fig:squint_correction}
+\end{figure}
+When the signal $s_{d}$ as in \autoref{eq:signal_model} is acquired, the data is windowed in the fast-time direction and the two dimensional range azimuth reflectivity map $\hat{\rho}\left(R, \theta_{i}\right)$ is reconstructed by taking a Fourier transform the fast-time direction.
+This method of range focusing is only valid when ensuring that the during the time it takes to acquire one profile, the angular displacement $\theta_{d} = \omega t_{chirp}$ is much smaller than the antenna 3 dB beamwidth $\theta_{3dB}$. If this condition is met, the rotation experienced by the antenna during a single chirp is small enough that it can be assumed to be still during the acquisition; this assumption is called the stop and go approximation in SAR processing. If the condition is not met, the 
+ Because the data is oversampled in azimuth, several range profiles can be averaged to improve the measurement SNR, producing range-azimuth images with an angular resolution limited by the antenna beamwidth.\\
+\subsection{Polarimetric Calibration}
+Supposing that data obtained after correcting for all the previous effects is free of other systematic errors, determining the polarimetric calibration parameters is in most cases the last step to obtain usable data.\\
+The calibration is based on a distortion matrix model\cite{Saraband1990, Sarabandi1992a} that relates the observed scattering matrix $\mathbf{S_{meas}}$ with the correct matrix $\mathbf{S}$:
+\begin{equation}\label{eq:distorsion_scattering}
+	\mathbf{S_{meas}} = \mathbf{R} \mathbf{S} \mathbf{T}.
+\end{equation}
+$\mathbf{R}$ and $\mathbf{T}$ are complex 2$\times$2 matrices that describe the phase and amplitude imbalances and crosstalks.\\
+In order to remove all the topographic phases, KAPRI data after the azimuth correction are processed in covariance matrix format, to ensure that all combinations of channels are terrain flattened. Thus, it is more convenient to restate~\autoref{eq:distortion_scattering} for the covariance matrix form. Using $\mathbf{s_{meas}}$ for the vectorization of $\mathbf{s}_{meas}$, the distorted scattering matrix is:
+\begin{equation}
+	\begin{aligned}
+		\mathbf{s}_{meas} &= \mathbf{D} \mathbf{s} 
+	\end{aligned}
+\end{equation}
+where $\mathbf{D}$ is the Kronecker product of $\mathbf{R}$ and $\mathbf{T}$.
+$\mathbf{C}_{meas}$ is then:
+\begin{equation}
+	\mathbf{C}_{meas} = \mathbf{D} \mathbf{C} \mathbf{D}^{H}.
+\end{equation}
+Usually, the estimation of the distortion parameters is performed in two independent steps\cite{Fore2015}, separating the correction of the imbalances from the derivation of the crosstalk terms, first assuming a diagonal $\mathbf{D}$ and determining the co- and crosspolar imbalances and then estimating the crosstalk parameters from the initially calibrated data. In the case of KAPRI, the crosstalk calibration is not performed as the radar is expected to have a good polarization isolation, largely due to the fact that only one polarization is acquired at a time. The only source of crosstalk is the presence of cross-polarized lobes in the direction of the antenna mainlobe. The manufacturer has provided simulated radiation patterns for the horizontally polarized antennas, where the isolation between the co and the cross polarized pattern in the main-lobe direction is observed to be better than 60 dB.
+%The H-V isolation in reception $r_{hv}$ was measured by connecting the H transmitter port output to the like polarized input through a delay line while leaving the V input disconnected. The direct signal HH is then measured, followed in the next pulse by HV. The ratio of the measured HH to HV intensities gives an estimate for the isolation of the switch. In this case, the worst case isolation was estimated at 44 dB. The same procedure applied to $r_{vh}$ gives 39 dB. The transmit isolation was estimated by transmitting one polarization while leaving the same polarized input port disconnected. In this case, no signal was observed, given the dynamic range of the receiver, $t_{hv}$ and $t_{vh}$ are presumed to be better than 65 dB. Because they were measured without antennas, these estimates are only best case values for the cross talk terms in $\mathbf{R}$ and $\mathbf{T}$. The effective figures are expected to be worse because of the polarization impurity of the antenna and the presence of cross-polarized sidelobes in the direction of the like polarized main lobe. Unfortunately, the company manufacturing the antennas did not measure the cross-polarized pattern for the antenna. It did however provide simulation results for the horizontally polarized antennas, where in the direction of the mainlobe, the crosspolarized power is approximatively 60 dB lower.\\
+When the isolation is sufficiently large, $\mathbf{R}$ and $\mathbf{T}$ and consequently $\mathbf{D}$ is diagonal too. Ignoring the absolute amplitude (RCS) and phase calibration constant $A$, the distortion matrices are
+\begin{equation}
+	\mathbf{R} = \begin{bmatrix}
+		1 & 0\\
+		0 & f/g e^{i\phi_{r}}
+	\end{bmatrix},~	\mathbf{T} = \begin{bmatrix}
+			1 & 0\\
+			0 & f g e^{i\phi_{t}}
+		\end{bmatrix}
+\end{equation}
+where $f$ is the one-way copolar amplitude imbalance with respect to the $H$ polarization, and $g$ the amplitude imbalance of the crosspolarized channels. $\phi_t = \phi_{t,v} -\phi_{t,h}$ is the phase offset between the polarizations when transmitting and $\phi_{r} = \phi_{r,v} -\phi_{r,h}$ is the phase offset in reception\cite{Ainsworth2006a}.\\
+Because the terrain flattening procedure introduces an additional phase offset $\phi_{off}$ in the measured covariance matrix, there are two possible calibration methods, depending whether a trihedral corner reflector as a phase reference is available in the scene or not. In the first case, the TCR is used to determine the copolar phase imbalance, in the second case this parameter has to be estimated basing on point-like targets relying on the assumption that they represent odd bounce scatterers, where the copolar phase difference is expected to be 0.\\
+The situation thus described is not commonly encountered in polarimetric radar calibration, because usually there is no need to correct for the topographic contribution in the phases of $\mathbf{C}$. No additional phase off that the 
+\subsubsection{With In-Scene Reflector}
+The four unknown complex parameters in $\mathbf{D}$ can be determined using a trihedral corner reflector and a reciprocal scatterer with a significant cross polarized contribution\cite{Sarabandi1989,Pipia2009}.\\
+Assuming a trihedral reflector with the scattering matrix:
+\begin{equation}
+ \mathbf{S^{tri}} = \sqrt{\sigma_{tri}}
+ \begin{bmatrix}1 & 0\\ 0 & 1\end{bmatrix}
+\end{equation}
+the measured covariance matrix $\mathbf{C_{meas}^{tri}}$ is:
+\begin{equation}
+	\begin{aligned}
+	&\mathbf{C_{meas}^{tri}} =\\
+	&= A^2 \sigma_{tri}
+	\begin{bmatrix}
+		1 & 0 & 0 & f^2 e^{-i \left(\phi_t + \phi_r\right)}\\
+		0 & 0 & 0 & 0\\
+		0 & 0 & 0 & 0\\
+		f^2 e^{i \left(\phi_t + \phi_r\right)} & 0 & 0 & f^4
+	\end{bmatrix}
+	\end{aligned}.
+\end{equation}
+The copolar amplitude imbalance $f$ is estimated from the oversampled response of the trihedral reflector by the ratio of the HHHH and VVVV elements of $\mathbf{C}_{meas}$:
+\begin{equation}
+	f = \left(\frac{C_{meas}^{VVVV}}{C_{meas}^{HHHH}}\right)^{\frac{1}{4}}.
+\end{equation}
+Similarly, $\phi_r + \phi_t$ is determined from the phase of $C_{meas}^{VVHH}$ in the oversampled reflector response:
+\begin{equation}
+	\phi_r + \phi_t = \operatorname{arg}\left(C_{meas}^{VVHH}\right).
+\end{equation}
+Because of the difficulty of placing and correctly orienting a dihedral reflector, the estimation of $g$ and $\phi_t - \phi_r$ is based on the assumption that most pixels in the calibration dataset represent reciprocal scatterers:
+\begin{equation}
+	g = \left<\frac{C_{meas}^{HVHV}}{C_{meas}^{VHVH}}\right>^\frac{1}{4},
+\end{equation}
+and:
+\begin{equation}
+	\phi_t - \phi_r =\operatorname{arg}\left( \left<C_{meas}^{HVVH}\right>\right).
+\end{equation}
+When $\mathbf{D}$ is estimated, \autoref{eq:covariance_distortion} is inverted to obtain a calibrated covariance matrix.\\
+\subsection{Experimental Data}
+
+\subsection{KAPRI Data Processing}
+\subsection{Frequency Dependent Antenna Squint}\label{sec:squint}
+For remote sensing applications at the scales allowed by ground-based system, a ground resolution of no more of than a few meters is desirable. For a real aperture radar, the requirement implies a mechanically large antenna, as it can be appreciated in \autoref{eq:azimuth_resolution}.\\
+The slotted waveguide array \cite{Hines1953a,Granet2007} is a simple and relatively cheap antenna design with a good beamwidth. It constructed by cutting slots resonating at the design frequency in a section of rectangular waveguide.\\
+According to Babinet's principle\cite{kraus88}, each of the cuts behaves like a complimentary dipole radiator: an horizontal slot is equivalent to a vertically oriented dipole, a vertical slot to an horizontal dipole. The slots can be cut on the narrow (narrow-wall slots) or wide side (broad-wall slots) of the guide. For the fundamental $TE_{10}$ waveguide mode the broad wall slot produces a vertically polarized field; conversely a narrow side hole emits an horizontal polarized field\cite{Enjiu2013}.\\
+The spacing of the slots determine the relative phasing of the radiation emitted at each cut; the antenna can be seen as a phased array with a fixed beam steering factor, where the phasing is provided by the position of the slots relative to the maxima and minima of the mode of interest. To suppress sidelobes, an amplitude taper is constructed by varying the amount of field coupled by each slot. In the wide wall array this is accomplished by varying the vertical offset from the wall midline whereas in the narrow wall the angle of the slots to the vertical of the face is changed.\\ Two types of slotted waveguide antennas exist: resonant and non-resonant. In the first case, the waveguide is terminated with a short circuit, while in the non-resonant case the termination has a matched impedence. In the latter case there is not reflection from the waveguide end and no standing waves can arise, hence the name traveling wave.
+For KAPRI, the antennas are of the non-resonant type; this design is preferred because it offers a larger bandwidth compared to the standing-wave type.\\
+If the slot spacing $s$ is set to  half of the wavelength in the wavequide\autoref{fig:antenna_type} $\lambda_{g_{ij}}$\cite{kraus88} each slot will radiate in phase; their coherent combination will result in a narrow beam in the antenna boresight direction. The exact phasing of the signal at the slots is obtained only at the design wavelength of the waveguide $\lambda_{g_{ij}}$; however the transmitted signal occupies a bandwidth in the order of several hundred MHz. Thus the wavelength in the waveguide changes over the course of the chirp\footnote{A similar reasoning can be applied to pulsed system by applying Fourier analysis to the pulse\cite{Sarkar1989}}, consequently the phase at each slot is changed as well, broadening the antenna pattern and shifting the main lobe direction (the "electrical boresight") from the mechanical boresight by an angle $\theta_{sq}$.\\
+\begin{figure}[ht]
+	\begin{subfigure}{\columnwidth}
+		\includegraphics{narrow_wall_slot.pdf}
+		\subcaption{Narrow Wall Slot}
+	\end{subfigure}
+	\begin{subfigure}{\columnwidth}
+		\includegraphics{wide_wall_slot.pdf}
+		\subcaption{Wide Wall Slot}
+	\end{subfigure}
+	\label{fig:antenna_type}
+\end{figure}
+The amount of deviation can be computed given the design parameters of the antenna:
+\begin{equation}\label{eq:squint_exact}
+	\theta_{sq} = \sin^{-1}\left({\frac{\lambda}{\lambda_{g_{ij}}} + \frac{k}{\frac{s}{\lambda}}}\right).
+\end{equation}
+where ${\lambda_g}_{ij}$ is the wavelength for the $ij$ mode of the waveguide, $\lambda$ is the freespace wavelength, $s$ is the element spacing and $k$ the mode number. Its value is $\frac{1}{2}$ for slots placed at $\frac{\lambda}{2}$.
+If the fundamental mode $TE_{10}$ is assumed , the wavelength inside the guide is:
+\begin{equation}
+\lambda_{g_{10}} = \frac{\lambda}{\sqrt{\epsilon - \left(\frac{\lambda}{2w}\right)^2 }}.
+\end{equation}.\\
+Because of the very short chirp duration, the frequency-dependent scanning of the antenna pattern is much faster than the azimuth scan that is obtained by mechanically rotating the array. This effect is beneficial where a fast scanning rate is of interest or when the number of moving parts has to be reduced. Several demonstrators of imaging radars based on frequency-scanning antennas exist\cite{Yang2014,Yang2012,Mayer2003,Alvarez2013}. However, this method imposes a trade-off between the cross-range and the range resolution: to separate the scatterers in azimuth, the transmitted bandwidth is split in a number of windows $N_{BW}$. The higher the number of windows, the better the azimuth resolution and the worse the range resolution\cite{Alvarez2013}. It can be shown\cite{Mayer2003} that the product of range and azimuth resolution is constant for a frequency scanning system.\\
+For the case of KAPRI, the bandwidth is not large enough to squint the beam in the range of angles necessary to image a large area. Splitting the chirp in sub-bands would only deteriorate the range resolution without the benefits of frequency scanning arrays operated at a much larger bandwidths.\\ 
+In this case, the beam scanning is a source of distortion because it interferes with the rotational scan. To see why, consider that the antenna is continuously rotated during the acquisition of the range profiles. If there were no frequency-induced scanning and if the angular rotation rate were small enough compared to the chirp duration, the small angular displacement induced by the mechanical scanning during the duration of the chirp would not have influence on the target response because during a single chirp it would still remain approximatively inside the mainlobe. On the other hand, if the mainlobe electronically moves during the chirp while the antenna is mechanically rotated, the target response will move in azimuth as the frequency is increased. The response of a single target, which is expected to stay inside the same azimuth cell for the entire duration of the chirp, will be spread over several azimuth cells. After the range FFT, the frequency-dependent angular spreading will broaden the azimuth response of the target and decrease the effective range resolution as only part of the transmitted bandwidth will be used to generate each subsequent range profile.\\
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.1]{squint_correction}
+	\caption{Illustration of the frequency-dependent antenna squint. When the antenna rotates during the electronical scan, the energy of the target is spread through several azimuth bins.}
+	\label{fig:squint_correction}
+\end{figure}
+The azimuth spreading of the frequency response is illustrated in \autoref{fig:squint_correction}; this effect can be appreciated in the acquired data in \autoref{fig:uncorrected_squint} , where the signal envelope in the deramped sample versus azimuth domain for a trihedral corner reflector has been plotted. As expected, the response of the reflector moves in azimuth (horizontal axis) when the transmitted frequency is changed. With no frequency-dependent squint, the response would be concentrated on a single azimuth bin for the entire chirp duration.\\ The plot figure has been obtained by extracting the deramped signal of the trihedral reflector from the data, computing its range position $R_{target}$ by a range FFT, filtering the range samples around this position with an Hamming window and converting the data back in the deramped samples (time) domain. By doing this, the samples of $s_{d}\left(t\right)$ corresponding to the target at range $R_{target}$ are isolated. Finally, the envelope of the signal is extracted by a discrete Hilbert transform.\\
+The blue curve in figure~\ref{fig:uncorrected_squint} superimposed to the measured envelope is obtained with a linear model that links the chirp frequency and the off-broadside angle of the main lobe relative to the center frequency pointing:
+\begin{equation}\label{eq:linearised_squint}
+	\theta_{sq} = a f.
+\end{equation}
+The model has been computed by tracking the azimuth location of the maximum envelope over the chirp duration (y axis in the plot) and fitting the obtained data,.\\\
+The green curve in  \autoref{fig:uncorrected_squint} is the off axis angle computed using \autoref{eq:squint_exact},
+both the linear and the exact model show a very good agreement and fit the measured data very well; the good fit of the linearised model in \autoref{eq:linearised_squint} is  due to the fact that the nonlinearity of the squint (as in \autoref{eq:squint_exact}) is not appreciable over the 200 MHz band that is employed by KAPRI.\\
+The fitted parameters for the linear model are $4.2\frac{deg}{GHz}$ for the horizontally polarized antenna and $3.9 \frac{deg}{GHz}$ for the V polarized antenna. The manufacturer of the antennas measured the pattern at 17.1, 17.2 and 17.3 GHz and derived similar values for the linear squint rates.\\
+
+\begin{figure}[h]
+	\begin{subfigure}[b]{\columnwidth}
+		\centering
+		\includegraphics[scale=1]{HIL_20140910_144113_810_8046_AAAl_chan_squint_plot}
+		\subcaption{HH channel}
+	\end{subfigure}
+	\begin{subfigure}[b]{\columnwidth}
+		\centering
+		\includegraphics[scale=1]{HIL_20140910_144113_810_8046_BBBl_chan_squint_plot}
+		\subcaption{VV channel}
+	\end{subfigure}
+	\caption{Envelope of a trihedral reflector as a function of the chirp frequency.}
+	\label{fig:uncorrected_squint}
+\end{figure}
+To correct for the frequency-scan induced distortion, the expected azimuth shift $\phi_{n}$ for each chirp sample $n$ with frequency $f_{n} = fc + t_{sample} \frac{B}{\tau_{chirp}}n$ is computed and used to interpolate the acquired samples by $-\phi_{n}$ into the azimuth position in the data matrix that they would occupy without frequency scanning. A slow antenna rotation rate, resulting in several azimuth pixels covering the same target facilitate the interpolation; for this reason the data is usually acquired with an angular spacing of one tenth of the antenna beamwidth.\\ 
+However, the frequency interpolation revealed to be insufficient to completely correct the data:
+After the range compression, if the $HH$ and $VV$ intensities are plotted together, a large offset is observed. This could be explained by the  H and V antennas having different off-axis squints  at $f_{c}$. The offset, estimated by intensity cross-correlation of the HH and VV channels is  around 0.22$^\circ$.\\
+This situation is especially problematic for the correction of the cross-polarized: the transmitting and receiving antennas are not of the same type and have different frequency scanning characteristics and different center-frequency pointing angles. Thus transmission and reception patterns are not starting their scan from the same location and they are moving at a different rate over the course of the chirp. The different pointing implies that the receiving and the transmitting patterns are not pointing at the same physical location; this could have severe consequences on the received power, especially if the offset is large compared with the beamwidth.
+Using the antenna patterns for the $HH$ and $VV$ channel provided by the manufacturer, a loss of 1.8 dB with respect to the ideal case is predicted.\\
+The correction using an azimuth-frequency interpolation is not sufficent in this case: the beams are physically pointing at different targets during the scan. To correct the beam pointing offset, the attachment of the antenna to the tower that connects them to the motor were modified so that one group of antennas can be precisely and accurately be shifted backwards or forwards by a displacing the beam in azimuth by the required amount.\\ Similarly, there is no method that is able to account for difference in squint rates for the transmitting and receiving antennas that are expected when the HV or VH polarization are measured.\\ If the center frequency offset is solved by mechanically rotating one antenna w.r.t to the other to that ${\Delta\theta_{sq}}_{c}=\phi_{sq}^{H} - \phi_{sq}^{V} =0$ at $f_{c}$, the HV mispointing  at $f_{l} = fc - \frac{B}{2}$ (beginning of chirp) will be 
+\begin{equation}
+	{\Delta\phi_{sq}}^{l} = f_{l} \left(a_{H} - a_{V} \right).
+\end{equation} 
+As the chirp frequency increases the beam initially lagging behind the other by  will close the gap until they overlap perfectly at $f_{c}$. The same repeats moving from the center frequency $f_{c}$ to the upper frequency $f_{u} = f_{c} + - \frac{B}{2}$, with the faster $V$ pattern leading the $H$ pattern. If the difference $\Delta\phi$ at the edges of the chirps is small compared to the antenna beamwidth, the effect of different scan rates can be ignored and the data for HV and VH can be corrected by assuming a scan rate that is the average of the H and the V channel squint rate. For the scan rates mentioned above and for a total bandwidth of 200 MHz, the difference at the edges of the bandwidth would be of 0.03 degrees, which is an order of magnitude smaller than the beamwidth of the antenna.\\
+\autoref{fig:corrected_squint} shows the frequency-azimuth response for the trihedral corner reflector after the correction of the frequency scan. The interpolation in the chirp frequency-azimuth domain removed the displacement of the envelope over the azimuth cells during the chirp, improving the azimuth resolution. The response of reflector covers the entire chirp duration inside the antenna beamwidth, maximizing the chirp bandwidth and the range resolution.\\
+\begin{figure}[h]
+	\begin{subfigure}[b]{\columnwidth}
+		\centering
+		\includegraphics[scale=1]{HIL_20140910_144113_810_8046_AAAl_desq_squint_plot.pdf}
+		\subcaption{HH channel}
+	\end{subfigure}
+	\begin{subfigure}[b]{\columnwidth}
+		\centering
+		\includegraphics[scale=1]{HIL_20140910_144113_810_8046_BBBl_desq_squint_plot.pdf}
+		\subcaption{VV channel}
+	\end{subfigure}
+	\caption{Envelope of a trihedral reflector as a function of the chirp frequency, after frequency scan correction.}
+	\label{fig:corrected_squint}
+\end{figure}
+\FloatBarrier
+\subsection{Azimuth Processing}
+After the frequency-dependent squint correction, the dechirped signal can be range compressed to obtain corrected two dimensional range-azimuth images. Because the data is highly oversampled in azimuth, it is convenient to average adjacent chirps to reduce the amount of data to process. This operation will also  increase the SNR, if nearby chirps are assumed to be the superposition of realizations of the same target with uncorrelated zero mean noise.\\
+The oversampled acquisition in azimuth has an interesting side effect;
+if the data is range compressed as it is, a linear phase variation on the response of Trihedral Corner Reflectors is observed for the VV channel and partly for the HH channel (\autoref{fig:phase_response_VV:uncorrected}). This phase modulation can reveal problematic in two ways:\\ the first effect is a reduction of the magnitude of the response of a reflector, because of the incoherent decimation in azimuth. Connected to this is the second problem; after the decimation the response will still show a reduced ramp; if is used  as a reference for polarimetric calibration or analysis, it may give results that do not reflect its true polarimetric response.\\
+It is supposed that the ramp are caused by the antennas having an offset from the rotation center of the radar~\cite{Lee2014}. The different phases for the HH and VV channels are presumably caused by different horizontal locations of the phase center along the slotted array.\\
+To model the effect of the antenna lever arm and of the displaced phase centers, a geometrical model to explain the phase has been developed. To derive it, first consider the configuration of\autoref{fig:displaced_pc_with_coordinates}.
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.15]{displaced_pc_with_coordinates}
+	\caption{Geometry used for the derivation of the phase. $r_{ph}$: horizontal phase center displacement. $r_{arm}$: antenna lever arm. $r_{sl}$: range of closest approach. $\theta$ rotation angle from the situation at closest approach. $R$ range to the point scatterer during the scan. The antenna beamwidth (gray triangle) is exaggerated.}
+	\label{fig:displaced_pc_with_coordinates}
+\end{figure}
+The antennas are mounted on a lever arm of length $r_{arm} = 0.25$ m that connects them to the azimuth scanner. The phase center of the antenna is horizontally displaced from the lever arm attachment by $r_{ph}$. A point target is at slant range  of closest approach $r_{sl}$, obtained when the phase center, the target and the lever arm all lie on a line. The antenna is now rotated by an angle $\theta$ relative to the situation of closest approach. The phase center will change its distance $R$ from the target, a corresponding variation of the phase will observed, according to:
+\begin{equation}\label{eq:range_phase}
+	\phi_{scan} = \frac{4 \pi}{\lambda}R\left(\theta\right).
+\end{equation}
+To compute $R$, the law of cosines is applied to the triangle of~\autoref{fig:displaced_pc_with_coordinates}, with the included angle $\theta$, one side length $c = r_{sl} + r_{ant}$ and the other $r_{ant}$. This length is the equivalent antenna rotation arm for a system with no phase center shift:
+\begin{equation}
+	r_{ant} = \sqrt{r_{arm}^2 + r_{ph}^2},
+\end{equation}
+the range from the target to the antenna relative to the closest approach is then:
+\begin{equation}\label{eq:range}
+	R = \sqrt{ c^2 +  r_{ant}^2 - 2 c r_{ant} \cos{\left(\theta  - \alpha\right)}}.
+\end{equation}
+The function is shifted by the angle  $\alpha = \operatorname{\arctan}\left({\frac{r_{ph}}{r_{arm}}}\right)$ that describes the shift between the angle of closest approach and the rotation angle of the antenna, which is measured from the theoretical direction of closest approach with no phase center shift, when the target is at the center of the beam.\\
+As seen in \autoref{eq:range}, the distance of each scatterer is a function of the rotation angle $\theta$ of the antenna. In this case, azimuth and distance are coupled, this situation is named \textbf{R}ange \textbf{C}ell \textbf{M}igration (\textbf{RCM}). If the range resolution is small enough compared to the RCM, the response of a point target can move through several range cells during the scan; in this case the images would be distorted severely. In this situation the data needs to be corrected by interpolating the range profiles as a function of the azimuth position using \autoref{eq:range}. In the renaming analysis, it is assumed that the RCM is small enough and only the effect of the rotation on the phase (\autoref{eq:range_phase}) will be considered.\\
+The complete characterization of the azimuth phase requires the knowledge of the antenna phase center displacement $r_{ph}$. This value is generally not known a priori as it is assumed that the phase center is located at the center of the array. However, when the experimental data was analyzed assuming this case to be true (which implies $r_{ant} = r_{arm}$),  \autoref{eq:range} failed to model the observed azimuth phase variation for the response of a trihedral corner reflector. The model was thus modified to account for the possibility of a displaced antenna phase center. The parameter $r_{ph}$ can be determined from the measured data of a point target. Range-azimuth profile are generated according to the procedure described in \autoref{sec:mode} and \autoref{sec:squint}. The azimuth phase profile for the point target is then extracted and used in a nonlinear optimization problem with the phase simulated according to \autoref{eq:range}:
+\begin{equation}\label{eq:rph_estimation}
+	\hat{r_{ph}} = \underset{\left(r_{ph}, \phi_{off}\right)}{\operatorname{argmax}}{\vert\vert\phi_{meas} - \phi_{sim}\vert\vert}^2.
+\end{equation}
+Where $\phi_{sim} = \phi_{pt} + \phi_{off}$ is the simulated phase with an additional offset that accounts for the phase induced by the noise, the intrinsic scattering phase and the system.\\
+Finally, the azimuth phase variation is corrected using \autoref{eq:range} as a range-variant matched filter. Each azimuth line in the range compressed, desquinted data $s_{d}$ is convolved with a filter of the form:
+\begin{equation}\label{eq:correction}
+	\begin{aligned}
+		s_{d}^{corr}\left(\theta, r_{sl}\right) = &\int\limits_{-\frac{L_{int}}{2}}^{\frac{L_{int}}{2}}e^{\jmath \frac{4\pi}{\lambda}\left(R\left(\theta - \theta^{\prime}, r_{sl}\right) - r_{sl}\right)}\\
+		&s_{d}\left(\theta^\prime\right)w(\theta - \theta^{\prime}) d\theta^\prime,
+	\end{aligned}
+\end{equation}
+where $w$ is a windowing function.
+The procedure is similar to the azimuth focusing of synthetic aperture data, where the cross-range resolution is obtained by the integration of the data in the azimuth-time direction. However, in the case of real aperture systems the resolution is limited by  physical antenna beamwidth and the response of a target ideally occupies a single azimuth sample. Integrating the data in azimuth degrades the resolution because samples that do not contain information on the same scatterer are combined together. To correct the azimuth phase variation without impacting the azimuth resolution  too much, the integration is limited to a window  $w$ of length $L_{int}$. This length  should be chosen such that enough samples can be integrated without exceeding the antenna beamwidth $\theta_{3dB}$. Normally the antennas are scanned with an angular speed so that $\omega_{ant} t_{chirp} < \theta_{3dB}$ to permit averaging of the range profiles for the improvement of the measurement SNR, as discussed\autoref{sec:mode}. This oversampling in azimuth can be used for the correction: instead of incoherently adding azimuth samples before the range FFT, the samples are coherently combined with the appropriate phase factor after the range compression. By using this method an improvement of the SNR is combined with the correction of the azimuth phase. Moreover, the combination of the samples with the proper phase factor should improve the SNR .\\
+In \autoref{eq:correction} the range at closest approach is subtracted from the current range $R$ in the calculation of the phase correction because it is only desired to correct the variation relative to that point. This is important for interferometric processing where the propagation phase has to be preserved.\\
+The model is tested on an array of five TCRs placed at different ranges in a mixed agricultural-urban scene. For each reflector, the maximum in range and azimuth was identified and the samples corresponding to the half power beamwidth were extracted at the range of maximum intensity. The unwrapped phase was then used to estimate $r_{ph}$ according to the procedure described in \autoref{eq:rph_estimation}. The resulting fitted $r_{ph}$ for each reflector is summarized in \autoref{tab:rph_fit}
+\begin{table}[ht]\label{tab:reflector_rph}
+	\begin{tabular}{lccl}
+		\hline
+		reflector & $r_sl$ & $\hat{r_{ph}}$ & comments\\
+		1	& 107 m & -0.11 & \\
+		2  & 192 m & -0.15 & \\
+		3 & 299 m & -0.05 & Obscured by trees\\
+		4 & 402 m & -0.13 &\\
+		5 & 658 m & -0.13&\\
+		\hline
+	\end{tabular}
+	\caption{Result of fitting the phase center displacement for five trihedral corner reflectors.}
+	\label{tab:rph_fit}
+\end{table}
+An example of the phase ramps before and after the proposed correction for can be observed in figure \autoref{fig:response}, especially in \autoref{fig:response:uncorrected_VV}, where the oversampled amplitude and phase responses for a TCR are plotted. The azimuthal phase variation is especially visible in the VV channel, a dependence of this phase on the range can be observed too, the azimuthal fringes appearing not to be  aligned 
+In \autoref{fig:phase_response_VV:uncorrected} the phase variation for the five reflectors in the VV channel before the proposed correction is plotted. A linear variation of 30 degrees over the 3dB antenna beamwidth can be observed. The reflectors at 107 and 299 m show a large disagreement with the remaining three targets. The nearer reflector was likely too close to the antennas, so that it was not illuminated with the complete antenna pattern as the far field transition distance of the slotted array is expected to be of the order of 500 m. This situation could explain its distorted amplitude response as well. The reflector at 299 meters shows the largest disagreement, the estimated $r_{ph}$ being very different from the parameter determined for the other corner reflectors. The big difference is presumably due to the reflector having been installed behind a line of trees, so that the phase contains contributions from the tree canopies superimposed to the proper point target response.\\
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.5\columnwidth}
+			\centering
+			\includegraphics[scale=0.7]{HIL_20140910_144113_810_8046_AAAl_coreg_mph_plot}
+			\caption{Before phase correction (HH channel).}
+			\label{fig:response:uncorrected_HH}
+	\end{subfigure}~
+	\begin{subfigure}[b]{0.5\columnwidth}
+			\centering
+			\includegraphics[scale=0.7]{HIL_20140910_144113_810_8046_AAAl_corr_mph_plot}
+			\caption{After phase correction (HH channel).}
+			\label{fig:response:corrected_HH}
+	\end{subfigure}\\
+	\begin{subfigure}[b]{0.5\columnwidth}
+			\centering
+			\includegraphics[scale=0.7]{HIL_20140910_144113_810_8046_BBBl_coreg_mph_plot}
+			\caption{Before phase correction (VV channel).}
+			\label{fig:response:uncorrected_VV}
+	\end{subfigure}~
+	\begin{subfigure}[b]{0.5\columnwidth}
+			\centering
+			\includegraphics[scale=0.7]{HIL_20140910_144113_810_8046_BBBl_corr_mph_plot}
+			\caption{After phase correction (VV channel).}
+			\label{fig:response:corrected_VV}
+	\end{subfigure}
+	\caption{Oversampled phase response of a trihedral corner reflector. Range is horizontal, azimuth is vertical. One color cycle corresponds to a phase change of $2 \pi$. The intensity is coded in the brightness. The phase at the peak was subtracted from each response for a better comparison of the phase ramps.}
+\label{fig:response}
+\end{figure}
+After the correction with an integration length of 0.7$^\circ$  (\autoref{fig:phase_response_VV:corrected}) the large slope is removed and only a small variation at the edge of the beamwidth is left. This minor fluctuation can probably be attributed to the large integration window that causes samples outside of the reflectors response to be combined with these that actually correspond to its response. The price of the correction is a slightly reduced azimuth resolution, as it can be observed from the amplitude response plot.
+\begin{figure}[ht]
+	\centering
+	\begin{subfigure}[b]{\columnwidth}
+		\centering
+		\includegraphics[scale=1]{HIL_20140910_144113_BBBl_coreg_phase_plot.pdf}
+		\subcaption{Uncorrected}
+		\label{fig:phase_response_VV:uncorrected}
+	\end{subfigure}
+	\begin{subfigure}[b]{\columnwidth}
+		\centering
+		\includegraphics[scale=1]{HIL_20140910_144113_BBBl_corr_phase_plot.pdf}
+		\subcaption{Corrected}
+		\label{fig:phase_response_VV:corrected}
+	\end{subfigure}
+	\caption{Phase response of a trihedral corner reflector in the VV channel. The red line marks the antenna half power beamwidth. The phase at the peak was substracted from both plots to facilitate the comparison.}\label{fig:phase_response_VV}
+\end{figure}
+\FloatBarrier
+\subsection{Removal of Interferometric Phase}
+After the azimuth phase correction, the data should be free of systematic effects and can be further processed for polarimetry or interferometry. However, in the former case, because of the antenna configuration used in KAPRI, a topographic phase contribution is observed when the phases of the polarimetric covariance matrix are computed. The topographic component is visible as fringes in \autoref{fig:HHVV_phase}, where the phase of the HH-VV covariance matrix is shown. This phase is superimposed to the true polarimetric phase differences and makes the estimation of polarimetric calibration parameters and further processing very hard, because topographic and polarimetric effects cannot be separated without external information.\\
+To understand the origin of this phase, a short digression on FMCW radar antenna configurations is necessary.
+When using the transmitted chirp to demodulate the incoming pulse, the radar needs to simultaneously transmit and receive. Sufficient isolation between the transmitter and the receiver is required for a good performance. If the isolation level between transmitter and receiver is not high enough, some of the transmitted signal can be leaked directly into the receiver without being transmitted at the antenna. Because this propagation is very short, the direct signal after deramping generates a beat frequency close to zero, producing a significant DC offset in the receiver. This voltage bias is a source of flicker noise in the receiver electronics. This effect increases the noise floor and reduces the signal to noise ratio\cite{Li2008} even at very low leakage levels.
+A single antenna can be  used for transmission and reception in combination with a circulator to isolate the transmitter from the receiver. However, the isolation provided by the circulator may not prove to be sufficent for a good performance. A simple solution  to improve isolation between the transmitter and the receiver is to employ separate transmission and reception antennas\cite{Stove1992, Strozzi2011}. TX-RX isolations of up to 60 dB are obtained in this configuration.\\The need of separate antennas is also due to  the new polarimetric mode. In this case, dual polarized antennas or separate antennas for the horizontal and vertical polarization are needed, both in transmission and reception. For KAPRI, each transmitting and receiving antenna for every polarization is mounted separately with a fixed vertical spacing on the antenna rack. This configuration provides good TX-RX insulation and a lower level of cross-talk between the polarizations compared to dual polarized antennas.\\ However, due to different locations of transmiting and receiving antennas for each polarization, the radar is effectively a bistatic system with a small TX-RX separation. This configuration is usually approximated by an equivalent monostatic radar located at the midpoint between the transmitter and the receiver. It is however legitimate to question whether the assumption of the equivalent phase center is valid or not. If the assumption holds, there are severe consequences in some circumstances, because for certain combinations of channels $i$ and $j$ the equivalent monostatic phase centers of $i$ and $j$ are separated by a baseline. If $i$ and $j$ represent two polarizations of which the polarimetric phase difference is sought, the baseline introduce an interferometric phase that complicates the polarimetric analysis. Namely, the computed phase difference will be:
+\begin{equation}
+	\phi_{ij} = \phi_{ij}^{pol} + \phi_{ij}^{prop}.
+\end{equation}
+Where the superscript \emph{prop} indicates the interferometric phase due to the difference in propagation path\cite{Satake2001} between the channels measured at the equivalent monostatic phase centers $i$ and $j$ and \emph{pol} is the phase contribution due to differences in the intrinsic (scattering) and polarimetric phases.\\
+In the following, the validity of assuming the equivalent phase center to be in the midpoint will be studied for the situation thus described.  From the analysis, a method to estimate the polarimetric phase from $\phi_{ij}$ can the be devised.\\
+To test the sensitivity of the interferometric term $\phi_{ij}^{prop}$ to the bistatic configuration, it is useful to consider the geometry in~\autoref{fig:bistatic_geometry}.\\
+A transmitter $t_i$ is placed in $\mathbf{t_i}$ where the origin of a coordinate system is placed. A receiver is located in $\mathbf{r_j}$ with a distance $\norm{\mathbf{b_{r_{i}}}}$ from $\mathbf{t_{i}}$ along the receiver baseline vector $\mathbf{b_{t_{j}}}$.\\
+Another transmitter and receiver are located at $\norm{\mathbf{b_{t_{j}}}}$ and $\norm{\mathbf{b_{r_{j}}}}$ along the corresponding baselines.\\
+The propagation phase difference between the signals at $r_i$ and $r_j$ is proportional to the total propagation path from $t_i$  to the point $\mathbf{p}$ and from there to $r_i$ minus the path for the pair $t_j,r_j$:
+\begin{equation}\label{eq:interferometric_phase}
+	\begin{aligned}
+		\phi_{ij}^{prop} = &\frac{2 \pi}{\lambda} (\norm{\mathbf{t_i} -\mathbf{p}}  \\
+		&+  \norm{\mathbf{r_i} -\mathbf{p}} - (\norm{\mathbf{t_j} -\mathbf{p}}  +  \norm{\mathbf{r_j} -\mathbf{p}}))
+	\end{aligned}
+\end{equation}
+Each distance term in~\autoref{eq:interferometric_phase} can be expressed with the form:
+\begin{equation}
+	p \sqrt{1 - \frac{b^2 - \mathbf{p} \cdot \mathbf{b}}{p^2}}
+\end{equation}
+with $b$ corresponding to the distances of the receivers or transmitters from the origin.\\
+By Taylor expansion of each of these square roots and truncation to terms higher than $\mathcal{O}(\frac{b^2}{p})$ a second order approximation for~\autoref{eq:interferometric_phase} is obtained:
+\begin{equation}\label{eq:second_order_expansion}
+	\begin{aligned}
+		\phi_{ij}^{prop} &\approx \frac{2\pi}{\lambda}\frac{1}{p}(((\mathbf{b_{t_j}} + \mathbf{b_{r_j}}) - \mathbf{b_{r_i}}) \cdot \mathbf{p}\\ + &\frac{1}{2}(b_{r_i}^2 - b_{r_j}^2 - b_{t_j}^2) + \frac{1}{2p^2}((\mathbf{b_{r_j}} \cdot \mathbf{p})^2\\
+		&- (\mathbf{b_{r_i}} \cdot \mathbf{p})^2 + (\mathbf{b_{t_j}} \cdot \mathbf{p})^2 )).
+	\end{aligned}
+\end{equation}
+The terms of order  $\mathcal{O}(\frac{b^2}{p})$ and higher can be ignored when $\frac{2\pi}{\lambda}\frac{b^2}{p^2} \ll 1$. In the case of KAPRI, with a wavelength of 17 mm and the largest baseline assumed to be 0.5 m, this condition is met for all scatterers at distances larger than a few hundred meters.\\
+Defining $\mathbf{b_{ij}^{eq}} = \frac{((\mathbf{b_{t_j}} + \mathbf{b_{r_j}}) - \mathbf{b_{r_i}})}{2}$ as the equivalent monostatic baseline, \autoref{eq:second_order_expansion} truncated to the first order simplifies to:
+\begin{equation}\label{eq:interferometric_phase_linear}
+	\phi_{ij}^{prop} = \frac{4\pi}{\lambda}\mathbf{b_{ij}^{eq}}\cdot \mathbf{p}.
+\end{equation}
+This implies that when $p \gg b$ the bistatic interferometric phase is equivalent to the repeat pass interferometric phase~\cite{Rosen2000} as it would be measured by two monostatic systems whose phase centers are at the midpoint between the corresponding transmitter and receiver. 
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.2]{bistatic_geometry_full}
+	\label{fig:bistatic_geometry}
+	\caption{Geometry for the derivation of the bistatic interferometric phase. $\mathbf{r_i}$ and $\mathbf{r_j}$ are the location of the two receivers,  $\mathbf{t_i}$ and $\mathbf{t_j}$  of the corresponding transmitters. The i-th transmitter is taken as a reference.}
+\end{figure}
+Additionally, it can be assumed that all transmitters and receivers are located on the same plane; For KAPRI this is ensured by the mechanical construction of the antenna mounts. In that case,~\autoref{eq:interferometric_phase_linear} simplifies to:
+\begin{equation}\autoref{eq:prop_approximation}
+		\phi_{ij}^{prop} = \frac{4\pi}{\lambda} b_{ij}^{eq} \sin(\theta - \alpha),
+\end{equation}
+where $\alpha$ is the baseline angle w.r.t to the $y$ axis and the look angle $\theta$ is the angle between the line of sight vector $\mathbf{p}$ and the vertical axis.\\
+Thus, it was proved that for KAPRI the small bistatic angle between transmitter and receiver can be ignored; still depending on the ordering of the antennas on the mounting rack, some combinations of polarizations will result in a non zero equivalent baseline $b_{ij}^{eq}$.\\
+In that case $\phi_{ij}$ is a mixture of interferometric and polarimetric phase, from which it is desired to estimate  $\phi_{ij}^{pol}$. A solution is readily obtained when a second measurement $\phi_{kl}$ using another combination of receiver and transmitters $k$ and $l$ with the same polarization and with a nonzero baseline is available. For this pair of receivers, the phase difference will consist of an interferometric contribution only:
+\begin{equation}
+	\phi_{kl} = \phi_{kl}^{prop}.
+\end{equation}
+Considering \autoref{eq:prop_approximation}, $\phi_{ij}^{prop}$ can be approximated in terms of $\phi_{kl}^{prop}$ if the look angle does not significantly change from $k$ to $i$, i.e if $\theta_{i} \approx \theta_{k}$. 
+\begin{equation}
+	\hat{\phi}_{ij}^{prop} = \frac{B_{ij}}{B_{kl}} \phi_{kl}^{prop}.
+\end{equation}
+The scaling $\phi_{kl}^{prop}$ by the ratio of the baselines can be performed directly only if $\frac{B_{ij}}{B_{kl}}$ is integer\cite{Massonnet1996}, if this condition is not met, phase unwrapping of $\phi_{kl}^{prop}$ is necessary before rescaling.\\
+When an estimate $\hat{\phi}_{ij}^{prop}$ of the interferometric contribution is obtained, the polarimetric phase difference can be recovered by subtracting the former from the measured phase difference.\\
+The $HHVV$ phase after topography removal with the described method  is shown in \autoref{fig:HHVV_phase:flattened}. In the unflattened phase difference of \autoref{fig:HHVV_phase:unflattened} ,high frequency fringes are visible, especially in the areas closer to the radar. They are due to the flat earth effect, i.e to the difference in propagation path for the receivers over a flat reference surface. The remaining phase contributions are due to the topography of the scene and to the effective polarimetric phase difference.
+After the proposed correction, the fringes caused by the presence of the interferometric baseline between the HH and VV phase centers are removed and no residual phase trends can be observed. The results for the other combinations of polarizations are not show since there are no large areas of high coherence, where the topographic phase can be visually appreciated.\\
+Applying the method to each element of the polarimetric covariance matrix $\mathbf{C}$ produces a terrain flattened matrix that can be used for polarimetric calibration or for further processing. 
+\begin{figure}[ht]
+	\centering
+	\begin{subfigure}[b]{\columnwidth}
+		\centering
+		\includegraphics[scale=1]{HIL_20140910_144113_l_03_normal_gc_phase.pdf}
+		\subcaption{Uncorrected}
+		\label{fig:HHVV_phase:unflattened}
+	\end{subfigure}
+	\begin{subfigure}[b]{\columnwidth}
+		\centering
+		\includegraphics[scale=1]{HIL_20140910_144113_l_03_flat_gc_phase.pdf}
+		\subcaption{Corrected}
+		\label{fig:HHVV_phase:flattened}
+	\end{subfigure}
+	\caption{HH VV phase difference. \autoref{fig:HHVV_phase:unflattened}: Phase difference after the correction of the azimuth ramp. The topographic phase ramp is very clearly visible. In  \autoref{fig:HHVV_phase:flattened} the phase after the topographic phase removal is shown. There is no noticeable phase trend.}
+	\label{fig:HHVV_phase}
+\end{figure}
+\FloatBarrier
+
+\subsubsection{Calibration Quality}
+The procedure thus described was applied to a KAPRI dataset of a mixed urban-argicultural area at the H\"{o}nggerberg campus. Five trihedral corner reflectors were placed in the scene at different distances from the radar (see \autoref{tab:reflector_rph}). The procedures described in the preceding sections were applied to prepare the data for the polarimetric calibration, so that the measured phases can be assumed to reflect the proper polarimetric behavior of the targets and do not contain contributions from other effects. One reflector in the scene was used as a calibration target, with the four remaining reflectors used for the determination of the calibration performance.\\
+An initial assessment of the calibration quality is made by plotting polarization signatures\cite{VanZyl1987} for the four corner reflectors. \autoref{fig:pol_signatures} shows the results for the four reflectors both before and after the proposed method.
+The signature in the uncorrected data is complex and cannot be easily interpreted as representing any known basic scattering mechanism. In the calibrated response, three of the four reflectors show a good correspondence with the expected polarization signature of a trihedral reflector. The signature of the third reflector from the top in \autoref{fig:pol_signatures:refl3}, located at 299 m from the radar appears to be more distorted, although an odd bounce scattering mechanism still seem to be dominant. The irregularity can probably be attributed to the vegetation in the line of sight path from the antennas to the reflector, as it was speculated when describing the results of \autoref{fig:phase_response_VV:corrected}.\\
+For a more quantitative evaluation of the calibration performance, the $f$ and $\phi_{HHVV}$ parameters are re-estimated on the calibrated reflectors after applying the calibration. The results are shown in \autoref{fig:pol_signatures} in the caption of each signature. Generally, both the amplitude and the phase imbalance appear to be well corrected with the exception of reflector number 3 in \autopageref{fig:pol_signatures:refl3}, where a large residual phase and amplitude imbalance is still visible. Assuming that the calibration parameters were correctly estimated in the first place, the discrepancy could again be explained by the presence of the trees in the line of sight to the calibration target, as shown in , the effect being likely due to a combination of  direct and multiple scattering interactions.
+
+
+
+\DTLloaddb[headers={$\phi_{HHVV}$, $\abs{f}$, $r_{sl}$}]{reflector1}{../img/HIL_20140910_144113_76_883_l_cal_cal_params.csv}
+\DTLloaddb[headers={$\phi_{HHVV}$, $\abs{f}$, $r_{sl}$}]{reflector2}{../img/HIL_20140910_144113_197_410_l_cal_cal_params.csv}
+\DTLloaddb[headers={$\phi_{HHVV}$, $\abs{f}$, $r_{sl}$}]{reflector3}{../img/HIL_20140910_144113_332_737_l_cal_cal_params.csv}
+\DTLloaddb[headers={$\phi_{HHVV}$, $\abs{f}$, $r_{sl}$}]{reflector4}{../img/HIL_20140910_144113_810_804_l_cal_cal_params.csv}
+\begin{figure*}[ht]
+		\begin{subfigure}[t]{\columnwidth}
+			\includegraphics[scale=1]{HIL_20140910_144113_76_883_l_flat_signature}
+			\includegraphics[scale=1]{HIL_20140910_144113_76_883_l_flat_signature_x}\\
+			\includegraphics[scale=1]{HIL_20140910_144113_76_883_l_cal_signature}
+			\includegraphics[scale=1]{HIL_20140910_144113_76_883_l_cal_signature_x}
+			\subcaption{Reflector 1\\ \DTLdisplaydb{reflector1}}
+			\label{fig:pol_signatures:refl1}
+		\end{subfigure}
+		\begin{subfigure}[t]{\columnwidth}
+			\includegraphics[scale=1]{HIL_20140910_144113_197_410_l_flat_signature}
+			\includegraphics[scale=1]{HIL_20140910_144113_197_410_l_flat_signature_x}\\
+			\includegraphics[scale=1]{HIL_20140910_144113_197_410_l_cal_signature}
+			\includegraphics[scale=1]{HIL_20140910_144113_197_410_l_cal_signature_x}
+			\subcaption{Reflector 2 \\  \DTLdisplaydb{reflector2}}
+			\label{fig:pol_signatures:refl2}
+		\end{subfigure}
+		\begin{subfigure}[t]{\columnwidth}
+			\includegraphics[scale=1]{HIL_20140910_144113_332_737_l_flat_signature}
+			\includegraphics[scale=1]{HIL_20140910_144113_332_737_l_flat_signature_x}\\
+			\includegraphics[scale=1]{HIL_20140910_144113_332_737_l_cal_signature}
+			\includegraphics[scale=1]{HIL_20140910_144113_332_737_l_cal_signature_x}
+			\subcaption{Reflector 3\\ \DTLdisplaydb{reflector3} }
+			\label{fig:pol_signatures:refl3}
+		\end{subfigure}
+		\begin{subfigure}[t]{\columnwidth}
+			\includegraphics[scale=1]{HIL_20140910_144113_810_804_l_flat_signature}
+			\includegraphics[scale=1]{HIL_20140910_144113_810_804_l_flat_signature_x}\\
+			\includegraphics[scale=1]{HIL_20140910_144113_810_804_l_cal_signature}
+			\includegraphics[scale=1]{HIL_20140910_144113_810_804_l_cal_signature_x}
+			\subcaption{Reflector 4\\ \DTLdisplaydb{reflector4}}
+			\label{fig:pol_signatures:refl4}
+		\end{subfigure}
+		\caption{Co- an crosspolarization signature for two trihedral corner reflectors. The top row for each subplot shows the response before the calibration procedure, the bottom one the calibrated response. Each caption contains the calibration parameters reestimated after the calibration. The imbalances are in degrees, the slant range distance in meters.}
+		\label{fig:pol_signatures}
+\end{figure*}
+\subsection{What Else?}
+Shall we add some more polarimetric anaylsis?
