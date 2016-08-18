@@ -6,7 +6,8 @@ import pyrat.gpri_utils
 from types import SimpleNamespace
 import re
 import json
-
+from snakemake.remote.SFTP import RemoteProvider
+SFTP = RemoteProvider(username="baffelli", private_key="/home/baffelli/.ssh/id_rsa")
 
 
 
@@ -23,7 +24,7 @@ import json
 #Heading
 config['geocoding']= {}
 config['geocoding']['DEM'] = 'geo/swissALTI3D_2016_Clip.dem'
-config['geocoding']['ref_mli_par'] = 'slc/20140321_123707_AAAl.mli.par'
+config['geocoding']['ref_mli_par'] = 'slc/20140321_132309_AAAl.mli.par'
 config['geocoding']['scan_heading'] = -69
 config['geocoding']['table_name'] = 'Chutze'
 include: '../Code/geocoding.snake'
@@ -37,7 +38,8 @@ workdir: './'
 
 rule all:
     input:
-        "slc/20140321_123707_AAAl.mli_gc.tif",
+        "slc/20140321_132309_AAAl.mli_gc.tif",
+        "slc/20140321_132827_AAAl.mli_gc.tif",
         "geo/Chutze.inc.tif",
         "geo/Chutze.sim_sar.tif",
         'geo/Chutze.ls_map.tif',
@@ -54,15 +56,21 @@ rule cleanup:
         """
             rm geo/Chutze*
             rm slc/*gc*
+            rm slc/*mli_gc*
+            rm slc/*mli*
         """
+
+rule copy_from_server:
+    output:
+
 
 rule mli:
     input:
         slc = "{slcname}.slc",
         slc_par = "{slcname}.slc.par",
     output:
-        mli = "Chutze.mli",
-        mli_par = "Chutze.mli.par",
+        mli = "{slcname}.mli",
+        mli_par = "{slcname}.mli.par",
     shell:
         "multi_look {input.slc} {input.slc_par} {output.mli} {output.mli_par} 2 4 0.5 0.35"
 
