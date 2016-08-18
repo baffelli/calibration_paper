@@ -65,8 +65,5 @@
 			"reflector_rcs":		48.4,
 			"correct_HV":           "True"
 	},
-	"geocoding":			{
-			"scan_heading":	"205",
-			"DEM"			: "/data/HIL/Geodata/swissALTI3D_15_Clip.dem"
-	}
+
 }
