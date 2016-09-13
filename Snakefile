@@ -27,7 +27,7 @@ config['geocoding']['DEM'] = 'geo/swissALTI3D_2016_Clip.dem'
 config['geocoding']['ref_mli_par'] = 'slc/20140321_132309_AAAl.mli.par'
 config['geocoding']['scan_heading'] = -69
 config['geocoding']['table_name'] = 'Chutze'
-include: '../Code/geocoding.snake'
+include: pyrat.rules['geocoding']
 #Set the working directory to be the current directory
 workdir: './'
 
@@ -60,8 +60,7 @@ rule cleanup:
             rm slc/*mli*
         """
 
-rule copy_from_server:
-    output:
+
 
 
 rule mli:
