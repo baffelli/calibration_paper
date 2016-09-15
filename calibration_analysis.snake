@@ -1,0 +1,157 @@
+import os
+import glob
+import pyrat.fileutils.gpri_files as gpf
+import pyrat
+import pyrat.gpri_utils
+from types import SimpleNamespace
+import re
+import json
+
+
+
+
+
+def reflector_list_from_config():
+	reflectors = config['list_of_reflectors']
+	azidx = [ref[0][1] for ref in reflectors]
+	azidx_dec = [int(ref[0][1]/int(config['range_compression']['dec'])) for ref in reflectors]
+	ridx = [ref[0][0] for ref in reflectors]
+	undec_list = [ (r, az) for r, az in zip(ridx, azidx)]
+	dec_list = [ (r, az) for r, az in zip(ridx, azidx_dec)]
+	return undec_list, dec_list
+
+
+
+#Include the necessary rules
+include: pyrat.rules['raw_to_slc']
+include: pyrat.rules['slc_to_calibrated_c']
+include: pyrat.rules['geocoding']
+
+
+##list of reflectors
+refl_list, refl_list_dec = reflector_list_from_config()
+#prefix for all figures
+figures_prefix = expand("outputs/img/{datetime}", datetime=config['datetime'])
+
+#prefix with decimated location
+figures_prefix_with_indices_dec = expand(expand("{{fp}}" + "_{ridx}_{azidx}", zip, ridx=[ref[0] for ref in refl_list],
+azidx=[int(ref[1]/config['range_compression']['dec'])  for ref in refl_list]), fp=figures_prefix)
+
+figures_prefix_with_indices = expand(expand("{{fp}}" + "_{ridx}_{azidx}", zip, ridx=[ref[0] for ref in refl_list],
+azidx=[int(ref[1])  for ref in refl_list]), fp=figures_prefix)
+
+
+
+#Polarisation signatures
+signatures = expand("{prefixes}_{rx}_{proc}_signature.pdf", proc=['cal', 'flat'], rx='l', prefixes=figures_prefix_with_indices_dec)
+#Oversampled phase response
+ptarg_mph = expand("{prefixes}_{chan}_{proc}_mph_plot.pdf",proc=['corr', 'desq', 'chan'], chan=['AAAl','BBBl'], prefixes=figures_prefix_with_indices)
+#Combined phase plot
+phase_plot = expand( "{pf}_{chan}_{processing}_phase_plot.pdf", processing=['coreg', 'corr'], chan=['AAAl', 'BBBl'], pf=figures_prefix)
+#Cloude pottier parameters
+cp_params = expand("{pf}_l_{type}_gc_{param}.pdf", param=['H', 'alpha', 'pauli'], type=['cal', 'flat'], pf=figures_prefix)
+#Pauli RGB
+pauli = expand("{pf}_l_{type}_gc_pauli.pdf", param=['H', 'alpha', 'pauli'], type=['cal', 'flat'], pf=figures_prefix)
+#Combined phase response
+
+print(phase_plot)
+
+#rule all:
+#	input:
+##	    expand("slc_{type}/{datetime}_{chan}{rx}.slc_dec",datetime=config['datetime'], chan=['AAA', 'BBB', 'ABB', 'BAA'] ,rx=['l', 'u'], type=['coreg', 'desq'])
+#	    signatures,
+#	    ptarg_mph,
+#	    phase_plot,
+#	    cp_params,
+
+#This rules touches a file when done
+rule done:
+    output:
+        touch('.done')
+    input:
+        signatures,
+	    ptarg_mph,
+	    phase_plot,
+	    cp_params,
+    shell:
+        "echo 'a'"
+
+
+
+###############################################################################
+### Plot oversampled response
+rule plot_mph:
+    input:
+        slc = "slc_{processing}/{slcname}_{chan}.slc",
+        style = config['style']
+    output:
+        plot = "outputs/img/{slcname}_{ridx}_{azidx}_{chan}_{processing}_mph_plot.{ext}",
+    script:
+        "scripts/plot_mph.py"
+
+##############################################################################
+## Display polarization signature
+rule pol_signature:
+    input:
+        C = expand("cov_{{type}}/{{slcname}}_{{rx}}.c{i}{j}",i=[0,1,2,3],j=[0,1,2,3]),
+    output:
+        x_sig_plot = "outputs/img/{slcname}_{ridx}_{azidx}_{rx}_{type}_signature_x.{ext}",
+        co_sig_plot = "outputs/img/{slcname}_{ridx}_{azidx}_{rx}_{type}_signature.{ext}",
+        azplot = "outputs/img/{slcname}_{ridx}_{azidx}_{rx}_{type}_azplot.{ext}",
+        rplot = "outputs/img/{slcname}_{ridx}_{azidx}_{rx}_{type}_rplot.{ext}",
+    params:
+        C_root = "cov_{type}/{slcname}_{rx}",
+        est_parameters = "outputs/img/{slcname}_{ridx}_{azidx}_{rx}_{type}_cal_params.csv",
+    script:
+        "scripts/plot_polarization_signature.py"
+
+
+##############################################################################
+## Plot phase response before and after the correction
+rule plot_phase_response:
+	input:
+		slc = "slc_{processing}/{slcname}_{chan}.slc",
+		style = config['style'],
+	output:
+		plot = "outputs/img/{slcname}_{chan}_{processing}_phase_plot.{ext}"
+	params:
+		ws=50
+	script:
+		"scripts/plot_azimuth_phase.py"
+
+
+
+###############################################################################
+### Plot Polarimetric analysis
+rule plot_polarimetric_analysis:
+    input:
+        C = expand("cov_{{type}}/{{slcname}}_{{rx}}.c{i}{j}",i=[0,1,2,3],j=[0,1,2,3]),
+        C_gc = expand("cov_{{type}}/{{slcname}}_{{rx}}.c{i}{j}_gc",i=[0,1,2,3],j=[0,1,2,3]),
+        ls_map = "geo/{slcname}.ls_map",
+        lut = "geo/{slcname}.gpri_to_dem",
+        dem_seg_par = "geo/{slcname}.dem_seg.par",
+    params:
+        cov_par =  "cov_{type}/{slcname}_{rx}.par",
+        C_root = "cov_{type}/{slcname}_{rx}"
+    output:
+        alpha = "outputs/img/{slcname}_{rx}_{type}_gc_alpha.{ext}",
+        H = "outputs/img/{slcname}_{rx}_{type}_gc_H.{ext}",
+        pauli = "outputs/img/{slcname}_{rx}_{type}_gc_pauli.{ext}",
+    script:
+        "scripts/plot_polarimetric_analysis.py"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
