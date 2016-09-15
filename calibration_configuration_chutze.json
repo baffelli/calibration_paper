@@ -1,0 +1,65 @@
+{
+    "style":    "/home/baffelli/PhD/trunk/Code/paper_rc.rc",
+	"pyrat":	"/home/baffelli/PhD/trunk/Code/pyrat/gpri_utils/",
+	"project_name": "2016_GPRI_Chutzen",
+	"datetime": ["20160914_105450","20160914_115628"],
+	"master_slc": "20160914_105450_AAAl",
+	"range_compression":	{
+			"rmin":		50,
+			"rmax":		3000,
+			"dec":		10,
+			"k":		5,
+			"z":		300,
+			"decimated_sample_spacing":		0.1
+	},
+	"list_of_reflectors": [
+							[[1033, 5703]],
+							[[1051, 5618]],
+							[[1331, 1495]],
+							[[830, 3503]],
+                            [[3517, 3540]]
+							],
+    "channel_mapping":{
+              "TX_A_position": 0,
+              "TX_B_position": 0.125,
+              "RX_Au_position": 0.475,
+              "RX_Al_position": 0.725,
+              "RX_Bu_position": 0.6,
+              "RX_Bl_position": 0.85 },
+	"desquint":				{
+			"AAA_squint_rate":	4.21e-9,
+			"BBB_squint_rate":	3.92e-9,
+			"BAA_squint_rate":	3.9e-9,
+			"ABB_squint_rate":	3.9e-9,
+			"AAA_center_squint": 1,
+			"BBB_center_squint": 1,
+			"BAA_center_squint": 1,
+			"ABB_center_squint": 1
+	},
+	"phase_correction":		{
+			"integration_length":	0.7,
+			"AAA_phase_center_offset": 0.02,
+			"BBB_phase_center_offset": -0.12,
+			"ABB_phase_center_offset": -0.12,
+			"BAA_phase_center_offset": -0.12
+	},
+	"interferogram":		{
+		"rlks":	"1",
+		"azlks": "1"
+	},
+	"squint_rate":			{
+			"rwin":		5,
+			"azwin":	250
+	},
+	"calibration":			{
+			"reflector_index":		2,
+			"reflector_rcs":		48.4,
+			"correct_HV":           "True"
+	},
+	"geocoding":			{
+			"scan_heading":	"205",
+			"DEM"			: "geo/swissALTI3D_2016_Clip.dem",
+			"ref_mli_par"   : "slc_corr/20160914_105450_AAAl.slc_dec.par",
+			"table_name" 	: "Chutzen"
+	}
+}
