@@ -15,7 +15,7 @@ def plot_signature(inputs, outputs, threads, config, params, wildcards):
         C = mat.coherencyMatrix(params['C_root'],  params['C_root'] + '.par', gamma=True, bistatic=True, basis='lexicographic')
         #Find the maxium by interpolation
         #Compute the ptarg response for the C matrix
-        ptarg_zoom_C, rplot_C, azplot_C, mx_pos, resolution_dict = cf.ptarg(C[:,:,:,:], float(wildcards['ridx']), float(wildcards['azidx']), azwin=15, rwin=20)
+        ptarg_zoom_C, rplot_C, azplot_C, mx_pos, resolution_dict = cf.ptarg(C[:,:,:,:], float(wildcards['ridx']), float(wildcards['azidx']), azwin=10, rwin=10, sw=2)
         ptarg_zoom_C = mat.coherencyMatrix(ptarg_zoom_C, basis='lexicographic', bistatic=True)
         C_tri = ptarg_zoom_C[mx_pos]
         co_sig, x_sig, psi, chi = pf.pol_signature(C_tri.to_monostatic(), n_points=300)
@@ -69,7 +69,7 @@ def plot_signature(inputs, outputs, threads, config, params, wildcards):
         plot_ax_az.plot(db(azplot_C[:,1,1]), color='g', label='HV')
         plot_ax_az.plot(mx_pos[1],db(ptarg_zoom_C[mx_pos + (0,0)].real),'ro')
         plot_ax_az.plot(mx_pos[1], db(ptarg_zoom_C[mx_pos + (1, 1)].real), 'go')
-        plot_ax_az.set_ylim(-5, 100)
+        # plot_ax_az.set_ylim(-5, 100)
         plot_ax_az.set_xlabel('azimuth samples')
         plot_ax_az.set_ylabel('power [dB]')
         leg = plot_ax_az.legend()

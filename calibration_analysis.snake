@@ -57,6 +57,7 @@ pauli = expand("{pf}_l_{type}_gc_pauli.pdf", param=['H', 'alpha', 'pauli'], type
 #Combined phase response
 
 
+
 #rule all:
 #	input:
 ##	    expand("slc_{type}/{datetime}_{chan}{rx}.slc_dec",datetime=config['datetime'], chan=['AAA', 'BBB', 'ABB', 'BAA'] ,rx=['l', 'u'], type=['coreg', 'desq'])
@@ -77,6 +78,9 @@ rule done:
     shell:
         "echo 'a'"
 
+#rule all:
+#    input:
+#        expand("slc_corr/{dt}_AAAl.mli_dec_gc.tif",dt=config['datetime']),
 
 
 ###############################################################################
@@ -128,9 +132,9 @@ rule plot_polarimetric_analysis:
     input:
         C = expand("cov_{{type}}/{{slcname}}_{{rx}}.c{i}{j}",i=[0,1,2,3],j=[0,1,2,3]),
         C_gc = expand("cov_{{type}}/{{slcname}}_{{rx}}.c{i}{j}_gc",i=[0,1,2,3],j=[0,1,2,3]),
-        ls_map = "geo/{slcname}.ls_map",
-        lut = "geo/{slcname}.gpri_to_dem",
-        dem_seg_par = "geo/{slcname}.dem_seg.par",
+        ls_map = "geo/{tablename}.ls_map".format(tablename=config['geocoding']['table_name']),
+        lut = "geo/{tablename}.gpri_to_dem".format(tablename=config['geocoding']['table_name']),
+        dem_seg_par = "geo/{tablename}.dem_seg.par".format(tablename=config['geocoding']['table_name']),
     params:
         cov_par =  "cov_{type}/{slcname}_{rx}.par",
         C_root = "cov_{type}/{slcname}_{rx}"

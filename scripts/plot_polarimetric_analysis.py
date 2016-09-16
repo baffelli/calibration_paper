@@ -26,10 +26,10 @@ def plot_reflectors(inputs, outputs, threads, config, params, wildcards):
     T_mat_gc = C_mat_gc.boxcar_filter([5, 5])
     H_gc, A_gc, alpha_gc, beta_gc, p, w = T_mat_gc.cloude_pottier()
     invalid_mask = np.logical_or(T_mat_gc.span() == 0, T_mat_gc.span() == np.nan)
-    H_gc[T_mat_gc.span() < 1e-3] = np.nan
-    alpha_gc[T_mat_gc.span() < 1e-3] = np.nan
+    # H_gc[T_mat_gc.span() < 1e-3] = np.nan
+    # alpha_gc[T_mat_gc.span() < 1e-3] = np.nan
     # Compute pauli rgb
-    rgb = vf.mask_zeros(C_mat_gc.pauli_image(k=0.1, sf=2))
+    rgb = vf.mask_zeros(C_mat_gc.pauli_image(k=0.5, sf=2))
 
     with plt.style.context(config['style']):
         w, h = plt.rcParams['figure.figsize']

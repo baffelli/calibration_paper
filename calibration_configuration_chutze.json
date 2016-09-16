@@ -17,7 +17,8 @@
 							[1051, 5618],
 							[1331, 1495],
 							[830, 3503],
-                            [3517, 3540]
+                            [3517, 3540],
+                            [3409, 2790]
 							],
     "channel_mapping":{
               "TX_A_position": 0,
@@ -57,7 +58,7 @@
 			"correct_HV":           "True"
 	},
 	"geocoding":			{
-			"scan_heading":	"205",
+			"scan_heading":	"56",
 			"DEM"			: "geo/swissALTI3D_2016_Clip.dem",
 			"ref_mli_par"   : "slc_corr/20160914_105450_AAAl.slc_dec.par",
 			"table_name" 	: "Chutzen"
