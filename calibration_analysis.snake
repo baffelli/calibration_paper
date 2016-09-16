@@ -13,9 +13,9 @@ import json
 
 def reflector_list_from_config():
 	reflectors = config['list_of_reflectors']
-	azidx = [ref[0][1] for ref in reflectors]
-	azidx_dec = [int(ref[0][1]/int(config['range_compression']['dec'])) for ref in reflectors]
-	ridx = [ref[0][0] for ref in reflectors]
+	azidx = [ref[1] for ref in reflectors]
+	azidx_dec = [int(ref[1]/int(config['range_compression']['dec'])) for ref in reflectors]
+	ridx = [ref[0] for ref in reflectors]
 	undec_list = [ (r, az) for r, az in zip(ridx, azidx)]
 	dec_list = [ (r, az) for r, az in zip(ridx, azidx_dec)]
 	return undec_list, dec_list

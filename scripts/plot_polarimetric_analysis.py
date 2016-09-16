@@ -37,7 +37,7 @@ def plot_reflectors(inputs, outputs, threads, config, params, wildcards):
         H_fig, H_ax = plt.subplots(figsize=(w, w))
         rgb_fig, rgb_ax = plt.subplots(figsize=(w, w))
         # plot alpha
-        alpha_mappable = alpha_ax.imshow(np.rad2deg(alpha_gc), vmin=0, vmax=90, interpolation='none', cmap='viridis')
+        alpha_mappable = alpha_ax.imshow(np.rad2deg(alpha_gc), vmin=0, vmax=90, interpolation='none')
         alpha_fig.colorbar(alpha_mappable, label=r'$\alpha [deg]$', orientation='horizontal', shrink=0.5)
         alpha_ax.axis('off')
         alpha_fig.tight_layout()
