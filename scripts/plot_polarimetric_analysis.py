@@ -23,7 +23,7 @@ def plot_reflectors(inputs, outputs, threads, config, params, wildcards):
     C_mat_gc = C_mat_gc.reshape((C_mat_gc.shape[0], C_mat_gc.shape[1], 4, 4))
     C_mat_gc = mat.coherencyMatrix(C_mat_gc, basis='lexicographic',
                                    bistatic=True).to_monostatic().lexicographic_to_pauli()
-    T_mat_gc = C_mat_gc.boxcar_filter([5, 5])
+    T_mat_gc = C_mat_gc.boxcar_filter([5, 2])
     H_gc, A_gc, alpha_gc, beta_gc, p, w = T_mat_gc.cloude_pottier()
     invalid_mask = np.logical_or(T_mat_gc.span() == 0, T_mat_gc.span() == np.nan)
     # H_gc[T_mat_gc.span() < 1e-3] = np.nan
