@@ -23,8 +23,8 @@
               "TX_A_position": 0,
               "TX_B_position": 0.125,
               "RX_Au_position": 0.475,
-              "RX_Al_position": 0.725,
               "RX_Bu_position": 0.6,
+              "RX_Al_position": 0.725,
               "RX_Bl_position": 0.85 },
 	"desquint":				{
 			"AAA_squint_rate":	4.21e-9,
