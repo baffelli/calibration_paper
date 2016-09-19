@@ -12,7 +12,7 @@ import numpy as np
 import csv
 def plot_signature(inputs, outputs, threads, config, params, wildcards):
     with plt.style.context(config['style']):
-        C = mat.coherencyMatrix(params['C_root'],  params['C_root'] + '.par', gamma=True, bistatic=True, basis='lexicographic')
+        C = mat.coherencyMatrix(params['C_root'],  params['C_root'] + '.par', gamma=True, bistatic=True, basis='lexicographic').boxcar_filter([3,3])
         #Find the maxium by interpolation
         #Compute the ptarg response for the C matrix
         ptarg_zoom_C, rplot_C, azplot_C, mx_pos, resolution_dict = cf.ptarg(C[:,:,:,:], float(wildcards['ridx']), float(wildcards['azidx']), azwin=10, rwin=10, sw=2)
@@ -67,8 +67,6 @@ def plot_signature(inputs, outputs, threads, config, params, wildcards):
         plot_ax_az.plot(db(azplot_C[:,0,0]),color='b', label='HH')
         plot_ax_az.plot(db(azplot_C[:,3,3]),color='r', label='VV')
         plot_ax_az.plot(db(azplot_C[:,1,1]), color='g', label='HV')
-        plot_ax_az.plot(mx_pos[1],db(ptarg_zoom_C[mx_pos + (0,0)].real),'ro')
-        plot_ax_az.plot(mx_pos[1], db(ptarg_zoom_C[mx_pos + (1, 1)].real), 'go')
         # plot_ax_az.set_ylim(-5, 100)
         plot_ax_az.set_xlabel('azimuth samples')
         plot_ax_az.set_ylabel('power [dB]')
