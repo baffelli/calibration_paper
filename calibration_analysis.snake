@@ -55,7 +55,8 @@ cp_params = expand("{pf}_l_{type}_gc_{param}.pdf", param=['H', 'alpha', 'pauli']
 #Pauli RGB
 pauli = expand("{pf}_l_{type}_gc_pauli.pdf", param=['H', 'alpha', 'pauli'], type=['cal', 'flat'], pf=figures_prefix)
 #Combined phase response
-
+#Calibration report:
+cal_report = expand("outputs/img/{slcname}_l_{type}_calibration_report.csv",slcname=config['datetime'], type=['flat', 'cal'])
 
 
 #rule all:
@@ -67,20 +68,57 @@ pauli = expand("{pf}_l_{type}_gc_pauli.pdf", param=['H', 'alpha', 'pauli'], type
 #	    cp_params,
 
 #This rules touches a file when done
-rule done:
-    output:
-        touch('.done')
-    input:
-        signatures,
-	    ptarg_mph,
-	    phase_plot,
-	    cp_params,
-    shell:
-        "echo 'a'"
-
-#rule all:
+#rule done:
 #    input:
-#        expand("slc_corr/{dt}_AAAl.mli_dec_gc.tif",dt=config['datetime']),
+#	    'geo/{table_name}_reflectors.shp'.format(table_name=config['geocoding']['table_name']),
+##        signatures,
+##	    ptarg_mph,
+##	    phase_plot,
+##	    cp_params,
+#    shell:
+#        "echo 'a'"
+
+rule all:
+    input:
+        cal_report,
+        expand("slc_corr/{datetime}_AAAl.mli_dec_gct.tif",datetime=config['datetime']),
+        'geo/{table_name}_reflectors.shp'.format(table_name=config['geocoding']['table_name']),
+        'geo/{table_name}.inc.tif'.format(table_name=config['geocoding']['table_name']),
+        'geo/{table_name}.sim_sar.tif'.format(table_name=config['geocoding']['table_name']),
+rule shapefile_from_reflectors:
+    input:
+        lut = 'geo/' + config['geocoding']['table_name'] + '.dem_to_gpri',
+        dem_seg = 'geo/' + config['geocoding']['table_name'] + '.dem_seg',
+        dem_seg_par = 'geo/' + config['geocoding']['table_name'] + '.dem_seg.par',
+        ref_par = config['geocoding']['ref_mli_par']
+    output:
+        shp = 'geo/' + config['geocoding']['table_name'] + '_reflectors' + '.shp',
+    run:
+        import fiona
+        from shapely.geometry import Point, mapping
+        from fiona.crs import from_epsg
+        import matplotlib.pyplot as plt
+#        from_epsg(2056)
+        {'init': 'epsg:21781', 'no_defs': True}
+        schema = {
+            'geometry': 'Point',
+            'properties': {
+                       'type': 'str',},
+        }
+        #load lut
+        ref_par = gpf.par_to_dict(input.ref_par)
+        dem_seg_par = gpf.par_to_dict(input.dem_seg_par)
+        lut = gpf.load_binary(input.lut, ref_par['range_samples'])[::-1,:]
+        with fiona.open(output.shp, 'w', 'ESRI Shapefile', schema, crs=from_epsg(21781)) as of:
+            for ref in config['list_of_reflectors']:
+                ref_geo = lut[ref[0], ref[1]/config['range_compression']['dec']]#decimate azimuth index
+                ref_geo = (ref_geo.real + dem_seg_par['corner_east'][0],
+                 ref_geo.imag + (dem_seg_par['corner_north'][0] + dem_seg_par['post_north'][0]*dem_seg_par['width']))
+                of.write({
+                   'geometry': mapping(Point(*ref_geo)),
+                    'properties':
+                        {
+                            'type': 'pane',}})
 
 
 ###############################################################################
@@ -124,6 +162,17 @@ rule plot_phase_response:
 	script:
 		"scripts/plot_azimuth_phase.py"
 
+##############################################################################
+## Compute recap information on the TCRs
+rule TCR_recap:
+    input:
+        C = expand("cov_{{type}}/{{slcname}}_{{rx}}.c{i}{j}",i=[0,1,2,3],j=[0,1,2,3]),
+    output:
+        cal_report = "outputs/img/{slcname}_{rx}_{type}_calibration_report.csv",
+    params:
+        C_root = "cov_{type}/{slcname}_{rx}",
+    script:
+        "scripts/TCR_recap.py"
 
 
 ###############################################################################
@@ -144,6 +193,8 @@ rule plot_polarimetric_analysis:
         pauli = "outputs/img/{slcname}_{rx}_{type}_gc_pauli.{ext}",
     script:
         "scripts/plot_polarimetric_analysis.py"
+
+
 
 
 

@@ -33,7 +33,7 @@ def plot_reflectors(inputs, outputs, threads, config, params, wildcards):
         # plot alpha
         alpha_mappable = alpha_ax.imshow(np.ma.array(np.rad2deg(alpha_gc), mask=invalid_mask), vmin=0, vmax=90,
                                          interpolation='none')
-        alpha_fig.colorbar(alpha_mappable, label=r'$\alpha [deg]$', orientation='horizontal', fraction=0.2, shrink=0.3)
+        alpha_fig.colorbar(alpha_mappable, label=r'$\alpha [deg]$', orientation='horizontal', fraction=0.05, shrink=0.25, pad=0.02)
         alpha_ax.axis('off')
         alpha_fig.tight_layout()
         # plot h
