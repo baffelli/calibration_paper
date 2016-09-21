@@ -81,10 +81,10 @@ cal_report = expand("outputs/img/{slcname}_l_{type}_calibration_report.csv",slcn
 rule all:
     input:
         cal_report,
-        expand("slc_corr/{datetime}_AAAl.mli_dec_gct.tif",datetime=config['datetime']),
-        'geo/{table_name}_reflectors.shp'.format(table_name=config['geocoding']['table_name']),
-        'geo/{table_name}.inc.tif'.format(table_name=config['geocoding']['table_name']),
-        'geo/{table_name}.sim_sar.tif'.format(table_name=config['geocoding']['table_name']),
+        signatures,
+	    ptarg_mph,
+	    phase_plot,
+	    cp_params,
 rule shapefile_from_reflectors:
     input:
         lut = 'geo/' + config['geocoding']['table_name'] + '.dem_to_gpri',

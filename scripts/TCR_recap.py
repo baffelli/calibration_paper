@@ -14,15 +14,15 @@ import csv
 def tcr_recap(inputs, outputs, threads, config, params, wildcards):
     #list of reflectors
     refl_list = config['list_of_reflectors']
-    refl_list_dec = sorted([ [ridx, azidx / config['range_compression']['dec']] for ridx, azidx in refl_list],key=lambda x: x[0])
+    refl_list_dec = sorted([ [ridx, azidx / config['range_compression']['dec'], ty] for ridx, azidx, ty in refl_list],key=lambda x: x[0])
     #Load matrix and convert to coherency
     C = mat.coherencyMatrix(params['C_root'],  params['C_root'] + '.par', gamma=True, bistatic=True, basis='lexicographic').boxcar_filter([3,3])
     with open(outputs['cal_report'], 'w+') as of:
         tabwrite = csv.writer(of, delimiter=',')
         tabwrite.writerow(
             ['HH-VV phase imbalance', 'HH-VV amplitude imbalance', 'Polarisation purity', 'RCS', 'slant range'])
-        for idx_r, idx_az in refl_list_dec:
-            ptarg_zoom_C, rplot_C, azplot_C, mx_pos, resolution_dict = cf.ptarg(C[:,:,:,:], float(idx_r), float(idx_az), azwin=10, rwin=10, sw=2)
+        for idx_r, idx_az, ty in refl_list_dec:
+            ptarg_zoom_C, rplot_C, azplot_C, mx_pos, resolution_dict = cf.ptarg(C[:,:,:,:], float(idx_r), float(idx_az), azwin=10, rwin=10, sw=(2,4))
             ptarg_zoom_C = mat.coherencyMatrix(ptarg_zoom_C, basis='lexicographic', bistatic=True)
             #Now estimate calibration parameters
             C_zoom = ptarg_zoom_C[mx_pos[0], mx_pos[1], :, :]

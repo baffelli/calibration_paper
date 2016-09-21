@@ -2,7 +2,7 @@
     "style":    "/home/baffelli/PhD/trunk/Code/paper_rc.rc",
 	"pyrat":	"/home/baffelli/PhD/trunk/Code/pyrat/gpri_utils/",
 	"project_name": "2016_GPRI_Chutzen",
-	"datetime": ["20160914_105450","20160914_115628"],
+	"datetime": ["20160914_143958", "20160914_145059"],
 	"master_slc": "20160914_105450_AAAl",
 	"range_compression":	{
 			"rmin":		50,
@@ -13,13 +13,13 @@
 			"decimated_sample_spacing":		0.1
 	},
 	"list_of_reflectors": [
-							[1033, 5703],
-							[1051, 5618],
-							[1331, 1495],
-							[830, 3503],
-                            [3517, 3540],
-                            [3409, 2790],
-                            [528, 1068]
+                            [32, 5192, "t"],
+                            [1331, 1490, "t"],
+							[830, 3503, "t"],
+							[1032, 5703, "t"],
+							[1051, 5617, "t"],
+                            [3517, 3540, "t"],
+                            [3409, 2790, "o"]
 							],
     "channel_mapping":{
               "TX_A_position": 0,
@@ -55,8 +55,8 @@
 	},
 	"calibration":			{
 			"reflector_index":		2,
-			"reflector_rcs":		48.4,
-			"correct_HV":           "True"
+			"reflector_rcs":		25.5,
+			"correct_HV":           "False"
 	},
 	"geocoding":			{
 			"scan_heading":	"56",

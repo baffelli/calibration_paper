@@ -15,7 +15,7 @@ def plot_signature(inputs, outputs, threads, config, params, wildcards):
         C = mat.coherencyMatrix(params['C_root'],  params['C_root'] + '.par', gamma=True, bistatic=True, basis='lexicographic').boxcar_filter([3,3])
         #Find the maxium by interpolation
         #Compute the ptarg response for the C matrix
-        ptarg_zoom_C, rplot_C, azplot_C, mx_pos, resolution_dict = cf.ptarg(C[:,:,:,:], float(wildcards['ridx']), float(wildcards['azidx']), azwin=10, rwin=10, sw=2)
+        ptarg_zoom_C, rplot_C, azplot_C, mx_pos, resolution_dict = cf.ptarg(C[:,:,:,:], float(wildcards['ridx']), float(wildcards['azidx']), azwin=20, rwin=10, sw=(2,4))
         ptarg_zoom_C = mat.coherencyMatrix(ptarg_zoom_C, basis='lexicographic', bistatic=True)
         C_tri = ptarg_zoom_C[mx_pos]
         co_sig, x_sig, psi, chi = pf.pol_signature(C_tri.to_monostatic(), n_points=300)
