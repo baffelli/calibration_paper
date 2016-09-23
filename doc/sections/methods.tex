@@ -61,7 +61,7 @@ implying that $\theta_{sq}^{fc}$ is not the same for both units. This reflected 
 To correct for the frequency-dependent beam squint, it is fundamental that the acquisition of the data is performed by rotating the antenna slowly enough. Having an azimuth sample spacing smaller than the antenna beamwidth permits to overcome the effect of beam squinting by reconstructing the illumination of the target with the full bandwidth by interpolating the data in the azimuth-fast time domain. A side benefit of oversampling is that several range profiles that in first approximation can be seen as representing independent realizations of the same profile can be averaged to improve the measurement SNR, producing range-azimuth images with an angular resolution limited by the antenna beamwidth.\\
 \begin{figure}[ht]
 	\centering
-	\includegraphics[scale=0.4]{squint_correction}
+	\includegraphics[scale=0.2]{squint_correction}
 	\caption{Illustration of the frequency-dependent antenna squint. When the antenna rotates during the electronic scan, the energy of the target is spread through several azimuth bins.}
 	\label{fig:squint_correction}
 \end{figure}
@@ -70,7 +70,7 @@ After correcting the beam squint,  the first and last $z$ samples of the squint 
 In the case of GPRI the range compression concludes the processing of raw data producing SLC data that is used for interferometric processing.  For KAPRI, additional steps are necessary to obtain polarimetric measurements that are well calibrated.\\ The first of these steps requires to briefly review the antenna configuration used by KAPRI(\autoref{fig:antenna_arrangement}):\\ Six antennas are mounted on a supporting structure connected to the rotary scanner. Of these, 2 are transmitting antennas, one for each polarization. The remaining 4 are connected in groups of two to the dual receivers, each pair consisting an horizontally and a vertically polarized array. This configuration permits to acquire full polarimetric dataset by selecting the desired transmit and receive polarization while minimizing polarimetric crosstalk thanks to the spatial separation. More crucially, the separation of transmitting and receiving antennas increases the TX-RX isolation, a fundamental requirement for FMCW performance\cite{Beasley1990,Stove1992, Strozzi2011}.  However, this configuration is not without consequences on the phase of the resulting polarimetric data.
 \begin{figure}[ht]
 	\centering
-	\includegraphics[scale=0.1]{kapri_antenna_arrangement}
+	\includegraphics[scale=0.15]{kapri_antenna_arrangement}
 	\caption{KAPRI with the usual antenna arrangement overlaid. }
 	\label{fig:antenna_arrangement}
 \end{figure}

@@ -20,7 +20,9 @@ def tcr_recap(inputs, outputs, threads, config, params, wildcards):
     with open(outputs['cal_report'], 'w+') as of:
         tabwrite = csv.writer(of, delimiter=',')
         tabwrite.writerow(
-            ['HH-VV phase imbalance', 'HH-VV amplitude imbalance', 'Polarisation purity', 'RCS', 'slant range'])
+            ['HH-VV phase imbalance', 'HH-VV amplitude imbalance', 'Polarisation purity', 'RCS', 'slant range', 'range_index', "azimuth_index"])
+        f_arr = []
+        HHVV_arr = []
         for idx_r, idx_az, ty in refl_list_dec:
             ptarg_zoom_C, rplot_C, azplot_C, mx_pos, resolution_dict = cf.ptarg(C[:,:,:,:], float(idx_r), float(idx_az), azwin=10, rwin=10, sw=(2,4))
             ptarg_zoom_C = mat.coherencyMatrix(ptarg_zoom_C, basis='lexicographic', bistatic=True)
@@ -32,8 +34,13 @@ def tcr_recap(inputs, outputs, threads, config, params, wildcards):
             purity = cf.dB(C_zoom[(0,0)].real) - cf.dB(C_zoom[(1,1)].real)
             RCS = cf.dB(C_zoom[(0,0)].real)
             str = "{HHVV_phase},{f}".format(HHVV_phase=HHVV_phase, f=f)
-            row = [HHVV_phase, f, purity, RCS, r_sl]
+            row = [HHVV_phase, f, purity, RCS, r_sl, idx_r, idx_az]
+            if ty == "t":
+                f_arr.append(f)
+                HHVV_arr.append(HHVV_phase)
             print(row)
             tabwrite.writerow(row)
+        tabwrite.writerow(["RMS f", "RMS HHVV phase"])
+        tabwrite.writerow([np.sqrt(np.mean(f**2)), np.sqrt(np.mean(HHVV_phase**2))])
 
 tcr_recap(snakemake.input, snakemake.output, snakemake.threads, snakemake.config, snakemake.params, snakemake.wildcards)
