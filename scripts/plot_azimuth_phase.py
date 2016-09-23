@@ -12,8 +12,9 @@ def plot_azimuth_phase(inputs, outputs, threads, config, params):
     #Create figure
     with plt.style.context(config['style']):
         f, (phase_ax, amp_ax) = plt.subplots(2, sharex=True)
-        sorted_by_range = sorted(refl_list, key=lambda tup: tup[0][0])
-        for (ridx, azidx), *rest in sorted_by_range:
+        sorted_by_range = sorted(refl_list, key=lambda tup: tup[0])
+        sorted_by_range = [ref for ref in sorted_by_range if ref[-1] == "t"]
+        for ridx, azidx, *rest in sorted_by_range:
                 print(ridx)
                 #Slice the slc
                 slc_sl = (ridx, slice(azidx - params['ws'] / 2, azidx + params['ws']/2))

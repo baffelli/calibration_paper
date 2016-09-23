@@ -1,40 +1,41 @@
 \section{Results}\label{sec:results}
 \subsection{FMCW Data Processing}\label{sec:res_SLC}
 In order to assess the processing quality and to appreciate the effect of the beam squint correction, in  \autoref{fig:tcr_mph} the oversampled impulse response of the 90 cm TCR at 659 m slant range is plotted. The plots on the left side (\autoref{fig:tcr_mph:HH_uncorr}, \autoref{fig:tcr_mph:VV_uncorr}) contain the response obtained by directly range compressing the dechirped data. The phase displays interesting patterns, with the equiphase contours forming a cross shape centered at the center of the reflector. The shift between the HH and the VV channel is visible too, as the response for the one channel is shifted with respect to the other plot.\\ A visual comparison with the same response obtained enabling the squint compensation, shows an improvement in both the range and the azimuth resolutions; this is confirmed numerically by fitting a spline on the azimuth and range responses and computing its 3 dB width. The numerical results are shown above each plot of \autoref{fig:tcr_mph}; signficant improvements in both range and azimuth are clear, especially so for the HH channel, that shows a range resolution improvement of 0.24 m. This gain is reduced to only 0.17 m for the VV channel.\\ Similarly, a reduction in the phase variation is visible especially for the HH channel, (\autoref{fig:tcr_mph:HH_corr}) while the phase response of VV channel shows a residual phase ramp in azimuth direction (\autoref{fig:tcr_mph:HH_corr}).
+\def\chutzepref{20160914_143958}
 \begin{figure*}[h]
 	\begin{subfigure}[b]{0.6\columnwidth}
 		\centering
-		\includegraphics[scale=0.7]{2014-2016_GPRI_HIL_Calibration_20140910_144113_810_8046_AAAl_chan_mph_plot}
+		\includegraphics[scale=0.7]{\chutzepref_1331_1490_AAAl_chan_mph_plot}
 		\subcaption{HH channel without beam squint correction.}
 		\label{fig:tcr_mph:HH_uncorr}
 	\end{subfigure}~
 	\begin{subfigure}[b]{0.6\columnwidth}
 		\centering
-		\includegraphics[scale=0.7]{2014-2016_GPRI_HIL_Calibration_20140910_144113_810_8046_AAAl_desq_mph_plot}
+		\includegraphics[scale=0.7]{\chutzepref_1331_1490_AAAl_desq_mph_plot}
 		\subcaption{HH channel with squint correction.}
 		\label{fig:tcr_mph:HH_corr}
 	\end{subfigure}~
 	\begin{subfigure}[b]{0.6\columnwidth}
 		\centering
-		\includegraphics[scale=0.7]{2014-2016_GPRI_HIL_Calibration_20140910_144113_810_8046_AAAl_corr_mph_plot}
+		\includegraphics[scale=0.7]{\chutzepref_1331_1490_AAAl_corr_mph_plot}
 		\subcaption{HH channel with squint and azimuth ramp correction.}
 		\label{fig:tcr_mph:HH_corr_ph}
 	\end{subfigure}\\
 	\begin{subfigure}[b]{0.6\columnwidth}
 		\centering
-		\includegraphics[scale=0.7]{2014-2016_GPRI_HIL_Calibration_20140910_144113_810_8046_BBBl_chan_mph_plot}
+		\includegraphics[scale=0.7]{\chutzepref_1331_1490_BBBl_chan_mph_plot}
 		\subcaption{VV channel without beam squint correction.}
 		\label{fig:tcr_mph:VV_uncorr}
 	\end{subfigure}~
 	\begin{subfigure}[b]{0.6\columnwidth}
 		\centering
-		\includegraphics[scale=0.7]{2014-2016_GPRI_HIL_Calibration_20140910_144113_810_8046_BBBl_desq_mph_plot}
+		\includegraphics[scale=0.7]{\chutzepref_1331_1490_BBBl_desq_mph_plot}
 		\subcaption{VV channel with squint correction.}
 		\label{fig:tcr_mph:VV_corr}
 	\end{subfigure}~
 	\begin{subfigure}[b]{0.6\columnwidth}
 		\centering
-		\includegraphics[scale=0.7]{2014-2016_GPRI_HIL_Calibration_20140910_144113_810_8046_BBBl_corr_mph_plot}
+		\includegraphics[scale=0.7]{\chutzepref_1331_1490_BBBl_corr_mph_plot}
 		\subcaption{VV channel with squint and azimuth ramp correction.}
 		\label{fig:tcr_mph:VV_corr_ph}
 	\end{subfigure}~
@@ -69,17 +70,17 @@ The model is tested by applying the fit procedure of \autoref{eq:rph_estimation}
 	\begin{tabular}{lccl}
 		\hline
 		reflector & $R_0$ & $\hat{L_{ph}}$ & comments\\
-		1	& 107 m & -0.11 & \\
-		2  & 192 m & -0.15 & \\
-		3 & 299 m & -0.05 & Obscured by trees\\
-		4 & 402 m & -0.13 &\\
-		5 & 658 m & -0.13&\\
+		1	& 74 m & -0.10 & \\
+		2  & 672 m & -0.10 & \\
+		3 & 824 m & -0.11 & \\
+		4 & 838 m & -0.13 &\\
+		5 & 1048 m & -0.12&\\
 		\hline
 	\end{tabular}
 	\caption{Result of fitting the phase center displacement for five trihedral corner reflectors.}
 	\label{tab:rph_fit}
 \end{table}
-The resulting fit values (\autoref{tab:rph_fit}) have a standard deviation of less than 2 \% of the antenna length, suggesting that the model is able to predict  most of the phase variation. The only exception is the 90 cm TCR at 299 m slant range were a large difference from the mean $L_{ph}$ is observed; the discrepancy is likely caused by its placement near to a row of trees.\\
+The resulting fit values (\autoref{tab:rph_fit}) have a standard deviation of less than 2 \% of the antenna length, suggesting that the model is able to predict  most of the phase variation.\\
 When $L_{ph}$ has been estimated, the azimuth phase variation is corrected using \autoref{eq:range} as a range-variant matched filter. Each azimuth line in the range compressed, squint corrected data $s_{d}$ is convolved with:
 \begin{equation}\label{eq:correction}
 	\begin{aligned}
@@ -90,14 +91,14 @@ When $L_{ph}$ has been estimated, the azimuth phase variation is corrected using
 where $w$ is a windowing function. The formula replaces the incoherent azimuth averaging described in \autoref{sec:proc_SLC} the samples are now averaged with the appropriate phase factor so that the SNR improvement and the correction of the azimuth trend are combined in a single step. In computing the filter, the range of closest approach $R_{0}$ is subtracted from the current range $R$ to correct the relative phase variation only; this is important for interferometric processing where the absolute phase has to be preserved.\\
 The procedure is similar to the azimuth focusing of synthetic aperture data, where the cross-range resolution is obtained by the integration of the data in the azimuth-time direction. However, in the case of real aperture systems the resolution is limited by  physical antenna beamwidth and the response of a target ideally occupies a single azimuth sample. Integrating the data in azimuth degrades the resolution because samples that do not contain information on the same scatterer are combined together. To correct the phase variation without an excessive deterioration in azimuth resolution, the integration is limited to a window  $w$ of length $L_{int}$. The optimal trade-off was empirically determined to be $0.6^\circ$, slightly larger than $\theta_{3dB}$.\\
 The result of applying the correction to the TCR at 658 m is displayed in the rightmost column of \autoref{fig:tcr_mph}; the phase ramp is significantly reduced while the azimuth resolution is slightly degraded.
-The phase and amplitude responses for the 658 m TCR are plotted in \autoref{fig:phase_response_VV} for the VV channel. A linear variation of 30 degrees over the 3dB antenna beamwidth can be observed. The reflectors at 107 and 299 m show a large disagreement with the remaining three targets. The nearer reflector was likely too close to the antennas, so that it was not illuminated with the complete antenna pattern as the far field transition distance of the slotted array is expected to be of the order of 500 m. This situation could explain its distorted amplitude response as well. 
+The phase and amplitude responses for all reflectors are plotted for the VV channel in \autoref{fig:phase_response_VV}. A linear variation of 30 degrees over the 3dB antenna beamwidth can be observed. The reflectors at 74 m shows a quadratic azimuth phase variation; it was likely too close to the radar, so that it was not illuminated with the complete antenna pattern as the far field transition distance of the slotted array is expected to be of the order of 500 m. This situation could explain its distorted amplitude response as well. 
 \begin{figure}[ht]
 	\begin{subfigure}[t]{\columnwidth}
-		\includegraphics{2014-2016_GPRI_HIL_Calibration_20140910_144113_BBBl_coreg_phase_plot}
+		\includegraphics{\chutzepref_BBBl_coreg_phase_plot}
 		\subcaption{Azimuth phase ramp not corrected.}
 	\end{subfigure}
 	\begin{subfigure}[t]{\columnwidth}
-		\includegraphics{2014-2016_GPRI_HIL_Calibration_20140910_144113_BBBl_corr_phase_plot}
+		\includegraphics{\chutzepref_BBBl_corr_phase_plot}
 		\subcaption{After azimuth filter.}
 	\end{subfigure}
 	\caption{Relative phase/amplitude response for all reflectors in the calibration array, VV channel. The phase at the azimuth of maxium intensity has been subtracted to make comparison easier. The dotted lines display the theoretical 3 dB resolution of the antennas $\theta_{3dB}$}
@@ -113,12 +114,12 @@ Interestingly, only very few pixels outside of noise seem to be representing vol
 
 \begin{figure}[ht]
 	\begin{subfigure}[t]{\columnwidth}
-		\includegraphics{2014-2016_GPRI_HIL_Calibration_20140910_144113_l_cal_gc_pauli}
+		\includegraphics{\chutzepref_l_cal_gc_pauli}
 		\subcaption{Calibrated Pauli RGB Composite.}
 		\label{fig:gc:pauli_rgb}
 	\end{subfigure}
 	\begin{subfigure}[t]{\columnwidth}
-		\includegraphics{2014-2016_GPRI_HIL_Calibration_20140910_144113_l_cal_gc_alpha}
+		\includegraphics{\chutzepref_l_cal_gc_alpha}
 		\subcaption{Calibrated mean Cloude-Pottier $\alpha$ parameter.}
 		\label{fig:gc:alpha}
 	\end{subfigure}
@@ -126,10 +127,10 @@ Interestingly, only very few pixels outside of noise seem to be representing vol
 	\label{fig:gc}
 \end{figure}
 
-\pgfplotstableread[col sep=comma]{../outputs/img/2014-2016_GPRI_HIL_Calibration_20140910_144113_76_883_l_cal_cal_params.csv}{\refI}
-\pgfplotstableread[col sep=comma]{../outputs/img/2014-2016_GPRI_HIL_Calibration_20140910_144113_197_410_l_cal_cal_params.csv}{\refII}
-\pgfplotstableread[col sep=comma]{../outputs/img/2014-2016_GPRI_HIL_Calibration_20140910_144113_332_737_l_cal_cal_params.csv}{\refIII}
-\pgfplotstableread[col sep=comma]{../outputs/img/2014-2016_GPRI_HIL_Calibration_20140910_144113_810_804_l_cal_cal_params.csv}{\refIV}
+\pgfplotstableread[col sep=comma]{../outputs/img/\chutzepref_32_519_l_cal_cal_params.csv}{\refI}
+\pgfplotstableread[col sep=comma]{../outputs/img/\chutzepref_1051_561_l_cal_cal_params.csv}{\refII}
+\pgfplotstableread[col sep=comma]{../outputs/img/\chutzepref_1331_149_l_cal_cal_params.csv}{\refIII}
+\pgfplotstableread[col sep=comma]{../outputs/img/\chutzepref_3517_354_l_cal_cal_params.csv}{\refIV}
 \pgfplotstableset{ref style/.style={
 									display columns/0/.style={precision=2, column name=$\phi_r + \phi_t [\circ]$},
 									display columns/1/.style={precision=2, column name=$f$},
@@ -153,7 +154,7 @@ Interestingly, only very few pixels outside of noise seem to be representing vol
 \begin{figure*}[hb]
 		\begin{subfigure}[t]{\columnwidth}
 		\centering
-			\signatures{2014-2016_GPRI_HIL_Calibration_20140910_144113_76_883_l}
+			\signatures{\chutzepref_32_519_l}
 
 			\subcaption{Reflector 1\\ 
 					\pgfplotstabletypeset[ref style] {\refI}
@@ -162,7 +163,7 @@ Interestingly, only very few pixels outside of noise seem to be representing vol
 		\end{subfigure}
 		\begin{subfigure}[t]{\columnwidth}
 			\centering
-			\signatures{2014-2016_GPRI_HIL_Calibration_20140910_144113_197_410_l}
+			\signatures{\chutzepref_1051_561_l}
 			\subcaption{Reflector 2 \\  
 						\pgfplotstabletypeset[ref style] {\refII}
 						}
@@ -170,7 +171,7 @@ Interestingly, only very few pixels outside of noise seem to be representing vol
 		\end{subfigure}
 		\begin{subfigure}[t]{\columnwidth}
 			\centering
-			\signatures{2014-2016_GPRI_HIL_Calibration_20140910_144113_332_737_l}
+			\signatures{\chutzepref_1331_149_l}
 			\subcaption{Reflector 3\\ 						
 									\pgfplotstabletypeset[ref style] {\refIII}
 						}
@@ -178,7 +179,7 @@ Interestingly, only very few pixels outside of noise seem to be representing vol
 		\end{subfigure}
 		\begin{subfigure}[t]{\columnwidth}
 			\centering
-			\signatures{2014-2016_GPRI_HIL_Calibration_20140910_144113_810_804_l}
+			\signatures{\chutzepref_3517_354_l}
 			\subcaption{Reflector 4\\ 
 									\pgfplotstabletypeset[ref style] {\refIV}
 			           }

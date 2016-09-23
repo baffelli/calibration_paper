@@ -57,7 +57,8 @@ pauli = expand("{pf}_l_{type}_gc_pauli.pdf", param=['H', 'alpha', 'pauli'], type
 #Combined phase response
 #Calibration report:
 cal_report = expand("outputs/img/{slcname}_l_{type}_calibration_report.csv",slcname=config['datetime'], type=['flat', 'cal'])
-
+#Phase center report
+phc_report = expand("outputs/img/{slcname}_{type}_{chan}_phase_center_report.csv", slcname=config['datetime'], type=['coreg'], chan='BBBl')
 
 #rule all:
 #	input:
@@ -80,11 +81,15 @@ cal_report = expand("outputs/img/{slcname}_l_{type}_calibration_report.csv",slcn
 
 rule all:
     input:
+        phc_report,
         cal_report,
         signatures,
 	    ptarg_mph,
 	    phase_plot,
 	    cp_params,
+
+
+#TODO fix this rule
 rule shapefile_from_reflectors:
     input:
         lut = 'geo/' + config['geocoding']['table_name'] + '.dem_to_gpri',
@@ -173,6 +178,19 @@ rule TCR_recap:
         C_root = "cov_{type}/{slcname}_{rx}",
     script:
         "scripts/TCR_recap.py"
+
+##############################################################################
+## Check phase center shift for each antenna
+rule phc_recap:
+    input:
+        slc = "slc_{type}/{slcname}_{chan}.slc",
+        slc_par = "slc_{type}/{slcname}_{chan}.slc.par"
+    output:
+        phase_report = "outputs/img/{slcname}_{type}_{chan}_phase_center_report.csv",
+    script:
+        "scripts/phase_center_recap.py"
+
+
 
 
 ###############################################################################

@@ -61,7 +61,7 @@ implying that $\theta_{sq}^{fc}$ is not the same for both units. This reflected 
 To correct for the frequency-dependent beam squint, it is fundamental that the acquisition of the data is performed by rotating the antenna slowly enough. Having an azimuth sample spacing smaller than the antenna beamwidth permits to overcome the effect of beam squinting by reconstructing the illumination of the target with the full bandwidth by interpolating the data in the azimuth-fast time domain. A side benefit of oversampling is that several range profiles that in first approximation can be seen as representing independent realizations of the same profile can be averaged to improve the measurement SNR, producing range-azimuth images with an angular resolution limited by the antenna beamwidth.\\
 \begin{figure}[ht]
 	\centering
-	\includegraphics[scale=0.1]{squint_correction}
+	\includegraphics[scale=0.4]{squint_correction}
 	\caption{Illustration of the frequency-dependent antenna squint. When the antenna rotates during the electronic scan, the energy of the target is spread through several azimuth bins.}
 	\label{fig:squint_correction}
 \end{figure}
@@ -154,16 +154,17 @@ For the radiometric calibration, each line of the covariance data is multiplied 
 \end{equation}
 \subsection{Experimental Data}\label{sec:data}
 In order to develop and test the methods described above, a calibration dataset was acquired in September 2016 at an urban-agricultural area near M\"{u}nsingen, Switzerland. The data was acquired from the top of an hill approximately 800 m high, looking down towards the fields and the town. 5 Trihedral Corner Reflectors were placed in the scene for the determination of calibration parameters and to assess imaging quality. Three of these reflectors have triangular faces with a length of 40 cm, corresponding to a RCS of $\sigma=\frac{4}{3}\pi \frac{a^4}{\lambda^2}=25.5 dB$, while the remaining two are cubic corner reflector with $\sigma= 35 dB$, at the nominal central frequency of 17.2 GHz.\\
-The dataset was acquired with the horizontally polarized antenna group shifted towards the vertical set by 1.8 mm, to optimally compensate for the pattern misalignment as described in \autoref{sec:proc_SLC}.
+The dataset was acquired with the horizontally polarized antenna group shifted towards the vertical set by 1.8 mm, to optimally compensate for the pattern misalignment as described in \autoref{sec:proc_SLC}. 
 \begin{table}[ht]
 	\begin{tabular}{lccl}
 		\hline
 		reflector & $R_0$ & $\sigma$ & comments\\
-		1	& 107 m & 39 dB & \\
-		2  & 192 m & 39 dB & \\
-		3 & 299 m & 39 dB & Obscured by trees\\
-		4 & 402 m & 48 dB &\\
-		5 & 658 m & 39 dB&\\
+		1 & 74 m & 35 dB & \\
+		2 & 672 m & 25.5 dB & \\
+		3 & 824 m & 25.5 dB & Obscured by trees\\
+		4 & 838 m & 35 dB &\\
+		5 & 1048 m & 35 dB&\\
+		6 & 2689 m & 25.5\\
 		\hline
 	\end{tabular}
 	\caption{Summary of the employed TCRs. Distance from the radar and expected RCS.}

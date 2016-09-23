@@ -24,7 +24,7 @@ def plot_signature(inputs, outputs, threads, config, params, wildcards):
         co_ax = co_fig.add_subplot(121,projection='3d')
         # x_ax = f.add_subplot(122,projection='3d',sharex=co_ax, sharey=co_ax)
         co_ax.plot_surface(pp,cc,co_sig, cmap='RdBu_r',lw=0.2)
-        co_ax.auto_scale_xyz([0,180],[-45,45], [0,1])
+        co_ax.auto_scale_xyz([-90,90],[-45,45], [0,1])
         # co_ax.set_title(r'Copolarized response')
         co_ax.set_ylabel(r' $\chi$ [deg]')
         co_ax.set_xlabel(r' $\psi$ [deg]')
@@ -32,7 +32,7 @@ def plot_signature(inputs, outputs, threads, config, params, wildcards):
         x_fig = plt.figure()
         x_ax = x_fig.add_subplot(121,projection='3d', sharex=co_ax, sharey=co_ax)
         x_ax.plot_surface(pp,cc,x_sig,cmap='RdBu_r',lw=0.2)
-        x_ax.auto_scale_xyz([0,180],[-45,45], [0,1])
+        x_ax.auto_scale_xyz([-90,90],[-45,45], [0,1])
         # x_ax.set_title(r'Cross-polarized response')
         x_ax.set_ylabel(r'$\chi$ [deg]')
         x_ax.set_xlabel(r'$\psi$ [deg]')
@@ -40,7 +40,7 @@ def plot_signature(inputs, outputs, threads, config, params, wildcards):
         vf.format_axes(co_ax)
         vf.format_axes(x_ax)
         dist = 15
-        xticks = [0,45,90,135,180]
+        xticks = [-90,-45,0,45,90]
         yticks = [-45,0,45]
         co_ax.dist = dist
         co_ax.set_xticks(xticks)
