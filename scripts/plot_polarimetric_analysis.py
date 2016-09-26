@@ -45,8 +45,8 @@ def plot_reflectors(inputs, outputs, threads, config, params, wildcards):
         rgb_ax.axis('off')
         rgb_fig.tight_layout()
         H_fig.savefig(outputs['H'])
-        alpha_fig.savefig(outputs['alpha'])
-        rgb_fig.savefig(outputs['pauli'])
+        alpha_fig.savefig(outputs['alpha'], bbox_inches=0)
+        rgb_fig.savefig(outputs['pauli'], bbox_inches=0)
 
 
 plot_reflectors(snakemake.input, snakemake.output, snakemake.threads, snakemake.config, snakemake.params,

@@ -48,7 +48,6 @@ def plot_mph(inputs, outputs, threads, config, params, wildcards):
         cbar.set_ticklabels(labels)
         cbar.update_ticks()
         plt.grid()
-        # plt.show()
         f.savefig(outputs['plot'])
 
 plot_mph(snakemake.input, snakemake.output, snakemake.threads, snakemake.config, snakemake.params, snakemake.wildcards)

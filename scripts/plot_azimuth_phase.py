@@ -40,7 +40,7 @@ def plot_azimuth_phase(inputs, outputs, threads, config, params):
                 refl_amp = (_np.abs(reflector_slice))**2
                 r_sl = slc.r_vec[ridx]
                 line, = phase_ax.plot(az_vec,_np.rad2deg(refl_ph), label=r"r={} m".format(round(r_sl)))
-                amp_ax.plot(az_vec, refl_amp/refl_amp[reflector_slice.shape[0]/2])
+                amp_ax.plot(az_vec, refl_amp/refl_amp[reflector_slice.shape[0]/2], label=r"r={} m".format(round(r_sl)))
                 #Plot line for beamwidth
                 phase_ax.set_ylim(-30,30)
                 phase_ax.axvline(0.2, color='red', ls='--')
@@ -51,7 +51,7 @@ def plot_azimuth_phase(inputs, outputs, threads, config, params):
                 amp_ax.axvline(-0.2, color='red', ls='--')
                 amp_ax.yaxis.set_label_text(r'Relative Intensity')
                 amp_ax.xaxis.set_label_text(r'azimuth angle from maximum [deg]')
-                phase_ax.legend()
+                amp_ax.legend()
                 f.savefig(outputs['plot'])
                 plt.close(f)
 plot_azimuth_phase(snakemake.input, snakemake.output, snakemake.threads, snakemake.config, snakemake.params)

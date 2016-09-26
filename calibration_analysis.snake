@@ -228,7 +228,7 @@ rule HV_gain:
             ax.set_ylim([-10,30])
             ax.grid(True)
             plt.legend(loc='lower right')
-        plt.show()
+            f.subplots_adjust(bottom=0.15)
         f.savefig(output[0],pad_inches=0.1)
 
 
