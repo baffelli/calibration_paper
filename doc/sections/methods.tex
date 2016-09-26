@@ -56,8 +56,6 @@ In processing KAPRI data a linear approximation for  the variation in beam squin
 	\theta_{sq} - \theta_{sq}^{f_{c}}  =  \alpha f
 \end{equation}
 this choice is necessary because the manufacturer of the antennas provided antenna pattern measurements at different frequencies suggesting that the vertically and the horizontally polarized units have different squint characteristics despite using a waveguide of the same size.\\ No other design information being available, a data-driven method had to be used for the correction of the beam squint.  The data is first range compressed with a fast-time FFT. The location of a point-like scatterer is the selected; the samples around the point are then windowed in range to isolate its response and converted back into the fast time domain, where the complex envelope response in the slow-fast time plane is estimated with an Hilbert transform. The model of \autoref{eq:squint_linearised} is then fitted on the envelope thus extracted to obtain $\alpha$.
-Other than the difference in linear squint rate, the two antennas were observed to have a difference in pointing of approx. $0.2^\circ$,
-implying that $\theta_{sq}^{fc}$ is not the same for both units. This reflected as an azimuth offset between the HH and VV channels. The misalignment is problematic for cross-polar measurements: the transmitting and receiving antenna patterns are not aligned, causing a loss of approx 2.25 dB of power and consequently a reduced SNR for the cross-polar channels. While the HH-VV offset can be easily corrected by a posteriori co-registration, no method is able to correct for the reduced SNR in the crosspolar measurements. To solve this problem, a new adjustable antenna mount was manufactured that allows to shift the $V$ antenna in azimuth to bring the patterns into alignment.\\
 To correct for the frequency-dependent beam squint, it is fundamental that the acquisition of the data is performed by rotating the antenna slowly enough. Having an azimuth sample spacing smaller than the antenna beamwidth permits to overcome the effect of beam squinting by reconstructing the illumination of the target with the full bandwidth by interpolating the data in the azimuth-fast time domain. A side benefit of oversampling is that several range profiles that in first approximation can be seen as representing independent realizations of the same profile can be averaged to improve the measurement SNR, producing range-azimuth images with an angular resolution limited by the antenna beamwidth.\\
 \begin{figure}[ht]
 	\centering
@@ -65,7 +63,10 @@ To correct for the frequency-dependent beam squint, it is fundamental that the a
 	\caption{Illustration of the frequency-dependent antenna squint. When the antenna rotates during the electronic scan, the energy of the target is spread through several azimuth bins.}
 	\label{fig:squint_correction}
 \end{figure}
-After correcting the beam squint,  the first and last $z$ samples of the squint corrected raw data $s_{d}$ are windowed with an Hann window to mitigate the transient signal caused by the sawtooth frequency sweep. A second Kaiser Window is then applied to the dechirped data in the fast-time; this filter serves to reduce range processing sidelobes. Finally, a fast time Fourier transform performs the range compression to obtain the SLC image $\hat{\rho}\left(R, \theta\right)$.\\ Each range line of the SLC thus compressed is then multiplied by $\sqrt{R^3}$ to compensate for the power spreading loss. According to the radar range equation, the power
+After correcting the beam squint,  the first and last $z$ samples of the squint corrected raw data $s_{d}$ are windowed with an Hann window to mitigate the transient signal caused by the sawtooth frequency sweep. A second Kaiser Window is then applied to the dechirped data in the fast-time; this filter serves to reduce range processing sidelobes. Finally, a fast time Fourier transform performs the range compression to obtain the SLC image $\hat{\rho}\left(R, \theta\right)$.\\ Each range line of the SLC thus compressed is then multiplied by $\sqrt{R^3}$ to compensate for the power spreading loss. In this manner, the intensity of the SLC data is directly proportional to the radar brightness $\beta_{0}$.
+\subsection{Antenna Pattern Misalingment}\label{sec:misalingment}
+In addition to the difference in frequency-dependent squint rate, the horizontally and the vertically polarized antennas are observed to have an azimuth misalignment of approx. $0.2^\circ$,
+implying that $\theta_{sq}^{fc}$ is not the same for both units. This reflected as an azimuth offset between the HH and VV channels; it is problematic for cross-polar measurements as the transmitting and receiving antenna patterns are not aligned, causing a power loss of approx 2.25 dB and consequently a reduced SNR for the cross-polar channels. While the HH-VV offset can be easily corrected by coregistering the data, no method is able to correct for the reduced SNR in the crosspolar measurements. To improve crosspolar performance, an adjustable antenna mount was manufactured, that allows to shift the $V$ antenna in azimuth to bring the patterns into alignment.\\
 \subsection{Polarimetric Calibration}\label{sec:proc_polcal}
 In the case of GPRI the range compression concludes the processing of raw data producing SLC data that is used for interferometric processing.  For KAPRI, additional steps are necessary to obtain polarimetric measurements that are well calibrated.\\ The first of these steps requires to briefly review the antenna configuration used by KAPRI(\autoref{fig:antenna_arrangement}):\\ Six antennas are mounted on a supporting structure connected to the rotary scanner. Of these, 2 are transmitting antennas, one for each polarization. The remaining 4 are connected in groups of two to the dual receivers, each pair consisting an horizontally and a vertically polarized array. This configuration permits to acquire full polarimetric dataset by selecting the desired transmit and receive polarization while minimizing polarimetric crosstalk thanks to the spatial separation. More crucially, the separation of transmitting and receiving antennas increases the TX-RX isolation, a fundamental requirement for FMCW performance\cite{Beasley1990,Stove1992, Strozzi2011}.  However, this configuration is not without consequences on the phase of the resulting polarimetric data.
 \begin{figure}[ht]
@@ -121,7 +122,7 @@ where $\sigma_{tri}$ is its RCS, has a measured covariance matrix $\mathbf{C^{\p
 \begin{equation}
 	\begin{aligned}
 	&\mathbf{C^{\prime}} =\\
-	&= A^4 \sigma_{tri}\\
+	&= k \sigma_{tri}\\
 	&\begin{bmatrix}
 		1 & 0 & 0 & f^2 e^{-i \left(\phi_t + \phi_r\right)}\\
 		0 & 0 & 0 & 0\\
@@ -148,23 +149,24 @@ and:
 	\phi_t - \phi_r =\operatorname{arg}\left( \left<C_{meas}^{HVVH}\right>\right).
 \end{equation}
 When $\mathbf{D}$ is estimated, \autoref{eq:covariance_distortion} is inverted to obtain a calibrated covariance matrix.\\
-For the radiometric calibration, each line of the covariance data is multiplied by $R^3$, where $R$ is the slant range to the line. This compensates for the range spreading loss in power, that is proportional to the illuminated area. If radiometric calibration is desired, the value of $A$ can be determined after imbalance correction:
+If radiometric calibration is desired, the value of $A$ can be determined after imbalance correction:
 \begin{equation}
-	A =	\left(\frac{\sigma_{tri}}{C^{\prime}_{HHHH}}\right)^{\frac{1}{4}}.
+	k =	\left(\frac{\sigma_{tri}}{C^{\prime}_{HHHH}}\right).
 \end{equation}
 \subsection{Experimental Data}\label{sec:data}
 In order to develop and test the methods described above, a calibration dataset was acquired in September 2016 at an urban-agricultural area near M\"{u}nsingen, Switzerland. The data was acquired from the top of an hill approximately 800 m high, looking down towards the fields and the town. 5 Trihedral Corner Reflectors were placed in the scene for the determination of calibration parameters and to assess imaging quality. Three of these reflectors have triangular faces with a length of 40 cm, corresponding to a RCS of $\sigma=\frac{4}{3}\pi \frac{a^4}{\lambda^2}=25.5 dB$, while the remaining two are cubic corner reflector with $\sigma= 35 dB$, at the nominal central frequency of 17.2 GHz.\\
-The dataset was acquired with the horizontally polarized antenna group shifted towards the vertical set by 1.8 mm, to optimally compensate for the pattern misalignment as described in \autoref{sec:proc_SLC}. 
+The dataset was acquired with the horizontally polarized antenna group shifted towards the vertical set by 1.8 mm, to optimally compensate for the pattern misalignment as described in \autoref{sec:misalingment}.  A second dataset has been acquired with the same settings in the same location, without correcting for the antenna shift.
 \begin{table}[ht]
+	\centering
 	\begin{tabular}{lccl}
 		\hline
 		reflector & $R_0$ & $\sigma$ & comments\\
-		1 & 74 m & 35 dB & \\
-		2 & 672 m & 25.5 dB & \\
-		3 & 824 m & 25.5 dB & Obscured by trees\\
-		4 & 838 m & 35 dB &\\
-		5 & 1048 m & 35 dB&\\
-		6 & 2689 m & 25.5\\
+		1 & 74 m & 35 dB &  Cubic CR\\
+		2 & 673 m & 25.5 dB &  Triangular CR\\
+		3 & 824 m & 25.5 dB & Triangular CR\\
+		4 & 838 m & 35 dB & Cubic CR\\
+		5 & 1048 m & 35 dB& Cubic CR\\
+		6 & 2690 m & 25.5& Triangular CR\\
 		\hline
 	\end{tabular}
 	\caption{Summary of the employed TCRs. Distance from the radar and expected RCS.}

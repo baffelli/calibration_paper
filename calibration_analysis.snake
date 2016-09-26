@@ -58,26 +58,10 @@ pauli = expand("{pf}_l_{type}_gc_pauli.pdf", param=['H', 'alpha', 'pauli'], type
 #Calibration report:
 cal_report = expand("outputs/img/{slcname}_l_{type}_calibration_report.csv",slcname=config['datetime'], type=['flat', 'cal'])
 #Phase center report
-phc_report = expand("outputs/img/{slcname}_{type}_{chan}_phase_center_report.csv", slcname=config['datetime'], type=['coreg'], chan='BBBl')
+phc_report = expand("outputs/img/{slcname}_{chan}_{type}_phase_center_report.csv", slcname=config['datetime'], type=['coreg'], chan=['AAAl','BBBl'])
+#Calibration parameters for each reflector
+cal_resid =  expand("{prefixes}_{rx}_{proc}_cal_params.csv", proc=['cal', 'flat'], rx='l', prefixes=figures_prefix_with_indices_dec)
 
-#rule all:
-#	input:
-##	    expand("slc_{type}/{datetime}_{chan}{rx}.slc_dec",datetime=config['datetime'], chan=['AAA', 'BBB', 'ABB', 'BAA'] ,rx=['l', 'u'], type=['coreg', 'desq'])
-#	    signatures,
-#	    ptarg_mph,
-#	    phase_plot,
-#	    cp_params,
-
-#This rules touches a file when done
-#rule done:
-#    input:
-#	    'geo/{table_name}_reflectors.shp'.format(table_name=config['geocoding']['table_name']),
-##        signatures,
-##	    ptarg_mph,
-##	    phase_plot,
-##	    cp_params,
-#    shell:
-#        "echo 'a'"
 
 rule all:
     input:
@@ -87,6 +71,9 @@ rule all:
 	    ptarg_mph,
 	    phase_plot,
 	    cp_params,
+        cal_resid,
+        "outputs/img/HV_gain.pdf"
+
 
 
 #TODO fix this rule
@@ -149,23 +136,35 @@ rule pol_signature:
         rplot = "outputs/img/{slcname}_{ridx}_{azidx}_{rx}_{type}_rplot.{ext}",
     params:
         C_root = "cov_{type}/{slcname}_{rx}",
-        est_parameters = "outputs/img/{slcname}_{ridx}_{azidx}_{rx}_{type}_cal_params.csv",
     script:
         "scripts/plot_polarization_signature.py"
+
+##############################################################################
+## Estimate calibration residuals
+rule cal_residuals:
+    input:
+        C = expand("cov_{{type}}/{{slcname}}_{{rx}}.c{i}{j}",i=[0,1,2,3],j=[0,1,2,3]),
+    output:
+        est_parameters = "outputs/img/{slcname}_{ridx}_{azidx}_{rx}_{type}_cal_params.csv",
+    params:
+        C_root = "cov_{type}/{slcname}_{rx}",
+    script:
+        "scripts/estimate_calibration_residuals.py"
+
 
 
 ##############################################################################
 ## Plot phase response before and after the correction
 rule plot_phase_response:
-	input:
-		slc = "slc_{processing}/{slcname}_{chan}.slc",
-		style = config['style'],
-	output:
-		plot = "outputs/img/{slcname}_{chan}_{processing}_phase_plot.{ext}"
-	params:
-		ws=50
-	script:
-		"scripts/plot_azimuth_phase.py"
+    input:
+        slc = "slc_{processing}/{slcname}_{chan}.slc",
+        style = config['style'],
+    output:
+        plot = "outputs/img/{slcname}_{chan}_{processing}_phase_plot.{ext}",
+    params:
+        ws=50,
+    script:
+        "scripts/plot_azimuth_phase.py"
 
 ##############################################################################
 ## Compute recap information on the TCRs
@@ -186,9 +185,51 @@ rule phc_recap:
         slc = "slc_{type}/{slcname}_{chan}.slc",
         slc_par = "slc_{type}/{slcname}_{chan}.slc.par"
     output:
-        phase_report = "outputs/img/{slcname}_{type}_{chan}_phase_center_report.csv",
+        phase_report = "outputs/img/{slcname}_{chan}_{type}_phase_center_report.csv",
     script:
         "scripts/phase_center_recap.py"
+
+
+##############################################################################
+## Check HV gain before and after calibration
+rule HV_gain:
+    input:
+        C = "cov_cal/20160914_143958_l.par",
+        C_corr = "cov_cal/20160914_145059_l.par",
+    output:
+        "outputs/img/HV_gain.pdf"
+    run:
+        import pyrat.core.matrices as mat
+        import os
+        import matplotlib.pyplot as plt
+        import pyrat.core.corefun as cf
+        C = mat.coherencyMatrix(os.path.splitext(input.C)[0], input.C, gamma=True, bistatic=True, basis='lexicographic').boxcar_filter([3,3])
+        C_corr = mat.coherencyMatrix(os.path.splitext(input.C_corr)[0], input.C_corr, gamma=True, bistatic=True, basis='lexicographic').boxcar_filter([3,3])
+        HV = C[:,:,1,1]
+        HV_corr = C_corr[:,:,1,1]
+        ridx = config['crosspolarizer_index'][0]
+        azidx =  config['crosspolarizer_index'][1] / config['range_compression']['dec']
+        rwin = 10
+        azwin = 30
+        ptarg_zoom, rplot, azplot, mx_idx_zoom, res_dict = cf.ptarg(HV, ridx, azidx, azwin=30)
+        ptarg_zoom_corr, rplot_corr, azplot_corr, mx_idx_zoom_corr, res_dict = cf.ptarg(HV_corr, ridx, azidx, azwin=30)
+        HV_gain = cf.dB(ptarg_zoom_corr[mx_idx_zoom_corr] / ptarg_zoom[mx_idx_zoom])
+        x_shift = 50
+        with plt.style.context(config['style']):
+            f, ax = plt.subplots()
+            norm_plot = plt.plot(cf.dB(np.abs(azplot)), label='No shift')
+            corr_plot = plt.plot(cf.dB(np.abs(azplot_corr)), label='Optimal shift')
+            plt.axhline(cf.dB(np.abs(ptarg_zoom[mx_idx_zoom])), color=norm_plot[0].get_color(), linestyle='--')
+            plt.axhline(cf.dB(np.abs(ptarg_zoom_corr[mx_idx_zoom_corr])), color=corr_plot[0].get_color(), linestyle='--')
+            ax.arrow(mx_idx_zoom[1] + x_shift, cf.dB(np.abs(ptarg_zoom[mx_idx_zoom])),0, HV_gain)
+            ax.text(mx_idx_zoom[1] + x_shift + 5, cf.dB(np.abs(ptarg_zoom[mx_idx_zoom])) + HV_gain/2, "gain {HV:.2f} dB".format(HV=HV_gain))
+            ax.xaxis.set_label_text(r'azimuth samples')
+            ax.yaxis.set_label_text(r'power [dB]')
+            ax.set_ylim([-10,30])
+            ax.grid(True)
+            plt.legend(loc='lower right')
+        plt.show()
+        f.savefig(output[0],pad_inches=0.1)
 
 
 

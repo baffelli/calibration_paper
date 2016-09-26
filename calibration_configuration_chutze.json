@@ -1,5 +1,5 @@
 {
-    "style":    "/home/baffelli/PhD/trunk/Code/paper_rc.rc",
+    "style":    "/home/baffelli/PhD/trunk/Code/pyrat/pyrat/rcfiles/paper_rc.rc",
 	"pyrat":	"/home/baffelli/PhD/trunk/Code/pyrat/gpri_utils/",
 	"project_name": "2016_GPRI_Chutzen",
 	"datetime": ["20160914_143958", "20160914_145059"],
@@ -18,9 +18,9 @@
 							[830, 3503, "t"],
 							[1032, 5703, "t"],
 							[1051, 5617, "t"],
-                            [3517, 3540, "t"],
-                            [3409, 2790, "o"]
+                            [3518, 3545, "t"]
 							],
+	"crosspolarizer_index": [3409, 2790, "o"],
     "channel_mapping":{
               "TX_A_position": 0,
               "TX_B_position": 0.125,

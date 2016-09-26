@@ -84,14 +84,14 @@ def plot_signature(inputs, outputs, threads, config, params, wildcards):
         plot_fig_az.savefig(outputs['azplot'])
         plot_fig_r.savefig(outputs['rplot'])
         #Now estimate calibration parameters
-        r_sl = C.r_vec[int(wildcards['ridx'])]
-        HHVV_phase = np.rad2deg(np.angle(C_tri[0,3]))
-        f = (C_tri[3,3].real / C_tri[0,0].real)**(1/4.0)
-        purity = db(ptarg_zoom_C[mx_pos + (0,0)].real) - db( ptarg_zoom_C[mx_pos + (1,1)].real)
-        RCS = db(ptarg_zoom_C[mx_pos + (0,0)].real)
-        str = "{HHVV_phase},{f}".format(HHVV_phase=HHVV_phase, f=f)
-        with open(params['est_parameters'],'w+') as of:
-            tabwrite = csv.writer(of, delimiter=',')
-            tabwrite.writerow(['HH-VV phase imbalance', 'HH-VV amplitude imbalance', 'Polarisation purity', 'RCS', 'slant range'])
-            tabwrite.writerow([HHVV_phase, f, purity, RCS, r_sl])
+        # r_sl = C.r_vec[int(wildcards['ridx'])]
+        # HHVV_phase = np.rad2deg(np.angle(C_tri[0,3]))
+        # f = (C_tri[3,3].real / C_tri[0,0].real)**(1/4.0)
+        # purity = db(ptarg_zoom_C[mx_pos + (0,0)].real) - db( ptarg_zoom_C[mx_pos + (1,1)].real)
+        # RCS = db(ptarg_zoom_C[mx_pos + (0,0)].real)
+        # str = "{HHVV_phase},{f}".format(HHVV_phase=HHVV_phase, f=f)
+        # with open(params['est_parameters'],'w+') as of:
+        #     tabwrite = csv.writer(of, delimiter=',')
+        #     tabwrite.writerow(['HH-VV phase imbalance', 'HH-VV amplitude imbalance', 'Polarisation purity', 'RCS', 'slant range'])
+        #     tabwrite.writerow([HHVV_phase, f, purity, RCS, r_sl])
 plot_signature(snakemake.input, snakemake.output, snakemake.threads, snakemake.config, snakemake.params, snakemake.wildcards)
