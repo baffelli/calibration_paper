@@ -1,0 +1,66 @@
+{
+"style":  "/home/baffelli/PhD/trunk/Code/pyrat/pyrat/rcfiles/paper_rc.rc",
+	"project_name": "2014-2016_GPRI_HIL_Calibration",
+	"datetime": ["20160224_111518", "20160224_123413"],
+	"master_slc": "20160224_105201_AAAl",
+	"range_compression":	{
+			"rmin":		50,
+			"rmax":		1000,
+			"dec":		10,
+			"k":		5,
+			"z":		300,
+			"decimated_sample_spacing":		0.1
+	},
+	"list_of_reflectors": [
+							[[673, 899], [2680516.36023053, 1251165.0244897, 521.441059025986]],
+							[[417, 1621], [2680271.63871318, 1251272.58077927, 518.52500197574]],
+							[[417, 1740], [2680236.40512099, 1251113.30165175, 526.974423017325]],
+                            [[401, 1807], [2680236.40512099, 1251113.30165175, 526.974423017325]],
+							[[722, 1742], [2680455.77531021, 1251373.20756116, 519.46029724681]],
+							[[720, 1621], [2680455.77531021, 1251373.20756116, 519.46029724681]]
+							],
+	"crosspolarizer_index": [720, 1683],
+    "channel_mapping":{
+              "TX_A_position": 0,
+              "TX_B_position": 0.125,
+              "RX_Au_position": 0.475,
+              "RX_Al_position": 0.725,
+              "RX_Bu_position": 0.6,
+              "RX_Bl_position": 0.85 },
+	"desquint":				{
+			"AAA_squint_rate":	4.21e-9,
+			"BBB_squint_rate":	3.92e-9,
+			"BAA_squint_rate":	3.9e-9,
+			"ABB_squint_rate":	3.9e-9,
+			"AAA_center_squint": 1,
+			"BBB_center_squint": 1,
+			"BAA_center_squint": 1,
+			"ABB_center_squint": 1
+	},
+	"phase_correction":		{
+			"integration_length":	0.7,
+			"AAA_phase_center_offset": 0.02,
+			"BBB_phase_center_offset": -0.12,
+			"ABB_phase_center_offset": -0.12,
+			"BAA_phase_center_offset": -0.12
+	},
+	"interferogram":		{
+		"rlks":	"1",
+		"azlks": "1"
+	},
+	"squint_rate":			{
+			"rwin":		5,
+			"azwin":	250
+	},
+	"calibration":			{
+			"reflector_index":		1,
+			"reflector_rcs":		48.4,
+			"correct_HV":           "False"
+	},
+	"geocoding":			{
+			"scan_heading":	"205",
+			"DEM"			: "/data/HIL/Geodata/swissALTI3D_15_Clip.dem",
+			"ref_mli_par"   : "slc_corr/20160224_111518_AAAl.slc_dec.par",
+			"table_name" 	: "HIL"
+	}
+}

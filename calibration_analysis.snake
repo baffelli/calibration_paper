@@ -63,7 +63,11 @@ phc_report = expand("outputs/img/{slcname}_{chan}_{type}_phase_center_report.csv
 cal_resid =  expand("{prefixes}_{rx}_{proc}_cal_params.csv", proc=['cal', 'flat'], rx='l', prefixes=figures_prefix_with_indices_dec)
 
 
-rule all:
+
+#This rule touches a file when done with the analyis.
+#it used as a dirty solution while we wait for
+#https://bitbucket.org/snakemake/snakemake/issues/93/subworkflow-rule-execution
+rule done:
     input:
         phc_report,
         cal_report,
@@ -72,45 +76,45 @@ rule all:
 	    phase_plot,
 	    cp_params,
         cal_resid,
-        "outputs/img/HV_gain.pdf"
-
+    output:
+        touch('analysis.done')
 
 
 #TODO fix this rule
-rule shapefile_from_reflectors:
-    input:
-        lut = 'geo/' + config['geocoding']['table_name'] + '.dem_to_gpri',
-        dem_seg = 'geo/' + config['geocoding']['table_name'] + '.dem_seg',
-        dem_seg_par = 'geo/' + config['geocoding']['table_name'] + '.dem_seg.par',
-        ref_par = config['geocoding']['ref_mli_par']
-    output:
-        shp = 'geo/' + config['geocoding']['table_name'] + '_reflectors' + '.shp',
-    run:
-        import fiona
-        from shapely.geometry import Point, mapping
-        from fiona.crs import from_epsg
-        import matplotlib.pyplot as plt
-#        from_epsg(2056)
-        {'init': 'epsg:21781', 'no_defs': True}
-        schema = {
-            'geometry': 'Point',
-            'properties': {
-                       'type': 'str',},
-        }
-        #load lut
-        ref_par = gpf.par_to_dict(input.ref_par)
-        dem_seg_par = gpf.par_to_dict(input.dem_seg_par)
-        lut = gpf.load_binary(input.lut, ref_par['range_samples'])[::-1,:]
-        with fiona.open(output.shp, 'w', 'ESRI Shapefile', schema, crs=from_epsg(21781)) as of:
-            for ref in config['list_of_reflectors']:
-                ref_geo = lut[ref[0], ref[1]/config['range_compression']['dec']]#decimate azimuth index
-                ref_geo = (ref_geo.real + dem_seg_par['corner_east'][0],
-                 ref_geo.imag + (dem_seg_par['corner_north'][0] + dem_seg_par['post_north'][0]*dem_seg_par['width']))
-                of.write({
-                   'geometry': mapping(Point(*ref_geo)),
-                    'properties':
-                        {
-                            'type': 'pane',}})
+#rule shapefile_from_reflectors:
+#    input:
+#        lut = 'geo/' + config['geocoding']['table_name'] + '.dem_to_gpri',
+#        dem_seg = 'geo/' + config['geocoding']['table_name'] + '.dem_seg',
+#        dem_seg_par = 'geo/' + config['geocoding']['table_name'] + '.dem_seg.par',
+#        ref_par = config['geocoding']['ref_mli_par']
+#    output:
+#        shp = 'geo/' + config['geocoding']['table_name'] + '_reflectors' + '.shp',
+#    run:
+#        import fiona
+#        from shapely.geometry import Point, mapping
+#        from fiona.crs import from_epsg
+#        import matplotlib.pyplot as plt
+##        from_epsg(2056)
+#        {'init': 'epsg:21781', 'no_defs': True}
+#        schema = {
+#            'geometry': 'Point',
+#            'properties': {
+#                       'type': 'str',},
+#        }
+#        #load lut
+#        ref_par = gpf.par_to_dict(input.ref_par)
+#        dem_seg_par = gpf.par_to_dict(input.dem_seg_par)
+#        lut = gpf.load_binary(input.lut, ref_par['range_samples'])[::-1,:]
+#        with fiona.open(output.shp, 'w', 'ESRI Shapefile', schema, crs=from_epsg(21781)) as of:
+#            for ref in config['list_of_reflectors']:
+#                ref_geo = lut[ref[0], ref[1]/config['range_compression']['dec']]#decimate azimuth index
+#                ref_geo = (ref_geo.real + dem_seg_par['corner_east'][0],
+#                 ref_geo.imag + (dem_seg_par['corner_north'][0] + dem_seg_par['post_north'][0]*dem_seg_par['width']))
+#                of.write({
+#                   'geometry': mapping(Point(*ref_geo)),
+#                    'properties':
+#                        {
+#                            'type': 'pane',}})
 
 
 ###############################################################################
@@ -190,46 +194,49 @@ rule phc_recap:
         "scripts/phase_center_recap.py"
 
 
-##############################################################################
-## Check HV gain before and after calibration
-rule HV_gain:
-    input:
-        C = "cov_cal/20160914_143958_l.par",
-        C_corr = "cov_cal/20160914_145059_l.par",
-    output:
-        "outputs/img/HV_gain.pdf"
-    run:
-        import pyrat.core.matrices as mat
-        import os
-        import matplotlib.pyplot as plt
-        import pyrat.core.corefun as cf
-        C = mat.coherencyMatrix(os.path.splitext(input.C)[0], input.C, gamma=True, bistatic=True, basis='lexicographic').boxcar_filter([3,3])
-        C_corr = mat.coherencyMatrix(os.path.splitext(input.C_corr)[0], input.C_corr, gamma=True, bistatic=True, basis='lexicographic').boxcar_filter([3,3])
-        HV = C[:,:,1,1]
-        HV_corr = C_corr[:,:,1,1]
-        ridx = config['crosspolarizer_index'][0]
-        azidx =  config['crosspolarizer_index'][1] / config['range_compression']['dec']
-        rwin = 10
-        azwin = 30
-        ptarg_zoom, rplot, azplot, mx_idx_zoom, res_dict = cf.ptarg(HV, ridx, azidx, azwin=30)
-        ptarg_zoom_corr, rplot_corr, azplot_corr, mx_idx_zoom_corr, res_dict = cf.ptarg(HV_corr, ridx, azidx, azwin=30)
-        HV_gain = cf.dB(ptarg_zoom_corr[mx_idx_zoom_corr] / ptarg_zoom[mx_idx_zoom])
-        x_shift = 50
-        with plt.style.context(config['style']):
-            f, ax = plt.subplots()
-            norm_plot = plt.plot(cf.dB(np.abs(azplot)), label='No shift')
-            corr_plot = plt.plot(cf.dB(np.abs(azplot_corr)), label='Optimal shift')
-            plt.axhline(cf.dB(np.abs(ptarg_zoom[mx_idx_zoom])), color=norm_plot[0].get_color(), linestyle='--')
-            plt.axhline(cf.dB(np.abs(ptarg_zoom_corr[mx_idx_zoom_corr])), color=corr_plot[0].get_color(), linestyle='--')
-            ax.arrow(mx_idx_zoom[1] + x_shift, cf.dB(np.abs(ptarg_zoom[mx_idx_zoom])),0, HV_gain)
-            ax.text(mx_idx_zoom[1] + x_shift + 5, cf.dB(np.abs(ptarg_zoom[mx_idx_zoom])) + HV_gain/2, "gain {HV:.2f} dB".format(HV=HV_gain))
-            ax.xaxis.set_label_text(r'azimuth samples')
-            ax.yaxis.set_label_text(r'power [dB]')
-            ax.set_ylim([-10,30])
-            ax.grid(True)
-            plt.legend(loc='lower right')
-            f.subplots_adjust(bottom=0.15)
-        f.savefig(output[0],pad_inches=0.1)
+
+
+
+###############################################################################
+### Check HV gain before and after calibration
+#rule HV_gain:
+#    input:
+#        C = "cov_cal/20160914_143958_l.par",
+#        C_corr = "cov_cal/20160914_145059_l.par",
+#    output:
+#        "outputs/img/HV_gain.pdf"
+#    run:
+#        import pyrat.core.matrices as mat
+#        import os
+#        import matplotlib.pyplot as plt
+#        import pyrat.core.corefun as cf
+#        C = mat.coherencyMatrix(os.path.splitext(input.C)[0], input.C, gamma=True, bistatic=True, basis='lexicographic').boxcar_filter([3,3])
+#        C_corr = mat.coherencyMatrix(os.path.splitext(input.C_corr)[0], input.C_corr, gamma=True, bistatic=True, basis='lexicographic').boxcar_filter([3,3])
+#        HV = C[:,:,1,1]
+#        HV_corr = C_corr[:,:,1,1]
+#        ridx = config['crosspolarizer_index'][0]
+#        azidx =  config['crosspolarizer_index'][1] / config['range_compression']['dec']
+#        rwin = 10
+#        azwin = 30
+#        ptarg_zoom, rplot, azplot, mx_idx_zoom, res_dict = cf.ptarg(HV, ridx, azidx, azwin=30)
+#        ptarg_zoom_corr, rplot_corr, azplot_corr, mx_idx_zoom_corr, res_dict = cf.ptarg(HV_corr, ridx, azidx, azwin=30)
+#        HV_gain = cf.dB(ptarg_zoom_corr[mx_idx_zoom_corr] / ptarg_zoom[mx_idx_zoom])
+#        x_shift = 50
+#        with plt.style.context(config['style']):
+#            f, ax = plt.subplots()
+#            norm_plot = plt.plot(cf.dB(np.abs(azplot)), label='No shift')
+#            corr_plot = plt.plot(cf.dB(np.abs(azplot_corr)), label='Optimal shift')
+#            plt.axhline(cf.dB(np.abs(ptarg_zoom[mx_idx_zoom])), color=norm_plot[0].get_color(), linestyle='--')
+#            plt.axhline(cf.dB(np.abs(ptarg_zoom_corr[mx_idx_zoom_corr])), color=corr_plot[0].get_color(), linestyle='--')
+#            ax.arrow(mx_idx_zoom[1] + x_shift, cf.dB(np.abs(ptarg_zoom[mx_idx_zoom])),0, HV_gain)
+#            ax.text(mx_idx_zoom[1] + x_shift + 5, cf.dB(np.abs(ptarg_zoom[mx_idx_zoom])) + HV_gain/2, "gain {HV:.2f} dB".format(HV=HV_gain))
+#            ax.xaxis.set_label_text(r'azimuth samples')
+#            ax.yaxis.set_label_text(r'power [dB]')
+#            ax.set_ylim([-10,30])
+#            ax.grid(True)
+#            plt.legend(loc='lower right')
+#            f.subplots_adjust(bottom=0.15)
+#        f.savefig(output[0],pad_inches=0.1)
 
 
 
