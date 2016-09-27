@@ -21,8 +21,8 @@ print(config)
 ## Check HV gain before and after calibration
 rule HV_gain:
     input:
-        C_HV_new = "slc_coreg/20160224_130521_ABBl.mli_dec",
-        C_HV_old ="slc_coreg/20160224_105201_ABBl.mli_dec",
+        C_HV_new = "slc_corr/20160224_130521_ABBl.mli_dec",
+        C_HV_old ="slc_corr/20160224_105201_ABBl.mli_dec",
     output:
         "outputs/img/HV_gain.pdf"
     run:
@@ -44,13 +44,18 @@ rule HV_gain:
             f, ax = plt.subplots()
             norm_plot = plt.plot(cf.dB(np.abs(azplot)), label='No shift')
             corr_plot = plt.plot(cf.dB(np.abs(azplot_corr)), label='Optimal shift')
+            plt.subplot(2,1,1)
+            plt.imshow(ptarg_zoom.real)
+            plt.subplot(2,1,2)
+            plt.imshow(ptarg_zoom_corr.real)
+            plt.show()
             plt.axhline(cf.dB(np.abs(ptarg_zoom[mx_idx_zoom])), color=norm_plot[0].get_color(), linestyle='--')
             plt.axhline(cf.dB(np.abs(ptarg_zoom_corr[mx_idx_zoom_corr])), color=corr_plot[0].get_color(), linestyle='--')
             ax.arrow(mx_idx_zoom[1] + x_shift, cf.dB(np.abs(ptarg_zoom[mx_idx_zoom])),0, HV_gain)
             ax.text(mx_idx_zoom[1] + x_shift + 5, cf.dB(np.abs(ptarg_zoom[mx_idx_zoom])) + HV_gain/2, "gain {HV:.2f} dB".format(HV=HV_gain))
             ax.xaxis.set_label_text(r'azimuth samples')
             ax.yaxis.set_label_text(r'power [dB]')
-            ax.set_ylim([-10,30])
+            ax.set_ylim([-10,32])
             ax.grid(True)
             plt.legend(loc='lower right')
             f.subplots_adjust(bottom=0.15)
