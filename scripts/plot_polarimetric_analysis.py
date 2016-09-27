@@ -23,7 +23,7 @@ def plot_reflectors(inputs, outputs, threads, config, params, wildcards):
     T_mat_gc = C_mat_gc.boxcar_filter([5, 3])
     H_gc, A_gc, alpha_gc, beta_gc, p, w = T_mat_gc.cloude_pottier()
     # Compute pauli rgb
-    rgb = vf.mask_zeros(C_mat_gc.pauli_image(k=0.3, sf=0.005))
+    rgb = vf.mask_zeros(C_mat_gc.pauli_image(k=0.3, sf=0.0005))
 
     with plt.style.context(config['style']):
         w, h = plt.rcParams['figure.figsize']
@@ -37,7 +37,8 @@ def plot_reflectors(inputs, outputs, threads, config, params, wildcards):
         alpha_ax.axis('off')
         alpha_fig.tight_layout()
         # plot h
-        H_ax.imshow(np.ma.array(H_gc, mask=invalid_mask), vmin=0, vmax=1, interpolation='none', cmap='gray')
+        H_mappable = H_ax.imshow(np.ma.array(H_gc, mask=invalid_mask), vmin=0, vmax=1, interpolation='none', cmap='gray')
+        H_fig.colorbar(H_mappable, label=r'$H$', orientation='horizontal', fraction=0.05, shrink=0.35, pad=0.02)
         H_ax.axis('off')
         H_fig.tight_layout()
         # plot rgb paulo
