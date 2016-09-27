@@ -34,21 +34,15 @@ rule HV_gain:
         HV_corr = gpf.gammaDataset(input.C_HV_new + '.par', input.C_HV_new)
         ridx = config['crosspolarizer_index'][0]
         azidx =  config['crosspolarizer_index'][1] / config['range_compression']['dec']
-        rwin = 10
-        azwin = 30
-        ptarg_zoom, rplot, azplot, mx_idx_zoom, res_dict = cf.ptarg(HV, ridx, azidx, azwin=30)
-        ptarg_zoom_corr, rplot_corr, azplot_corr, mx_idx_zoom_corr, res_dict = cf.ptarg(HV_corr, ridx, azidx, azwin=30)
+        sw = (2,4)
+        ptarg_zoom, rplot, azplot, mx_idx_zoom, res_dict = cf.ptarg(HV, ridx, azidx,  sw=sw, azwin=30)
+        ptarg_zoom_corr, rplot_corr, azplot_corr, mx_idx_zoom_corr, res_dict = cf.ptarg(HV_corr, ridx, azidx, sw=sw, azwin=30)
         HV_gain = cf.dB(ptarg_zoom_corr[mx_idx_zoom_corr] / ptarg_zoom[mx_idx_zoom])
         x_shift = 50
         with plt.style.context(config['style']):
             f, ax = plt.subplots()
             norm_plot = plt.plot(cf.dB(np.abs(azplot)), label='No shift')
             corr_plot = plt.plot(cf.dB(np.abs(azplot_corr)), label='Optimal shift')
-            plt.subplot(2,1,1)
-            plt.imshow(ptarg_zoom.real)
-            plt.subplot(2,1,2)
-            plt.imshow(ptarg_zoom_corr.real)
-            plt.show()
             plt.axhline(cf.dB(np.abs(ptarg_zoom[mx_idx_zoom])), color=norm_plot[0].get_color(), linestyle='--')
             plt.axhline(cf.dB(np.abs(ptarg_zoom_corr[mx_idx_zoom_corr])), color=corr_plot[0].get_color(), linestyle='--')
             ax.arrow(mx_idx_zoom[1] + x_shift, cf.dB(np.abs(ptarg_zoom[mx_idx_zoom])),0, HV_gain)
