@@ -168,9 +168,9 @@ Finally, to visualize the result of the calibration, RGB Pauli composites of the
 \newcommand\signatures[1]{
 						\begin{tikzpicture}[]
 							\node(copoluncal) at (0,0){\includegraphics{#1_flat_signature}};
-							\node[right  =  0.5cm  of copoluncal] (xpoluncal) {\includegraphics{#1_flat_signature_x}};
-							\node[below = 2 cm of copoluncal] (copolcal) at (0,0){\includegraphics{#1_cal_signature}};
-							\node[right  = 0.5cm of copolcal] (xpolcal) {\includegraphics{#1_cal_signature_x}};
+							\node[right  =  0.1cm  of copoluncal] (xpoluncal) {\includegraphics{#1_flat_signature_x}};
+							\node[below = 0.5 cm of copoluncal] (copolcal) at (0,0){\includegraphics{#1_cal_signature}};
+							\node[right  = 0.1cm of copolcal] (xpolcal) {\includegraphics{#1_cal_signature_x}};
 							\node[left = 0.1 cm of copoluncal.west, rotate = 90, above = 0.25cm of copoluncal.west ] (uncaltitle) {Uncalibrated};
 							\node[left = 0.1 cm of copolcal.west, rotate = 90, above = 0.25cm of copolcal.west] (caltitle) {Calibrated};
 						\end{tikzpicture}

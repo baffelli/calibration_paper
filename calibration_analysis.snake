@@ -140,8 +140,12 @@ rule pol_signature:
         rplot = "outputs/img/{slcname}_{ridx}_{azidx}_{rx}_{type}_rplot.{ext}",
     params:
         C_root = "cov_{type}/{slcname}_{rx}",
+        est_params = "outputs/img/{slcname}_{rx}_{azidx}_{rx}_{type}_est_params.csv",
     script:
         "scripts/plot_polarization_signature.py"
+
+
+        
 
 ##############################################################################
 ## Estimate calibration residuals

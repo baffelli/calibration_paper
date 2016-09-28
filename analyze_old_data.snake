@@ -13,10 +13,6 @@ include: pyrat.rules['slc_to_calibrated_c']
 include: pyrat.rules['geocoding']
 
 
-print(config)
-
-
-
 ##############################################################################
 ## Check HV gain before and after calibration
 rule HV_gain:
@@ -55,9 +51,22 @@ rule HV_gain:
             f.subplots_adjust(bottom=0.15)
         f.savefig(output[0],pad_inches=0.1)
 
-
-
-
+rule HV_loss_theoretical:
+    input:
+        diff_par = "diff/20160224_105201_AAAl_20160224_105201_BBBl.off_par",
+        slc_par = "slc_desq/20160224_105201_AAAl.slc.par",
+        V_pat = "V_mainlobe_171_GHz.txt",
+        H_pat = "V_mainlobe_171_GHz.txt"
+    output:
+        'outputs/img/HV_loss.pdf'
+    run:
+        hd_size = 1
+        with open(input.H_pat, 'rb') as H_pat_file, open(input.V_pat, 'rb') as V_pat_file:
+            H_pat = np.genfromtxt(H_pat_file, dtype=float, delimiter=',', skip_header=hd_size)
+            V_pat = np.genfromtxt(V_pat_file, dtype=float, delimiter=',', skip_header=hd_size)
+        f, ax = plt.subplots()
+        plt.plot(H_pat)
+        plt.plot(V_pat)
 
 
 
