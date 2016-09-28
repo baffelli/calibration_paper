@@ -42,10 +42,10 @@ rule HV_gain:
             plt.axhline(cf.dB(np.abs(ptarg_zoom[mx_idx_zoom])), color=norm_plot[0].get_color(), linestyle='--')
             plt.axhline(cf.dB(np.abs(ptarg_zoom_corr[mx_idx_zoom_corr])), color=corr_plot[0].get_color(), linestyle='--')
             ax.arrow(mx_idx_zoom[1] + x_shift, cf.dB(np.abs(ptarg_zoom[mx_idx_zoom])),0, HV_gain)
-            ax.text(mx_idx_zoom[1] + x_shift + 5, cf.dB(np.abs(ptarg_zoom[mx_idx_zoom])) + HV_gain/2, "gain {HV:.2f} dB".format(HV=HV_gain))
+            ax.text(mx_idx_zoom[1] + x_shift + 5, cf.dB(np.abs(ptarg_zoom[mx_idx_zoom])) + HV_gain/2, "gain: {HV:.2f} dB".format(HV=HV_gain))
             ax.xaxis.set_label_text(r'azimuth samples')
-            ax.yaxis.set_label_text(r'power [dB]')
-            ax.set_ylim([-10,32])
+            ax.yaxis.set_label_text(r'HV power [dB]')
+            ax.set_ylim([0,35])
             ax.grid(True)
             plt.legend(loc='lower right')
             f.subplots_adjust(bottom=0.15)
@@ -60,13 +60,20 @@ rule HV_loss_theoretical:
     output:
         'outputs/img/HV_loss.pdf'
     run:
+        import matplotlib.pyplot as plt
+        slc_par = gpf.par_to_dict(input.slc_par)
+        off_par = gpf.par_to_dict(input.diff_par)
+        offset = off_par['azimuth_offset_polynomial'][0] * slc_par['GPRI_az_angle_step'][0]
         hd_size = 1
         with open(input.H_pat, 'rb') as H_pat_file, open(input.V_pat, 'rb') as V_pat_file:
             H_pat = np.genfromtxt(H_pat_file, dtype=float, delimiter=',', skip_header=hd_size)
             V_pat = np.genfromtxt(V_pat_file, dtype=float, delimiter=',', skip_header=hd_size)
         f, ax = plt.subplots()
         plt.plot(H_pat)
-        plt.plot(V_pat)
+        plt.plot(V_pat[:,0] + offset, V_pat[:,1])
+        plt.xlabel(r'azimuth [deg]')
+        plt.ylabel(r'normalzied pattern [dB]')
+        plt.show()
 
 
 
