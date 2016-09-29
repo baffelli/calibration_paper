@@ -73,7 +73,6 @@ rule done:
 	    phase_plot,
 	    cp_params,
         cal_resid,
-        "geo/Chuze.sh_map"
     output:
         touch('analysis.done')
 
@@ -205,7 +204,7 @@ rule phc_recap:
 ### Plot Polarimetric analysis
 rule plot_polarimetric_analysis:
     input:
-        C = expand("cov_{{type}}/{{slcname}}_{{rx}}.c{i}{j}",i=[0,1,2,3],j=[0,1,2,3]),
+        C = expand("cov_{{type}}/{{slcname}}_{{rx}}_filt.c{i}{j}",i=[0,1,2,3],j=[0,1,2,3]),
 #        C_gc = expand("cov_{{type}}/{{slcname}}_{{rx}}.c{i}{j}_gc",i=[0,1,2,3],j=[0,1,2,3]),
 #        sh_map = "geo/{tablename}.sh_map".format(tablename=config['geocoding']['table_name']),
 #        lut = "geo/{tablename}.gpri_to_dem".format(tablename=config['geocoding']['table_name']),

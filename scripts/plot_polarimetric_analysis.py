@@ -23,10 +23,10 @@ def plot_reflectors(inputs, outputs, threads, config, params, wildcards):
     # C_mat_gc = C_mat_gc.reshape((C_mat_gc.shape[0], C_mat_gc.shape[1], 4, 4))
     # C_mat_gc = mat.coherencyMatrix(C_mat_gc, basis='lexicographic',
     #                                bistatic=True).to_monostatic().lexicographic_to_pauli()
-    T_mat_gc, x_vec, y_vec, lut = geo.geocode_image( T_mat[200:1200, :], 1.5)
-    H_gc, A_gc, alpha_gc, beta_gc, p, w = T_mat_gc.boxcar_filter([5,2]).cloude_pottier()
+    T_mat_gc, x_vec, y_vec, lut = geo.geocode_image( T_mat[200:1200, :], 1)
+    H_gc, A_gc, alpha_gc, beta_gc, p, w = T_mat_gc.boxcar_filter([3,3]).cloude_pottier()
     # Compute pauli rgb
-    rgb = vf.mask_zeros(T_mat_gc.pauli_image(k=0.5, sf=0.05))
+    rgb = vf.mask_zeros(T_mat_gc.pauli_image(k=0.3, sf=0.5))
 
     with plt.style.context(config['style']):
         #temporary chna
@@ -40,13 +40,13 @@ def plot_reflectors(inputs, outputs, threads, config, params, wildcards):
         # plot alpha
         alpha_mappable = alpha_ax.imshow(np.ma.array(np.rad2deg(alpha_gc)), vmin=0, vmax=90,
                                          interpolation='none')
-        alpha_fig.colorbar(alpha_mappable, label=r'$\alpha [deg]$', orientation='horizontal', fraction=0.05, shrink=0.35, pad=0.02)
+        alpha_fig.colorbar(alpha_mappable, label=r'$\alpha [deg]$', orientation='horizontal', fraction=0.05, shrink=0.35, pad=0.05)
         alpha_ax.axis('off')
         kwdict = {'left':0, 'right':1, 'top':1, 'bottom':0, 'hspace':0, 'wspace':1}
         alpha_fig.subplots_adjust(**kwdict)
         # plot h
         H_mappable = H_ax.imshow(np.ma.array(H_gc), vmin=0, vmax=1, interpolation='none', cmap='gray')
-        H_fig.colorbar(H_mappable, label=r'$H$', orientation='horizontal', fraction=0.05, shrink=0.35, pad=0.02)
+        H_fig.colorbar(H_mappable, label=r'$H$', orientation='horizontal', fraction=0.05, shrink=0.35, pad=0.05)
         H_ax.axis('off')
         H_fig.subplots_adjust(**kwdict)
         # plot rgb paulo
