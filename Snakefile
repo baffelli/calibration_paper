@@ -20,7 +20,7 @@ subworkflow new_data:
 
 rule all:
     input:
-#        old_data('outputs/img/HV_gain.pdf'),
+        old_data('outputs/img/HV_gain.pdf'),
 #        old_data('outputs/img/HV_loss.pdf'),
         new_data('analysis.done'),
 #        'doc/calibration_paper.pdf'

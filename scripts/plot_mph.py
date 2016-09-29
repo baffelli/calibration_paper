@@ -8,7 +8,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 import numpy as np
 import scipy.ndimage as ndim
 def plot_mph(inputs, outputs, threads, config, params, wildcards):
-    with plt.style.context(inputs['style']):
+    with plt.style.context(config['style']):
         slc = gpf.gammaDataset(inputs['slc'] + '.par', inputs['slc'] )
         r_idx = int(wildcards['ridx'])
         az_idx = int(wildcards['azidx'])
@@ -24,18 +24,9 @@ def plot_mph(inputs, outputs, threads, config, params, wildcards):
         mappable = mph_ax.imshow(mph[:, :], cmap=rgb, extent=[r_vec.min(), r_vec.max(), az_vec.min(),az_vec.max()], aspect=10.0, interpolation='none')
         # #Create axes for range and azimuth respoinse
         # divider = make_axes_locatable(mph_ax)
-        plt.figtext(0.15,0.9, r"\begin{{tabular}}{{l}}Range resolution: {r_res:.3f} m\\Azimuth resolution:"
+        plt.figtext(0.15,0.95, r"\begin{{tabular}}{{l}}Range resolution: {r_res:.3f} m\\Azimuth resolution:"
                              " {az_res:.3f}$^\circ$\end{{tabular}}".format(r_res=res_dict['range_resolution'][0],
                                                                             az_res=res_dict['azimuth_resolution'][0]), fontsize=5)
-        # r_ax = divider.append_axes("top", size="50%", pad=0.15, sharex=mph_ax)
-        # r_ax.plot(r_vec, cf.dB(r_plot))
-        # r_ax.set_ylabel(r'power [dB]')
-        # az_ax = divider.append_axes("left", size="50%", pad=0.15, sharey=mph_ax)
-        # az_ax.plot(cf.dB(az_plot[::-1]), az_vec)
-        # az_ax.invert_xaxis()
-        # az_ax.set_xlabel(r'power [dB]')
-        # ax = f.gca()
-        # vf.format_axes(ax)
         mph_ax.set_xlabel(r'range samples [m]')
         mph_ax.set_ylabel(r'azimuth samples $\theta$ [deg]')
         ticks = [0, 0.25, 0.5, 0.75, 1]

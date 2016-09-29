@@ -1,8 +1,7 @@
 {
     "style":    "/home/baffelli/PhD/trunk/Code/pyrat/pyrat/rcfiles/paper_rc.rc",
 	"project_name": "2016_GPRI_Chutzen",
-	"datetime": ["20160914_143958", "20160914_145059"],
-	"master_slc": "20160914_105450_AAAl",
+	"datetime":  "20160914_145059",
 	"range_compression":	{
 			"rmin":		50,
 			"rmax":		3000,
@@ -60,7 +59,7 @@
 	"geocoding":			{
 			"scan_heading":	"56",
 			"DEM"			: "geo/swissALTI3D_2016_Clip.dem",
-			"ref_mli_par"   : "slc_corr/20160914_105450_AAAl.slc_dec.par",
+			"ref_mli_par"   : "slc_corr/20160914_145059_AAAl.slc_dec.par",
 			"table_name" 	: "Chutzen"
 	}
 }

@@ -18,7 +18,7 @@ def phc_recap(inputs, outputs, threads, config, params, wildcards):
     #Load matrix and convert to coherency
     slc = gpf.gammaDataset(inputs['slc_par'], inputs['slc'])
     #list of results
-    res_list =
+    res_list = []
     with open(outputs['phase_report'], 'w+') as of:
         tabwrite = csv.writer(of, delimiter=',')
         tabwrite.writerow(
@@ -29,8 +29,11 @@ def phc_recap(inputs, outputs, threads, config, params, wildcards):
             res_list.append(row)
             print(row)
             tabwrite.writerow(row)
-        tabwrite.writerow(['weighted average', 'weighted RMS'])
-        r_ph_opt = np.mean()
+        tabwrite.writerow(['average r_ph', 'weighted average r_ph'])
+        res_list = np.array(res_list)
+        r_ph_opt = np.mean(res_list[:,0])
+        r_ph_opt_w = np.average(res_list[:, 0], weights = 1/res_list[:,1])
+        tabwrite.writerow([r_ph_opt, r_ph_opt_w])
         #Compute average
         #     ax.plot(meas_ph,'r')
         #     ax.plot(sim_ph,'g')
