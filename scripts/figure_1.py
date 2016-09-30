@@ -17,26 +17,29 @@ def plot_figure_1(inputs, outputs, threads, config, params, wildcards):
             current_slc = gpf.gammaDataset(file_name + '.par', file_name)  # load slc
             ptarg_zoom, r_plot, az_plot, mx_pos, res_dict, r_vec, az_vec = cf.ptarg(current_slc, params['ridx'],
                                                                                     params['azidx'],
-                                                                                    azwin=128, rwin=20)
-            mph, rgb, norm = vf.dismph(ptarg_zoom, k=0.4, sf=0.1, coherence=False)  # create rgb image
+                                                                                    azwin=128, rwin=20, osf=32)
+            mph, rgb, norm = vf.dismph(ptarg_zoom, k=0.3, sf=0.2, coherence=False)  # create rgb image
             mappable = current_ax.imshow(mph, cmap=rgb, extent=[az_vec.min(), az_vec.max(), r_vec.min(), r_vec.max()],
                                          aspect=1 / 10.0)
             # add resolution analysis
-            resolution_text = r"\begin{{tabular}}{{l}}Range resolution: {r_res:.3f} m\\Azimuth resolution:"
-            " {az_res:.3f}$^\circ$\end{{tabular}}".format(r_res=res_dict['range_resolution'][0],
-                                                          az_res=res_dict['azimuth_resolution'][
-                                                              0])
-            current_ax.text(0.7, 0.1, resolution_text, size=5)#set label
-        if idx_chan == 1 and idx_proc == 0:
-            current_ax.set_xlabel(r'azimuth samples $\theta$ [deg]')
-            current_ax.set_ylabel(r'range samples [m]')
+            resolution_text = r"""Range resolution: {r_res:.3f} m
+            Azimuth resolution: {az_res:.3f}$^\circ$""".format(r_res=res_dict['range_resolution'][0],
+                                             az_res=res_dict['azimuth_resolution'][
+                                                 0])
+            # print(resolution_text)
+            bbox_props = dict(boxstyle="square", fc="white", ec="w", lw=2)
+            t = current_ax.text(0.1, 0.1, resolution_text, size=8, bbox=bbox_props, horizontalalignment='left',
+                                transform=current_ax.transAxes)  # set label
+            if idx_chan == 1 and idx_proc == 0:
+                current_ax.set_xlabel(r"azimuth samples $\theta$ [deg]")
+                current_ax.set_ylabel(r'range samples [m]')
 
     ticks = [0, 0.25, 0.5, 0.75, 1]
     labels = ['-180', '-90', '0', '90', '180']
     # Make space for colorbar
     # f.subplots_adjust(right=0.8)
     # cbar_ax = divider.append_axes("left", size="20%", pad=0.25)
-    cax = f.add_axes([0.1, 0.02, 0.5, 0.015])
+    cax = f.add_axes([0.25, 0.02, 0.5, 0.015])
     cbar = f.colorbar(mappable, label=r'Phase [deg]', orientation='horizontal', ticks=ticks, cax=cax)
     cbar.set_ticks(ticks)
     cbar.set_ticklabels(labels)

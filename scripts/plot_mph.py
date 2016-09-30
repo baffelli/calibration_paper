@@ -32,8 +32,6 @@ def plot_mph(inputs, outputs, threads, config, params, wildcards):
         ticks = [0, 0.25, 0.5, 0.75, 1]
         labels = ['-180', '-90', '0', '90', '180']
         #Make space for colorbar
-        # f.subplots_adjust(right=0.8)
-        # cbar_ax = divider.append_axes("left", size="20%", pad=0.25)
         cbar = f.colorbar(mappable, label=r'Phase [deg]', orientation='vertical', ticks=ticks, shrink=0.5, pad=0.1)
         cbar.set_ticks(ticks)
         cbar.set_ticklabels(labels)

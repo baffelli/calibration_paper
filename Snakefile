@@ -23,7 +23,7 @@ subworkflow new_data:
 
 rule all:
     input:
-        './fig/figure_1.pdf'
+        'fig/figure_1.pdf'
 #        old_data('outputs/img/HV_gain.pdf'),
 ##        old_data('outputs/img/HV_loss.pdf'),
 #        new_data('analysis.done'),
@@ -35,7 +35,7 @@ rule all:
 
 rule fig1:
     output:
-        './fig/figure_1.pdf'
+        'fig/figure_1.pdf'
     input:
         HH = new_data('slc_chan/20160914_145059_AAAl.slc'),
         VV = new_data('slc_chan/20160914_145059_BBBl.slc'),
@@ -48,7 +48,7 @@ rule fig1:
         ridx = 1331,
         azidx = 1490
     script:
-        './scripts/figure_1.py'
+        'scripts/figure_1.py'
 
 
 
