@@ -3,42 +3,44 @@
 In order to assess the processing quality and to appreciate the effect of the beam squint correction, in  \autoref{fig:tcr_mph} the oversampled impulse response of the 90 cm TCR at 659 m slant range is plotted. The plots on the left side (\autoref{fig:tcr_mph:HH_uncorr}, \autoref{fig:tcr_mph:VV_uncorr}) contain the response obtained by directly range compressing the dechirped data. The phase displays interesting patterns, with the equiphase contours forming a cross shape centered at the center of the reflector. The shift between the HH and the VV channel is visible too, as the response for the one channel is shifted with respect to the other plot.\\ A visual comparison with the same response obtained enabling the squint compensation, shows an improvement in both the range and the azimuth resolutions; this is confirmed numerically by fitting a spline on the azimuth and range responses and computing its 3 dB width. The numerical results are shown above each plot of \autoref{fig:tcr_mph}; signficant improvements in both range and azimuth are clear, especially so for the HH channel, that shows a range resolution improvement of 0.24 m. This gain is reduced to only 0.17 m for the VV channel.\\ Similarly, a reduction in the phase variation is visible especially for the HH channel, (\autoref{fig:tcr_mph:HH_corr}) while the phase response of VV channel shows a residual phase ramp in azimuth direction (\autoref{fig:tcr_mph:HH_corr}).
 \def\chutzepref{20160914_145059}
 \begin{figure*}[ht]
-	\begin{subfigure}[b]{0.6\columnwidth}
-		\centering
-		\includegraphics[scale=0.7]{\chutzepref_1331_1490_AAAl_chan_mph_plot}
-		\subcaption{HH channel without beam squint correction.}
-		\label{fig:tcr_mph:HH_uncorr}
-	\end{subfigure}~
-	\begin{subfigure}[b]{0.6\columnwidth}
-		\centering
-		\includegraphics[scale=0.7]{\chutzepref_1331_1490_AAAl_desq_mph_plot}
-		\subcaption{HH channel with squint correction.}
-		\label{fig:tcr_mph:HH_corr}
-	\end{subfigure}~
-	\begin{subfigure}[b]{0.6\columnwidth}
-		\centering
-		\includegraphics[scale=0.7]{\chutzepref_1331_1490_AAAl_corr_mph_plot}
-		\subcaption{HH channel with squint and azimuth ramp correction.}
-		\label{fig:tcr_mph:HH_corr_ph}
-	\end{subfigure}\\
-	\begin{subfigure}[b]{0.6\columnwidth}
-		\centering
-		\includegraphics[scale=0.7]{\chutzepref_1331_1490_BBBl_chan_mph_plot}
-		\subcaption{VV channel without beam squint correction.}
-		\label{fig:tcr_mph:VV_uncorr}
-	\end{subfigure}~
-	\begin{subfigure}[b]{0.6\columnwidth}
-		\centering
-		\includegraphics[scale=0.7]{\chutzepref_1331_1490_BBBl_desq_mph_plot}
-		\subcaption{VV channel with squint correction.}
-		\label{fig:tcr_mph:VV_corr}
-	\end{subfigure}~
-	\begin{subfigure}[b]{0.6\columnwidth}
-		\centering
-		\includegraphics[scale=0.7]{\chutzepref_1331_1490_BBBl_corr_mph_plot}
-		\subcaption{VV channel with squint and azimuth ramp correction.}
-		\label{fig:tcr_mph:VV_corr_ph}
-	\end{subfigure}~
+	\centering
+	\includegraphics{figure_1}
+%	\begin{subfigure}[b]{0.6\columnwidth}
+%		\centering
+%		\includegraphics[scale=0.7]{\chutzepref_1331_1490_AAAl_chan_mph_plot}
+%		\subcaption{HH channel without beam squint correction.}
+%		\label{fig:tcr_mph:HH_uncorr}
+%	\end{subfigure}~
+%	\begin{subfigure}[b]{0.6\columnwidth}
+%		\centering
+%		\includegraphics[scale=0.7]{\chutzepref_1331_1490_AAAl_desq_mph_plot}
+%		\subcaption{HH channel with squint correction.}
+%		\label{fig:tcr_mph:HH_corr}
+%	\end{subfigure}~
+%	\begin{subfigure}[b]{0.6\columnwidth}
+%		\centering
+%		\includegraphics[scale=0.7]{\chutzepref_1331_1490_AAAl_corr_mph_plot}
+%		\subcaption{HH channel with squint and azimuth ramp correction.}
+%		\label{fig:tcr_mph:HH_corr_ph}
+%	\end{subfigure}\\
+%	\begin{subfigure}[b]{0.6\columnwidth}
+%		\centering
+%		\includegraphics[scale=0.7]{\chutzepref_1331_1490_BBBl_chan_mph_plot}
+%		\subcaption{VV channel without beam squint correction.}
+%		\label{fig:tcr_mph:VV_uncorr}
+%	\end{subfigure}~
+%	\begin{subfigure}[b]{0.6\columnwidth}
+%		\centering
+%		\includegraphics[scale=0.7]{\chutzepref_1331_1490_BBBl_desq_mph_plot}
+%		\subcaption{VV channel with squint correction.}
+%		\label{fig:tcr_mph:VV_corr}
+%	\end{subfigure}~
+%	\begin{subfigure}[b]{0.6\columnwidth}
+%		\centering
+%		\includegraphics[scale=0.7]{\chutzepref_1331_1490_BBBl_corr_mph_plot}
+%		\subcaption{VV channel with squint and azimuth ramp correction.}
+%		\label{fig:tcr_mph:VV_corr_ph}
+%	\end{subfigure}~
 
 	\caption{Oversampled phase and amplitude response for the trihedral corner reflector.}
 	\label{fig:tcr_mph}
@@ -146,17 +148,17 @@ Finally, to visualize the result of the calibration, RGB Pauli composites of the
 
 
 
-\def\refI{../outputs/img/\chutzepref_32_519}
-\def\refII{../outputs/img/\chutzepref_1032_570}
-\def\refIII{../outputs/img/\chutzepref_1051_561}
-\def\refIV{../outputs/img/\chutzepref_1331_149}
-\def\refV{../outputs/img/\chutzepref_3518_354}
+\def\refI{../outputs/img/\chutzepref_32_519_l}
+\def\refII{../outputs/img/\chutzepref_1032_570_l}
+\def\refIII{../outputs/img/\chutzepref_1051_561_l}
+\def\refIV{../outputs/img/\chutzepref_1331_149_l}
+\def\refV{../outputs/img/\chutzepref_3518_354_l}
 
-\pgfplotstableread[col sep=comma]{\refI_l_cal_cal_params.csv}{\refIt}
-\pgfplotstableread[col sep=comma]{\refII_l_cal_cal_params.csv}{\refIIt}
-\pgfplotstableread[col sep=comma]{\refIII_l_cal_cal_params.csv}{\refIIIt}
-\pgfplotstableread[col sep=comma]{\refIV_l_cal_cal_params.csv}{\refIVt}
-\pgfplotstableread[col sep=comma]{\refV_l_cal_cal_params.csv}{\refVt}
+\pgfplotstableread[col sep=comma]{\refI_cal_cal_params.csv}{\refIt}
+\pgfplotstableread[col sep=comma]{\refII_cal_cal_params.csv}{\refIIt}
+\pgfplotstableread[col sep=comma]{\refIII_cal_cal_params.csv}{\refIIIt}
+\pgfplotstableread[col sep=comma]{\refIV_cal_cal_params.csv}{\refIVt}
+\pgfplotstableread[col sep=comma]{\refV_cal_cal_params.csv}{\refVt}
 \pgfplotstableset{ref style/.style={
 									display columns/0/.style={precision=2, column name=$\phi_r + \phi_t [\circ]$},
 									display columns/1/.style={precision=2, column name=$f$},
@@ -168,60 +170,80 @@ Finally, to visualize the result of the calibration, RGB Pauli composites of the
 \newcommand\signatures[1]{
 						\begin{tikzpicture}[]
 							\node(copoluncal) at (0,0){\includegraphics{#1_flat_signature}};
-							\node[right  =  0.1cm  of copoluncal] (xpoluncal) {\includegraphics{#1_flat_signature_x}};
-							\node[below = 0.5 cm of copoluncal] (copolcal) at (0,0){\includegraphics{#1_cal_signature}};
-							\node[right  = 0.1cm of copolcal] (xpolcal) {\includegraphics{#1_cal_signature_x}};
+							\node[right  =  -0.0cm  of copoluncal] (xpoluncal) {\includegraphics{#1_flat_signature_x}};
+							\node[below = 1.5 cm of copoluncal] (copolcal) at (0,0){\includegraphics{#1_cal_signature}};
+							\node[right  = 0.0cm of copolcal] (xpolcal) {\includegraphics{#1_cal_signature_x}};
 							\node[left = 0.1 cm of copoluncal.west, rotate = 90, above = 0.25cm of copoluncal.west ] (uncaltitle) {Uncalibrated};
 							\node[left = 0.1 cm of copolcal.west, rotate = 90, above = 0.25cm of copolcal.west] (caltitle) {Calibrated};
 						\end{tikzpicture}
 					}
 
+\newcommand\sigsubfig[1]{
+			\begin{subfigure}[t]{0.5\linewidth}
+				\begin{subfigure}[t]{0.5\linewidth}
+					\includegraphics{#1_flat_signature}
+				\end{subfigure}~
+				\begin{subfigure}[t]{0.5\linewidth}
+					\includegraphics{#1_flat_signature_x}
+				\end{subfigure}\\
+				\begin{subfigure}[t]{0.5\linewidth}
+					\includegraphics{#1_cal_signature}
+				\end{subfigure}~
+				\begin{subfigure}[t]{0.5\linewidth}
+					\includegraphics{#1_cal_signature_x}
+				\end{subfigure}
+			\end{subfigure}}
 
 \begin{figure*}[hb]
-		\begin{subfigure}[t]{\columnwidth}
-		\centering
-			\signatures{\refI_l}
-
-			\subcaption{Reflector 1\\ 
-					\pgfplotstabletypeset[ref style] {\refIt}
-					}
-			\label{fig:pol_signatures:refl1}
-		\end{subfigure}
-		\begin{subfigure}[t]{\columnwidth}
-			\centering
-			\signatures{\refII_l}
-			\subcaption{Reflector 2 \\  
-						\pgfplotstabletypeset[ref style] {\refIIt}
-						}
-			\label{fig:pol_signatures:refl2}
-		\end{subfigure}
-		\begin{subfigure}[t]{\columnwidth}
-			\centering
-			\signatures{\refIII_l}
-			\subcaption{Reflector 3\\ 						
-									\pgfplotstabletypeset[ref style] {\refIIIt}
-						}
-			\label{fig:pol_signatures:refl3}
-		\end{subfigure}
-		\begin{subfigure}[t]{\columnwidth}
-			\centering
-			\signatures{\refIV_l}
-			\subcaption{Reflector 4\\ 
-									\pgfplotstabletypeset[ref style] {\refIVt}
-			           }
-			\label{fig:pol_signatures:refl4}
-		\end{subfigure}\\
-\end{figure*}	
-\begin{figure*}[H]		
-		 \ContinuedFloat
-		\begin{subfigure}[t]{\columnwidth}
-			\centering
-			\signatures{\refV_l}
-			\subcaption{Reflector 5\\ 
-									\pgfplotstabletypeset[ref style] {\refVt}
-        }
-			\label{fig:pol_signatures:refl5}
-		\end{subfigure}
-		\caption{Polarization signatures for the calibration array, acquired using the lower receiver. The top row for each subplot shows the response before the calibration procedure, the bottom one the calibrated response. Each caption contains the calibration parameters re-estimated after the calibration. The imbalances are in degrees, the slant range distance in meters.}
-		\label{fig:pol_signatures}
+	\sigsubfig{\refI}
 \end{figure*}
+
+
+%\begin{figure*}[hb]
+%		\begin{subfigure}[t]{\columnwidth}
+%		\centering
+%			\signatures{\refI_l}
+%
+%			\subcaption{Reflector 1\\ 
+%					\pgfplotstabletypeset[ref style] {\refIt}
+%					}
+%			\label{fig:pol_signatures:refl1}
+%		\end{subfigure}\\
+%		\begin{subfigure}[t]{\columnwidth}
+%			\centering
+%			\signatures{\refII_l}
+%			\subcaption{Reflector 2 \\  
+%						\pgfplotstabletypeset[ref style] {\refIIt}
+%						}
+%			\label{fig:pol_signatures:refl2}
+%		\end{subfigure}\\
+%		\begin{subfigure}[t]{\columnwidth}
+%			\centering
+%			\signatures{\refIII_l}
+%			\subcaption{Reflector 3\\ 						
+%									\pgfplotstabletypeset[ref style] {\refIIIt}
+%						}
+%			\label{fig:pol_signatures:refl3}
+%		\end{subfigure}\\
+%\end{figure*}	
+%\begin{figure*}[H]		
+%		 \ContinuedFloat
+% 		\begin{subfigure}[t]{\columnwidth}
+% 			\centering
+% 			\signatures{\refIV_l}
+% 			\subcaption{Reflector 4\\ 
+% 									\pgfplotstabletypeset[ref style] {\refIVt}
+%         }
+% 			\label{fig:pol_signatures:refl4}
+% 		\end{subfigure}\\
+%		\begin{subfigure}[t]{\columnwidth}
+%			\centering
+%			\signatures{\refV_l}
+%			\subcaption{Reflector 5\\ 
+%									\pgfplotstabletypeset[ref style] {\refVt}
+%        }
+%			\label{fig:pol_signatures:refl5}
+%		\end{subfigure}
+%		\caption{Polarization signatures for the calibration array, acquired using the lower receiver. The top row for each subplot shows the response before the calibration procedure, the bottom one the calibrated response. Each caption contains the calibration parameters re-estimated after the calibration. The imbalances are in degrees, the slant range distance in meters.}
+%		\label{fig:pol_signatures}
+%\end{figure*}
