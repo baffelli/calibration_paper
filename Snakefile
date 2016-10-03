@@ -24,7 +24,8 @@ subworkflow new_data:
 rule all:
     input:
         'fig/figure_1.pdf',
-        'fig/figure_2.pdf'
+        'fig/figure_2.pdf',
+        'fig/figure_3.pdf'
 #        old_data('outputs/img/HV_gain.pdf'),
 ##        old_data('outputs/img/HV_loss.pdf'),
 #        new_data('analysis.done'),
@@ -41,6 +42,14 @@ list_of_reflectors = [
     [1051, 5617, "t"],
     [3518, 3545, "t"]
 ]
+
+
+###############################################################################
+#Cleanup figure
+rule cleanup_figures:
+    run:
+        shell("trash ./fig/*.pdf")
+
 ###############################################################################
 #Plot figure 1: Oversampled magnitude/phase response of a TCR
 rule fig1:
@@ -66,7 +75,7 @@ rule fig1:
 
 #this serves to select the proper channel
 def select_slc(wildcards):
-    proc_type = 'coreg' if wildcards.n == 2 else 'corr'
+    proc_type = 'coreg' if int(wildcards.n) == 2 else 'corr'
     VV = new_data('slc_{name}/20160914_145059_BBBl.slc'.format(name=proc_type))
     return VV
 
@@ -78,7 +87,6 @@ rule fig2:
         style = 'paper_style.rc'
     params:
         reflectors = list_of_reflectors,
-        ws=4
     script:
         'scripts/figure_2.py'
 

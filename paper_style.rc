@@ -4,12 +4,9 @@ font.serif      : computer modern roman
 font.sans-serif : computer modern sans serif
 font.size       : 12
 text.usetex     : True  # use latex for all text handling
-text.latex.preamble: \usepackage{helvet} \usepackage{sansmath} \sansmath
+#text.latex.preamble:
 #Math text
-mathtext.fontset:   custom
-mathtext.rm:    computer modern
-mathtext.it:    computer modern:italic
-mathtext.bf:    computer modern:bold
+mathtext.fontset:  cm
 axes.unicode_minus  : True
 image.aspect : equal             # equal | auto | a number
 image.interpolation  : none  # see help(imshow) for options
@@ -17,6 +14,7 @@ image.interpolation  : none  # see help(imshow) for options
 figure.figsize : 3, 2
 figure.subplot.wspace  : 0.1    # the amount of width reserved for blank space between subplots
 figure.subplot.hspace  : 0.1    # the amount of height reserved for white space between subplots
+figure.autolayout : False
 #Legend
 legend.frameon       : False
 legend.fontsize      : xx-small
@@ -33,31 +31,37 @@ axes.labelsize      : x-small
 axes.labelcolor     : black
 axes.titlesize      : x-small
 axes.labelpad       : 0.8
+axes.spines.right : False
+axes.spines.top : False
 #Grid
-grid.color : gray
-grid.linestyle : dashed
-grid.linewidth: 0.1
+grid.color : grey
+grid.linestyle : solid
+grid.linewidth: 0.02
 #Ticks
 #xticks
 xtick.major.size     : 2
 xtick.minor.size     : 0.5
-xtick.major.width   : 0.15
-xtick.minor.width   : 0.075
-xtick.major.pad     : 0.5
+xtick.major.width   : 0.3
+xtick.minor.width   : 0.1
+xtick.major.pad     : 0.75
 xtick.minor.pad     : 0.25
 xtick.color         : black
 xtick.direction: out
 xtick.labelsize     : xx-small
+xtick.major.top     : False
+xtick.minor.top     : False
 #yticks
 ytick.major.size     : 2
 ytick.minor.size     : 0.5
-ytick.major.width   : 0.15
-ytick.minor.width   : 0.075
-ytick.major.pad     : 0.5
+ytick.major.width   : 0.3
+ytick.minor.width   : 0.1
+ytick.major.pad     : 0.75
 ytick.minor.pad     : 0.25
 ytick.color         : black
 ytick.direction: out
 ytick.labelsize     : xx-small
+ytick.major.top     : False
+ytick.minor.top     : False
 #Lines
 lines.linewidth     : 1.5
 #Color cycle
@@ -67,8 +71,7 @@ savefig.format  : pdf
 savefig.dpi         : 100
 savefig.transparent : True
 savefig.bbox        : tight
-#Figure
-figure.autolayout : False
+savefig.pad_inches  : 0.1      # Padding to be used when bbox is set to 'tight'
 #interaction
 interactive         : False
 backend:            PDF
