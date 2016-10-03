@@ -7,7 +7,7 @@ text.usetex     : True  # use latex for all text handling
 #text.latex.preamble:
 #Math text
 mathtext.fontset:  cm
-axes.unicode_minus  : True
+axes.unicode_minus  : False
 image.aspect : equal             # equal | auto | a number
 image.interpolation  : none  # see help(imshow) for options
 #Figure
@@ -18,7 +18,8 @@ figure.autolayout : False
 #Legend
 legend.frameon       : False
 legend.fontsize      : xx-small
-legend.labelspacing  : 0.25
+legend.labelspacing  : 0.1
+legend.handletextpad : 0.4
 legend.borderpad: 0.2
 #Axes
 axes.facecolor      : white
@@ -65,7 +66,7 @@ ytick.minor.top     : False
 #Lines
 lines.linewidth     : 1.5
 #Color cycle
-axes.prop_cycle    : cycler('color', ['66c2a5','fc8d62','8da0cb','e78ac3','a6d854'])
+axes.prop_cycle    : cycler('color', ['66c2a5','fc8d62','8da0cb','e78ac3','a6d854','ffd92f','e5c494','b3b3b3'])
 #Dpi
 savefig.format  : pdf
 savefig.dpi         : 100

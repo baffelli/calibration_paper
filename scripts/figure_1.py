@@ -7,7 +7,7 @@ import pyrat.fileutils.gpri_files as gpf
 import pyrat.visualization.visfun as vf
 
 # searc window in degrees
-sw = 0.5
+sw = 0.8
 # window for interpolation
 rwin = 20
 azwin = 128
@@ -33,7 +33,7 @@ def plot_figure_1(inputs, outputs, threads, config, params, wildcards):
             ptarg_zoom, r_plot, az_plot, mx_pos, res_dict, r_vec, az_vec = cf.ptarg(current_slc, params['ridx'],
                                                                                     params['azidx'],
                                                                                     azwin=azwin, rwin=rwin, osf=32,
-                                                                                    sw=(2, sw_idx))
+                                                                                    sw=(4, sw_idx))
             # remove phase at maximum
             ptarg_zoom *= np.exp(1j * np.angle(ptarg_zoom[mx_pos].conj()))
             mph, rgb, norm = vf.dismph(ptarg_zoom, k=0.6, sf=0.2, coherence=False)  # create rgb image
