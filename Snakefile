@@ -23,7 +23,8 @@ subworkflow new_data:
 
 rule all:
     input:
-        'fig/figure_1.pdf'
+        'fig/figure_1.pdf',
+        'fig/figure_2.pdf'
 #        old_data('outputs/img/HV_gain.pdf'),
 ##        old_data('outputs/img/HV_loss.pdf'),
 #        new_data('analysis.done'),
@@ -31,8 +32,17 @@ rule all:
 
 
 
+#Define list of reflectors
+list_of_reflectors = [
+    [32, 5192, "t"],
+    [1331, 1490, "t"],
+    [830, 3503, "t"],
+    [1032, 5703, "t"],
+    [1051, 5617, "t"],
+    [3518, 3545, "t"]
+]
 ###############################################################################
-
+#Plot figure 1: Oversampled magnitude/phase response of a TCR
 rule fig1:
     output:
         'fig/figure_1.pdf'
@@ -45,13 +55,32 @@ rule fig1:
         VV_corr = new_data('slc_corr/20160914_145059_BBBl.slc'),
         style = 'paper_style.rc'
     params:
-        ridx = 1331,
-        azidx = 1490
+        ridx = list_of_reflectors[1][0],
+        azidx = list_of_reflectors[1][1]
     script:
         'scripts/figure_1.py'
 
+###############################################################################
+#Plot figure 2/3: Oversampled magnitude/phase response of all TCR
+#before and after the phase correction
 
+#this serves to select the proper channel
+def select_slc(wildcards):
+    proc_type = 'coreg' if wildcards.n == 2 else 'corr'
+    VV = new_data('slc_{name}/20160914_145059_BBBl.slc'.format(name=proc_type))
+    return VV
 
+rule fig2:
+    output:
+        'fig/figure_{n,(2|3)}.pdf'
+    input:
+        VV = select_slc,
+        style = 'paper_style.rc'
+    params:
+        reflectors = list_of_reflectors,
+        ws=4
+    script:
+        'scripts/figure_2.py'
 
 
 
