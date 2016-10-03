@@ -10,22 +10,21 @@ import json
 
 
 
-
 subworkflow old_data:
-    workdir:    './processed'
+    workdir: './processed'
     snakefile:  pyrat.rules['slc_to_calibrated_c']
     configfile: './calibration_configuration_20160222.json'
 
 subworkflow new_data:
-    workdir:    './processed'
+    workdir: './processed'
     snakefile:  pyrat.rules['slc_to_calibrated_c']
     configfile: './calibration_configuration_chutze.json'
 
 rule all:
     input:
         'fig/figure_1.pdf',
-        'fig/figure_2.pdf',
-        'fig/figure_3.pdf'
+#        'fig/figure_2.pdf',
+#        'fig/figure_3.pdf'
 #        old_data('outputs/img/HV_gain.pdf'),
 ##        old_data('outputs/img/HV_loss.pdf'),
 #        new_data('analysis.done'),
@@ -89,6 +88,16 @@ rule fig2:
         reflectors = list_of_reflectors,
     script:
         'scripts/figure_2.py'
+
+
+###############################################################################
+#Plot figure 4: Gain in HV response after coregistration
+rule fig4:
+    input:
+        C_HV_new = old_data("slc_corr/20160224_130521_ABBl.mli_dec"),
+        C_HV_old = old_data("slc_corr/20160224_105201_ABBl.mli_dec"),
+    output:
+
 
 
 

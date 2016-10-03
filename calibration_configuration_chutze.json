@@ -37,7 +37,7 @@
 			"ABB_center_squint": 1
 	},
 	"phase_correction":		{
-			"integration_length":	0.7,
+			"integration_length":	0.4,
 			"AAA_phase_center_offset": 0.02,
 			"BBB_phase_center_offset": -0.12,
 			"ABB_phase_center_offset": -0.12,

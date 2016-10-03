@@ -31,7 +31,7 @@ def plot_figure_2(inputs, outputs, threads, config, params, wildcards):
         r_sl = slc.r_vec[ridx]
         line, = phase_ax.plot(az_vec, np.rad2deg(refl_ph), label=r"r={} m".format(round(r_sl)))
         amp_ax.plot(az_vec, refl_amp / refl_amp[reflector_slice.shape[0] / 2],
-                    label=r"\tiny{{r={r_sl:.2f} m}}".format(r_sl=r_sl))
+                    label=r"\tiny{{r={r_sl:.2f}~m}}".format(r_sl=r_sl))
         # Plot line for beamwidth
         phase_ax.set_ylim(-30, 30)
         lc = "#cc8e8e"
