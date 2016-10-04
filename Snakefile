@@ -20,11 +20,15 @@ subworkflow new_data:
     snakefile:  pyrat.rules['slc_to_calibrated_c']
     configfile: './calibration_configuration_chutze.json'
 
+
+old_data.configfile
+
 rule all:
     input:
         'fig/figure_1.pdf',
-#        'fig/figure_2.pdf',
-#        'fig/figure_3.pdf'
+        'fig/figure_2.pdf',
+        'fig/figure_3.pdf',
+        'fig/figure_4.pdf'
 #        old_data('outputs/img/HV_gain.pdf'),
 ##        old_data('outputs/img/HV_loss.pdf'),
 #        new_data('analysis.done'),
@@ -96,7 +100,14 @@ rule fig4:
     input:
         C_HV_new = old_data("slc_corr/20160224_130521_ABBl.mli_dec"),
         C_HV_old = old_data("slc_corr/20160224_105201_ABBl.mli_dec"),
+        style = 'paper_style.rc'
     output:
+        'fig/figure_4.pdf'
+    params:#position of dihedral
+        ridx = 720,
+        azidx = 168
+    script:
+        'scripts/figure_4.py'
 
 
 
