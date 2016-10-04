@@ -46,20 +46,18 @@ def plot_figure_5(inputs, outputs, threads, config, params, wildcards):
         fig_arr[ref_count, 1].plot_surface(pp, cc, x_sig, cmap='RdBu_r', lw=0.2)
         fig_arr[ref_count  + 1, 0].plot_surface(pp, cc, co_sig_cal, cmap='RdBu_r', lw=0.2)
         fig_arr[ref_count  + 1, 1].plot_surface(pp, cc, x_sig_cal, cmap='RdBu_r', lw=0.2)
-        fig_arr[ref_count, 0].auto_scale_xyz([-90, 90], [-45, 45], [0, 1])
+        # fig_arr[ref_count, 0].auto_scale_xyz([-90, 90], [-45, 45], [0, 1])
     #Set label etc https://dawes.wordpress.com/2014/06/27/publication-ready-3d-figures-from-matplotlib/
     for row in fig_arr:
         for ax in row:
-            ax.view_init(elev=70, azim=30)
+            ax.view_init(elev=60, azim=45)
             ax.xaxis.set_major_locator(MultipleLocator(45))
             ax.yaxis.set_major_locator(MultipleLocator(45))
             ax.zaxis.set_major_locator(MultipleLocator(0.5))
-            ax.set_ylabel(r' $\chi$ [deg]', linespacing=0.1)
-            ax.set_xlabel(r' $\psi$ [deg]', linespacing=0.1)
-            ax.set_zlabel(r'Power', linespacing=0.1)
-            ax.xaxis.labelpad = 0.1
-            ax.yaxis.labelpad = 0.1
-            ax.zaxis.labelpad = 0,1
+            ax.set_ylabel(r' $\chi$ [deg]', labelpad=0)
+            ax.set_xlabel(r' $\psi$ [deg]',  labelpad=0)
+            ax.set_zlabel(r'Power',  labelpad=0)
+            ax.dist = 12
             # ax.xaxis.line.set_lw(0.5)
             # ax.yaxis.line.set_lw(0.5)
             # ax.zaxis.line.set_lw(0.5)
@@ -84,7 +82,7 @@ def plot_figure_5(inputs, outputs, threads, config, params, wildcards):
             # [t.set_ha('left') for t in ax.get_zticklabels()]
             # print(ax.xaxis._axinfo)
 
-    f.subplots_adjust(wspace=0.2, hspace=0.2, bottom=0.2)
+    f.subplots_adjust(wspace=0.1, hspace=0.1, bottom=0.25, top=1, left=0.2)
     f.savefig(outputs[0])
 
 
