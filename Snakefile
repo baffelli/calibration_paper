@@ -21,18 +21,15 @@ subworkflow new_data:
     configfile: './calibration_configuration_chutze.json'
 
 
-old_data.configfile
 
 rule all:
     input:
         'fig/figure_1.pdf',
         'fig/figure_2.pdf',
         'fig/figure_3.pdf',
-        'fig/figure_4.pdf'
-#        old_data('outputs/img/HV_gain.pdf'),
-##        old_data('outputs/img/HV_loss.pdf'),
-#        new_data('analysis.done'),
-##        'doc/calibration_paper.pdf'
+        'fig/figure_4.pdf',
+        'fig/figure_5.pdf'
+
 
 
 
@@ -109,9 +106,21 @@ rule fig4:
     script:
         'scripts/figure_4.py'
 
-
-
-
+###############################################################################
+#Plot figure 5: Polarisation signatures
+rule fig5:
+    input:
+        C = new_data(expand("cov_flat/20160914_145059_l.c{i}{j}",i=range(4),j=range(4))),
+        C_par = new_data("cov_flat/20160914_145059_l.par"),
+        C_cal = new_data(expand("cov_cal/20160914_145059_l.c{i}{j}",i=range(4),j=range(4))),
+        C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
+        style = 'paper_style.rc'
+    output:
+        'fig/figure_5.pdf'
+    params:
+        ref = list_of_reflectors
+    script:
+        'scripts/figure_5.py'
 
 
 ###############################################################################

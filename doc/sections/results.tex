@@ -1,6 +1,6 @@
 \section{Results}\label{sec:results}
 \subsection{FMCW Data Processing}\label{sec:res_SLC}
-In order to assess the processing quality and to appreciate the effect of the beam squint correction, in  \autoref{fig:tcr_mph} the oversampled impulse response of the 90 cm TCR at 659 m slant range is plotted. The plots on the left side (\autoref{fig:tcr_mph:HH_uncorr}, \autoref{fig:tcr_mph:VV_uncorr}) contain the response obtained by directly range compressing the dechirped data. The phase displays interesting patterns, with the equiphase contours forming a cross shape centered at the center of the reflector. The shift between the HH and the VV channel is visible too, as the response for the one channel is shifted with respect to the other plot.\\ A visual comparison with the same response obtained enabling the squint compensation, shows an improvement in both the range and the azimuth resolutions; this is confirmed numerically by fitting a spline on the azimuth and range responses and computing its 3 dB width. The numerical results are shown above each plot of \autoref{fig:tcr_mph}; signficant improvements in both range and azimuth are clear, especially so for the HH channel, that shows a range resolution improvement of 0.24 m. This gain is reduced to only 0.17 m for the VV channel.\\ Similarly, a reduction in the phase variation is visible especially for the HH channel, (\autoref{fig:tcr_mph:HH_corr}) while the phase response of VV channel shows a residual phase ramp in azimuth direction (\autoref{fig:tcr_mph:HH_corr}).
+In order to assess the processing quality and to appreciate the effect of the beam squint correction, in  \autoref{fig:tcr_mph} the oversampled impulse response of the 90 cm TCR at 659 m slant range is plotted. The plots on the left side (\autoref{fig:tcr_mph:HH_uncorr}, \autoref{fig:tcr_mph:VV_uncorr}) contain the response obtained by directly range compressing the dechirped data. The phase displays interesting patterns, with the equiphase contours forming a cross shape centered at the center of the reflector.\\ A visual comparison with the same response obtained enabling the squint compensation shows an improvement in both the range resolution; this is confirmed numerically by fitting a spline on the azimuth and range responses and computing its 3 dB width. The numerical results are in each plot of \autoref{fig:tcr_mph}; signficant improvements in range resolution are noticed after correcting for the frequency-dependent squint.\\ After compensating the azimuth phase ramp, a reduction in the phase variation is visible in the VV channel, albeit with a residual phase ramp. The azimuth resolution is slightly worsened, although it is still better than the resolution that would be observed by incocoherent addition of azimuth samples.
 \def\chutzepref{20160914_145059}
 \begin{figure*}[ht]
 	\centering
@@ -112,55 +112,56 @@ Finally, to visualize the result of the calibration, RGB Pauli composites of the
 
 
 
-\def\refI{../outputs/img/\chutzepref_32_519_l}
-\def\refII{../outputs/img/\chutzepref_1032_570_l}
-\def\refIII{../outputs/img/\chutzepref_1051_561_l}
-\def\refIV{../outputs/img/\chutzepref_1331_149_l}
-\def\refV{../outputs/img/\chutzepref_3518_354_l}
+%\def\refI{../outputs/img/\chutzepref_32_519_l}
+%\def\refII{../outputs/img/\chutzepref_1032_570_l}
+%\def\refIII{../outputs/img/\chutzepref_1051_561_l}
+%\def\refIV{../outputs/img/\chutzepref_1331_149_l}
+%\def\refV{../outputs/img/\chutzepref_3518_354_l}
+%
+%\pgfplotstableread[col sep=comma]{\refI_cal_cal_params.csv}{\refIt}
+%\pgfplotstableread[col sep=comma]{\refII_cal_cal_params.csv}{\refIIt}
+%\pgfplotstableread[col sep=comma]{\refIII_cal_cal_params.csv}{\refIIIt}
+%\pgfplotstableread[col sep=comma]{\refIV_cal_cal_params.csv}{\refIVt}
+%\pgfplotstableread[col sep=comma]{\refV_cal_cal_params.csv}{\refVt}
+%\pgfplotstableset{ref style/.style={
+%									display columns/0/.style={precision=2, column name=$\phi_r + \phi_t [\circ]$},
+%									display columns/1/.style={precision=2, column name=$f$},
+%									display columns/2/.style={precision=1, column name=$\frac{HH}{HV} [dB]$},
+%									display columns/4/.style={precision=1, column name=$R_{0}$},
+%									display columns/3/.style={precision=1, column name=$\beta_{0}$}
+%				}}
+%
+%\newcommand\signatures[1]{
+%						\begin{tikzpicture}[]
+%							\node(copoluncal) at (0,0){\includegraphics{#1_flat_signature}};
+%							\node[right  =  -0.0cm  of copoluncal] (xpoluncal) {\includegraphics{#1_flat_signature_x}};
+%							\node[below = 1.5 cm of copoluncal] (copolcal) at (0,0){\includegraphics{#1_cal_signature}};
+%							\node[right  = 0.0cm of copolcal] (xpolcal) {\includegraphics{#1_cal_signature_x}};
+%							\node[left = 0.1 cm of copoluncal.west, rotate = 90, above = 0.25cm of copoluncal.west ] (uncaltitle) {Uncalibrated};
+%							\node[left = 0.1 cm of copolcal.west, rotate = 90, above = 0.25cm of copolcal.west] (caltitle) {Calibrated};
+%						\end{tikzpicture}
+%					}
+%
+%\newcommand\sigsubfig[1]{
+%			\begin{subfigure}[t]{0.5\linewidth}
+%				\begin{subfigure}[t]{0.5\linewidth}
+%					\includegraphics{#1_flat_signature}
+%				\end{subfigure}~
+%				\begin{subfigure}[t]{0.5\linewidth}
+%					\includegraphics{#1_flat_signature_x}
+%				\end{subfigure}\\
+%				\begin{subfigure}[t]{0.5\linewidth}
+%					\includegraphics{#1_cal_signature}
+%				\end{subfigure}~
+%				\begin{subfigure}[t]{0.5\linewidth}
+%					\includegraphics{#1_cal_signature_x}
+%				\end{subfigure}
+%			\end{subfigure}}
 
-\pgfplotstableread[col sep=comma]{\refI_cal_cal_params.csv}{\refIt}
-\pgfplotstableread[col sep=comma]{\refII_cal_cal_params.csv}{\refIIt}
-\pgfplotstableread[col sep=comma]{\refIII_cal_cal_params.csv}{\refIIIt}
-\pgfplotstableread[col sep=comma]{\refIV_cal_cal_params.csv}{\refIVt}
-\pgfplotstableread[col sep=comma]{\refV_cal_cal_params.csv}{\refVt}
-\pgfplotstableset{ref style/.style={
-									display columns/0/.style={precision=2, column name=$\phi_r + \phi_t [\circ]$},
-									display columns/1/.style={precision=2, column name=$f$},
-									display columns/2/.style={precision=1, column name=$\frac{HH}{HV} [dB]$},
-									display columns/4/.style={precision=1, column name=$R_{0}$},
-									display columns/3/.style={precision=1, column name=$\beta_{0}$}
-				}}
-
-\newcommand\signatures[1]{
-						\begin{tikzpicture}[]
-							\node(copoluncal) at (0,0){\includegraphics{#1_flat_signature}};
-							\node[right  =  -0.0cm  of copoluncal] (xpoluncal) {\includegraphics{#1_flat_signature_x}};
-							\node[below = 1.5 cm of copoluncal] (copolcal) at (0,0){\includegraphics{#1_cal_signature}};
-							\node[right  = 0.0cm of copolcal] (xpolcal) {\includegraphics{#1_cal_signature_x}};
-							\node[left = 0.1 cm of copoluncal.west, rotate = 90, above = 0.25cm of copoluncal.west ] (uncaltitle) {Uncalibrated};
-							\node[left = 0.1 cm of copolcal.west, rotate = 90, above = 0.25cm of copolcal.west] (caltitle) {Calibrated};
-						\end{tikzpicture}
-					}
-
-\newcommand\sigsubfig[1]{
-			\begin{subfigure}[t]{0.5\linewidth}
-				\begin{subfigure}[t]{0.5\linewidth}
-					\includegraphics{#1_flat_signature}
-				\end{subfigure}~
-				\begin{subfigure}[t]{0.5\linewidth}
-					\includegraphics{#1_flat_signature_x}
-				\end{subfigure}\\
-				\begin{subfigure}[t]{0.5\linewidth}
-					\includegraphics{#1_cal_signature}
-				\end{subfigure}~
-				\begin{subfigure}[t]{0.5\linewidth}
-					\includegraphics{#1_cal_signature_x}
-				\end{subfigure}
-			\end{subfigure}}
-
-\begin{figure*}[hb]
-	\sigsubfig{\refI}
-\end{figure*}
+\begin{figure}[hb]
+	\centering
+	\includegraphics{figure_5}
+\end{figure}
 
 
 %\begin{figure*}[hb]
