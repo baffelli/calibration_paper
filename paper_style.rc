@@ -18,9 +18,9 @@ figure.autolayout : False
 #Legend
 legend.frameon       : False
 legend.fontsize      : xx-small
-legend.labelspacing  : 0.1
+legend.labelspacing  : 0.05
 legend.handletextpad : 0.4
-legend.borderpad: 0.2
+legend.borderpad: 0.15
 #Axes
 axes.facecolor      : white
 axes.xmargin        : 0
