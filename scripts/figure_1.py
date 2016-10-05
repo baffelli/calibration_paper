@@ -36,7 +36,9 @@ def plot_figure_1(inputs, outputs, threads, config, params, wildcards):
                                                                                     sw=(4, sw_idx))
             # remove phase at maximum
             ptarg_zoom *= np.exp(1j * np.angle(ptarg_zoom[mx_pos].conj()))
-            mph, rgb, norm = vf.dismph(ptarg_zoom, k=0.6, sf=0.2, coherence=False)  # create rgb image
+            mph_dict = {'k':0.35, 'sf':0.3, 'coherence':False}
+            mph, rgb, norm = vf.dismph(ptarg_zoom, **mph_dict)  # create rgb image
+            pal, ext = vf.dismph_palette(ptarg_zoom, **mph_dict)
             aspect = fig_h / fig_w
             new_aspect = rwin / azwin * aspect  # in this way the subplot has the same aspect as the figure
             mappable = current_ax.imshow(mph, cmap=rgb, extent=[az_vec.min(), az_vec.max(), r_vec.min(), r_vec.max()],
@@ -53,16 +55,22 @@ def plot_figure_1(inputs, outputs, threads, config, params, wildcards):
                 current_ax.set_xlabel(r"azimuth samples $\theta$ [deg]")
                 current_ax.set_ylabel(r'range samples [m]')
 
-    ticks = [0, 0.25, 0.5, 0.75, 1]
-    labels = ['-180', '-90', '0', '90', '180']
     # Make space for colorbar
-    # f.subplots_adjust(right=0.8)
     # cbar_ax = divider.append_axes("left", size="20%", pad=0.25)
-    cax = f.add_axes([0.25, 0.02, 0.5, 0.015])
-    cbar = f.colorbar(mappable, label=r'Phase [deg]', orientation='horizontal', ticks=ticks, cax=cax)
-    cbar.set_ticks(ticks)
-    cbar.set_ticklabels(labels)
-    cbar.update_ticks()
+    cax = f.add_axes([0.25, 0.0, 0.5, 0.07])
+    cax.imshow(pal, aspect=1/15.0, extent=[ 0, 1, -np.pi, np.pi,])
+    cax.set_ylabel(r'Phase')
+    cax.set_xlabel(r'Magnitude relative to mean')
+    cax.grid(b=False)
+    cax.set_yticks([-np.pi, 0, np.pi])
+    cax.set_yticklabels([r"$-\pi$", r"$0$",  r"$\pi$"])
+    cax.set_xticks([0, 0.5, 1])
+    cax.set_xticklabels([r"$0$", r"$0.5$",  r"$1$"])
+    f.subplots_adjust(right=0.8, wspace=0.2)
+    # cbar = f.colorbar(mappable, label=r'Phase [deg]', orientation='horizontal', ticks=ticks, cax=cax)
+    # cbar.set_ticks(ticks)
+    # cbar.set_ticklabels(labels)
+    # cbar.update_ticks()
     map(vf.format_axes, f.get_axes())
     f.savefig(outputs[0])
 

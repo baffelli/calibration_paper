@@ -48,7 +48,7 @@ xtick.major.pad     : 0.75
 xtick.minor.pad     : 0.25
 xtick.color         : black
 xtick.direction: out
-xtick.labelsize     : xx-small
+xtick.labelsize     : x-small
 xtick.major.top     : False
 xtick.minor.top     : False
 #yticks
@@ -60,7 +60,7 @@ ytick.major.pad     : 0.75
 ytick.minor.pad     : 0.25
 ytick.color         : black
 ytick.direction: out
-ytick.labelsize     : xx-small
+ytick.labelsize     : x-small
 ytick.major.top     : False
 ytick.minor.top     : False
 #Lines
