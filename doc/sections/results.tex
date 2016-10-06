@@ -5,8 +5,8 @@ In order to assess the processing quality and to appreciate the effect of the be
 \begin{figure*}[ht]
 	\centering
 	\includegraphics{figure_1}
-	\caption{Oversampled phase and amplitude response for a trihedral corner reflector. (a) HH channel without correction, (b) HH channel with frequency-dependent squint compensation (c) same as (b) with azimuth phase ramp removal. Bottom row: same processing for the VV channel.
-	The phase shown is reference to the maximum of the response.}
+	\caption{Oversampled phase and amplitude responses for a trihedral corner reflector. (a) HH channel without correction, (b) HH channel with frequency-dependent squint compensation (c) same as (b) with azimuth phase ramp removal. Bottom row: same processing for the VV channel.
+	The phase of each response is referenced to its maximum.}
 	\label{fig:tcr_mph}
 \end{figure*}
 \subsection{Antenna Pattern Misalingment}
@@ -38,25 +38,26 @@ $R$, the range from the target to the antenna as a function of the rotation from
 \end{equation}
 The function is shifted by the angle  $\alpha = \operatorname{\arctan}\left({\frac{L_{ph}}{L_{arm}}}\right)$ that describes the additional rotation needed for an antenna with nonzero $L_{ph}$ to be at closest approach with the target compared to the regular case. This shift is necessary because antenna rotation is measured assuming a zero $L_{ph}$; the azimuth position read at the encored of the antenna scanner does not correspond to the azimuth of the phase center.\\
 As seen in \autoref{eq:range}, the distance of each scatterer is a function of the relative rotation angle $\theta_r$ of the antenna. Thus azimuth and distance are coupled, this effect is known as Range Cell Migration RCM. In this case, the range resolution is small enough compared to the RCM that only the effect of the rotation on the phase (\autoref{eq:range_phase}) will be considered.\\
-The complete characterization of the azimuth phase requires the knowledge of the antenna phase center displacement $L_{ph}$. This value is generally not known a priori as it is assumed that the phase center is located at the midpoint of the array. However, when the experimental data was analyzed assuming this case to be true (which implies $L_{ant} = L_{arm}$),  \autoref{eq:range} failed to model the observed azimuth phase variation for the response of a trihedral corner reflector. The model was thus modified to account for the possibility of a displaced antenna phase center. The parameter $L_{ph}$ can be determined from the measured data of a point target. SLC images are generated according to the procedure described in \autoref{sec:proc_SLC}. The azimuth phase profile for the point target is then extracted and used in a nonlinear optimization problem with the phase simulated according to \autoref{eq:range}:
+The complete characterization of the azimuth phase requires the knowledge of the antenna phase center displacement $L_{ph}$. This value is generally not known a priori as it is assumed that the phase center is located at the midpoint of the array. However, when the experimental data was analyzed assuming this case to be true (which implies $L_{ant} = L_{arm}$),  \autoref{eq:range} failed to model the observed azimuth phase variation for the response of a trihedral corner reflector. The model was thus modified to account for the possibility of a displaced antenna phase center. The parameter $L_{ph}$ can be determined from the measured data of a point target: SLC images are generated according to the procedure described in \autoref{sec:proc_SLC}. The azimuth phase profile for the point target is then extracted and used in a nonlinear optimization problem with the phase simulated according to \autoref{eq:range}.
 \begin{equation}\label{eq:rph_estimation}
 	\hat{r_{ph}} = \underset{\left(L_{ph}, \phi_{off}\right)}{\operatorname{argmax}}{\vert\vert\phi_{meas} - \phi_{sim}\vert\vert}^2.
 \end{equation}
 Where $\phi_{sim} = \phi_{scan} + \phi_{off}$ is the simulated phase with an additional offset that accounts for the phase induced by the noise, the intrinsic scattering phase and the system.
-The model is tested by applying the fit procedure of \autoref{eq:rph_estimation} to the calibration array. For each reflector, the maximum in range and azimuth was identified and the samples corresponding to the half power beamwidth were extracted at the range of maximum intensity. The unwrapped phase was then used to estimate $r_{ph}$ according to the procedure described in \autoref{eq:rph_estimation}.
+The model was tested on each reflector of the array: the maximum in range and azimuth was identified and the samples corresponding to the half power beamwidth were extracted at the range of maximum intensity. The unwrapped phase was then used to estimate $r_{ph}$ according to the procedure described in \autoref{eq:rph_estimation}.
+\pgfplotstableread[col sep=comma]{../tab/table_1.csv}{\tabI}
+\pgfplotstableset{rph style/.style={,
+									columns={rph, res, rsl},
+									every head row/.style={before row=\toprule,after row=\midrule},
+									every last row/.style={after row=\bottomrule},
+									display columns/0/.style={precision=3, column name={$L_{ph}$}},
+									display columns/1/.style={precision=3, column name={residual}},
+									display columns/2/.style={precision=3, column name={$R_0$}}
+									},
+									}
+
 \begin{table}[ht]
 	\centering
-	\begin{tabular}{lccl}
-		\hline
-		reflector & $R_0$ & $\hat{L_{ph}}$ & comments\\
-		1	& 74 m & -0.17 & \\
-		2  & 672 m & -0.10 & \\
-		3 & 824 m & -0.11 & \\
-		4 & 838 m & -0.14 &\\
-		5 & 1048 m & -0.11&\\
-		6 & 2690 m & -0.11&\\
-		\hline
-	\end{tabular}
+	\pgfplotstabletypeset[rph style] {\tabI}
 	\caption{Result of the phase center displacement fit for six trihedral corner reflectors located at different ranges.}
 	\label{tab:rph_fit}
 \end{table}
@@ -70,18 +71,20 @@ When $L_{ph}$ has been estimated, the azimuth phase variation is corrected using
 \end{equation}
 where $w$ is a windowing function. The formula replaces the incoherent azimuth averaging described in \autoref{sec:proc_SLC} the samples are now averaged with the appropriate phase factor so that the SNR improvement and the correction of the azimuth trend are combined in a single step. In computing the filter, the range of closest approach $R_{0}$ is subtracted from the current range $R$ to correct the relative phase variation only; this is important for interferometric processing where the absolute phase has to be preserved.\\
 The procedure is similar to the azimuth focusing of synthetic aperture data, where the cross-range resolution is obtained by the integration of the data in the azimuth-time direction. However, in the case of real aperture systems the resolution is limited by  physical antenna beamwidth and the response of a target ideally occupies a single azimuth sample. Integrating the data in azimuth degrades the resolution because samples that do not contain information on the same scatterer are combined together. To correct the phase variation without an excessive deterioration in azimuth resolution, the integration is limited to a window  $w$ of length $L_{int}$. The optimal trade-off was empirically determined to be $0.6^\circ$, slightly larger than $\theta_{3dB}$.\\
-The result of applying the correction to the TCR at 658 m is displayed in the rightmost column of \autoref{fig:tcr_mph}; the phase ramp is significantly reduced while the azimuth resolution is slightly degraded.
-The phase and amplitude responses for all reflectors are plotted for the VV channel in \autoref{fig:phase_response_VV}. A linear variation of 30 degrees over the 3dB antenna beamwidth can be observed. The reflectors at 74 m shows a quadratic azimuth phase variation; it was likely too close to the radar, so that it was not illuminated with the complete antenna pattern as the far field transition distance of the slotted array is expected to be of the order of 500 m. This situation could explain its distorted amplitude response as well. 
+The result of applying the correction to the TCR at 673 m is displayed in the rightmost column of \autoref{fig:tcr_mph}; the phase ramp is significantly reduced while the azimuth resolution is slightly degraded.\\
+The phase and amplitude responses for all reflectors are plotted for the VV channel in \autoref{fig:phase_response_VV}. A linear variation of 30 degrees over the 3dB antenna beamwidth can be observed in \autoref{fig:phase_response_VV:uncorrected}. After the correction the reflector at 74 m shows a residual quadratic azimuth phase variation; this behavior is attributed to its closeness to the radar, considering that the far field transition distance of the antennas is in the order of 500 m. Excluding this exception, the corrected phase response displays a residual variation under $10^\circ$ inside the antenna beamwdith.
 \begin{figure}[ht]
 	\begin{subfigure}[t]{\columnwidth}
 		\includegraphics{figure_2}
 		\subcaption{Azimuth phase ramp not corrected.}
+		\label{fig:phase_response_VV:uncorrected}
 	\end{subfigure}
 	\begin{subfigure}[t]{\columnwidth}
 		\includegraphics{figure_3}
 		\subcaption{Response after azimuth filtering.}
+		\label{fig:phase_response_VV:corrected}
 	\end{subfigure}
-	\caption{Relative phase/amplitude response for all reflectors in the calibration array, VV channel. The phase at the azimuth position where the highest intensity is measured has been subtracted in order to show the relative phase variation only. The vertical lines display the theoretical 3 dB resolution of the antennas $\theta_{3dB}$}
+	\caption{Relative phase/amplitude response for all reflectors in the calibration array, VV channel. To display the relative phase variation, the phase at the maximum is subtracted from each plot. The vertical lines indicate the theoretical 3 dB resolution of the antenna $\theta_{3dB}$}
 	\label{fig:phase_response_VV}
 \end{figure}
 \subsection{Polarimetric Calibration}\label{sec:res_polcal}
@@ -159,9 +162,15 @@ Finally, to visualize the result of the calibration, RGB Pauli composites of the
 %			\end{subfigure}}
 
 \begin{figure}[hb]
+	\begin{subfigure}[t]{\columnwidth}
 	\centering
 	\includegraphics{figure_5}
-	\caption{}
+	\end{subfigure}
+	\begin{subfigure}[t]{\columnwidth}
+	\centering
+	\includegraphics{figure_6}
+	\end{subfigure}
+	\caption{Polarisation responses for two trihedral corner reflectors located at different distances from the radar. Left column: copolar signature, right crosspolar; top row: uncalibrated, bottom row: calibrated. The power is relative to the peak.}
 \end{figure}
 
 

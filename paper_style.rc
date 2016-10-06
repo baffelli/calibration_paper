@@ -27,7 +27,7 @@ axes.xmargin        : 0
 axes.ymargin        : 0
 axes.grid           : True
 axes.edgecolor: black
-axes.linewidth: 0.5
+axes.linewidth: 0.25
 axes.labelsize      : x-small
 axes.labelcolor     : black
 axes.titlesize      : x-small
@@ -35,9 +35,9 @@ axes.labelpad       : 0.8
 axes.spines.right : False
 axes.spines.top : False
 #Grid
-grid.color : grey
-grid.linestyle : solid
-grid.linewidth: 0.05
+grid.color : black
+grid.linestyle : --
+grid.linewidth: 0.25
 #Ticks
 #xticks
 xtick.major.size     : 2
@@ -73,6 +73,3 @@ savefig.dpi         : 100
 savefig.transparent : True
 savefig.bbox        : tight
 savefig.pad_inches  : 0.1      # Padding to be used when bbox is set to 'tight'
-#interaction
-interactive         : False
-backend:            PDF

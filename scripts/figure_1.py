@@ -5,6 +5,7 @@ import numpy as np
 import pyrat.core.corefun as cf
 import pyrat.fileutils.gpri_files as gpf
 import pyrat.visualization.visfun as vf
+from matplotlib import gridspec
 
 # searc window in degrees
 sw = 0.8
@@ -18,14 +19,20 @@ def plot_figure_1(inputs, outputs, threads, config, params, wildcards):
     # This is a full page figure, so we create a figure twice as wide as usual
     # create figure
     fig_w, fig_h = plt.rcParams['figure.figsize']
-
-    f, axarr = plt.subplots(2, 3, figsize=(fig_w * 3, fig_h * 2))
+    rs = 2
+    shp = (2 * rs + 1, 3)#shape of gridspec
+    f = plt.figure(figsize=(fig_w * 3, fig_h * 2))
+    gs = gridspec.GridSpec(*shp)
+    gs.update(wspace=0.0, hspace=0.7)
+    # f, ax_arr = plt.subplots(nrows=3, ncols=3, figsize=(fig_w * 3, fig_h * 2), gridspec_kw={'height_ratios':[1,1,0.5]})
     for idx_chan, chan_str in enumerate(['HH', 'VV']):
         for idx_proc, proc_str in enumerate(['', '_desq', '_corr']):
             # current label
-            current_idx = np.ravel_multi_index((idx_chan, idx_proc), axarr.shape)
+            start_idx = idx_chan + (idx_chan%rs)
+            current_ax = plt.subplot(gs[start_idx:start_idx+rs, idx_proc])
+            current_idx = np.ravel_multi_index((idx_chan , idx_proc), shp)
             label_name = string.ascii_lowercase[current_idx]
-            current_ax = axarr[idx_chan, idx_proc]
+            # current_ax = axarr[idx_chan, idx_proc]
             current_ax.title.set_text(r"({label_name})".format(label_name=label_name))
             file_name = inputs[chan_str + proc_str]
             current_slc = gpf.gammaDataset(file_name + '.par', file_name)  # load slc
@@ -52,13 +59,14 @@ def plot_figure_1(inputs, outputs, threads, config, params, wildcards):
             t = current_ax.text(0.1, 0.1, resolution_text, size=8, bbox=bbox_props, horizontalalignment='left',
                                 transform=current_ax.transAxes)  # set label
             if idx_chan == 1 and idx_proc == 0:
-                current_ax.set_xlabel(r"azimuth samples $\theta$ [deg]")
-                current_ax.set_ylabel(r'range samples [m]')
+                current_ax.set_xlabel(r"Azimuth [deg]")
+                current_ax.set_ylabel(r'Range [m]')
 
     # Make space for colorbar
-    # cbar_ax = divider.append_axes("left", size="20%", pad=0.25)
-    cax = f.add_axes([0.25, 0.0, 0.5, 0.07])
-    cax.imshow(pal, aspect=1/15.0, extent=[ 0, 1, -np.pi, np.pi,])
+    # f.subplots_adjust(hspace=0.3, wspace=0.2)
+    # cax = f.add_axes([0.5, 0, 0.5, 0.07], anchor=(0.5,0.5))
+    cax = plt.subplot(gs[-1,:])
+    cax.imshow(pal, aspect=1/30.0, extent=[ 0, 1, -np.pi, np.pi,])
     cax.set_ylabel(r'Phase')
     cax.set_xlabel(r'Magnitude relative to mean')
     cax.grid(b=False)
@@ -66,11 +74,7 @@ def plot_figure_1(inputs, outputs, threads, config, params, wildcards):
     cax.set_yticklabels([r"$-\pi$", r"$0$",  r"$\pi$"])
     cax.set_xticks([0, 0.5, 1])
     cax.set_xticklabels([r"$0$", r"$0.5$",  r"$1$"])
-    f.subplots_adjust(right=0.8, wspace=0.2)
-    # cbar = f.colorbar(mappable, label=r'Phase [deg]', orientation='horizontal', ticks=ticks, cax=cax)
-    # cbar.set_ticks(ticks)
-    # cbar.set_ticklabels(labels)
-    # cbar.update_ticks()
+
     map(vf.format_axes, f.get_axes())
     f.savefig(outputs[0])
 

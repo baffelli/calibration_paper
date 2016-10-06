@@ -28,7 +28,9 @@ rule all:
         'fig/figure_2.pdf',
         'fig/figure_3.pdf',
         'fig/figure_4.pdf',
-        'fig/figure_5.pdf'
+        'fig/figure_5.pdf',
+        'fig/figure_6.pdf',
+        'tab/table_1.csv'
 
 
 
@@ -107,7 +109,7 @@ rule fig4:
         'scripts/figure_4.py'
 
 ###############################################################################
-#Plot figure 5: Polarisation signatures
+#Plot figure 5/6: Polarisation signatures for two reflectors
 rule fig5:
     input:
         C = new_data(expand("cov_flat/20160914_145059_l.c{i}{j}",i=range(4),j=range(4))),
@@ -116,11 +118,24 @@ rule fig5:
         C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
         style = 'paper_style.rc'
     output:
-        'fig/figure_5.pdf'
+        'fig/figure_{n, (5|6)}.pdf'
+    params:
+        ref = lambda wildcards: list_of_reflectors[1] if wildcards.n == 1 else list_of_reflectors[-1]
+    script:
+        'scripts/figure_5.py'
+
+###############################################################################
+#Make table 1: Phase center estimate for all reflectors:
+rule table1:
+    input:
+        slc = new_data("slc_coreg/20160914_145059_BBBl.slc"),
+        slc_par = new_data("slc_coreg/20160914_145059_BBBl.slc.par"),
+    output:
+        'tab/table_1.csv'
     params:
         ref = list_of_reflectors
     script:
-        'scripts/figure_5.py'
+        'scripts/table_1.py'
 
 
 ###############################################################################
@@ -129,7 +144,7 @@ rule paper:
     input:
         sections = glob.glob('doc/sections/*.tex'),
         main_paper = 'doc/calibration_paper.tex',
-        figures = glob.glob('outputs/img/*.pdf')
+        figures = glob.glob('fig/*.pdf')
     output:
         paper_pdf = 'doc/calibration_paper.pdf'
     shell:
