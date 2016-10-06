@@ -8,6 +8,10 @@ import re
 import json
 
 
+configfile: './calibration_configuration_chutze.json'
+
+#Define list of reflectors from json config file
+list_of_reflectors = config['list_of_reflectors']
 
 
 subworkflow old_data:
@@ -30,20 +34,15 @@ rule all:
         'fig/figure_4.pdf',
         'fig/figure_5.pdf',
         'fig/figure_6.pdf',
-        'tab/table_1.csv'
+        'tab/table_1.csv',
+        'tab/table_2.csv',
+        'tab/RMS_polcal.csv'
 
 
 
 
-#Define list of reflectors
-list_of_reflectors = [
-    [32, 5192, "t"],
-    [1331, 1490, "t"],
-    [830, 3503, "t"],
-    [1032, 5703, "t"],
-    [1051, 5617, "t"],
-    [3518, 3545, "t"]
-]
+
+
 
 
 ###############################################################################
@@ -136,6 +135,29 @@ rule table1:
         ref = list_of_reflectors
     script:
         'scripts/table_1.py'
+
+###############################################################################
+#Make table 2: Calibration residuals:
+rule table2:
+    input:
+        C = new_data(expand("cov_cal/20160914_145059_l.c{i}{j}",i=range(4),j=range(4))),
+        C_par = new_data("cov_cal/20160914_145059_l.par"),
+    output:
+        'tab/table_2.csv'
+    params:
+        ref = list_of_reflectors
+    script:
+        'scripts/table_2.py'
+
+###############################################################################
+#Make table 3: Residuals RMS:
+rule RMS_residual:
+    input:
+        res = 'tab/table_2.csv'
+    output:
+        'tab/RMS_polcal.csv'
+    script:
+        'scripts/RMS_polcal.py'
 
 
 ###############################################################################
