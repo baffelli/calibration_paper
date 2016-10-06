@@ -34,6 +34,7 @@ rule all:
         'fig/figure_4.pdf',
         'fig/figure_5.pdf',
         'fig/figure_6.pdf',
+        'fig/figure_7.pdf',
         'tab/table_1.csv',
         'tab/table_2.csv',
         'tab/RMS_polcal.csv'
@@ -122,6 +123,18 @@ rule fig5:
         ref = lambda wildcards: list_of_reflectors[1] if wildcards.n == 1 else list_of_reflectors[-1]
     script:
         'scripts/figure_5.py'
+
+###############################################################################
+#Plot figure 7: Calibrated pauli with location of reflectors
+rule fig7:
+    input:
+        C_cal = new_data(expand("cov_cal/20160914_145059_l.c{i}{j}",i=range(4),j=range(4))),
+        C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
+        style = 'paper_style.rc'
+    output:
+        'fig/figure_7.pdf'
+    script:
+        'scripts/figure_7.py'
 
 ###############################################################################
 #Make table 1: Phase center estimate for all reflectors:

@@ -43,7 +43,7 @@ def plot_figure_1(inputs, outputs, threads, config, params, wildcards):
                                                                                     sw=(4, sw_idx))
             # remove phase at maximum
             ptarg_zoom *= np.exp(1j * np.angle(ptarg_zoom[mx_pos].conj()))
-            mph_dict = {'k':0.35, 'sf':0.3, 'coherence':False}
+            mph_dict = {'k':0.35, 'sf':0.3, 'coherence':False, 'peak':True}
             mph, rgb, norm = vf.dismph(ptarg_zoom, **mph_dict)  # create rgb image
             pal, ext = vf.dismph_palette(ptarg_zoom, **mph_dict)
             aspect = fig_h / fig_w
@@ -68,7 +68,7 @@ def plot_figure_1(inputs, outputs, threads, config, params, wildcards):
     cax = plt.subplot(gs[-1,:])
     cax.imshow(pal, aspect=1/30.0, extent=[ 0, 1, -np.pi, np.pi,])
     cax.set_ylabel(r'Phase')
-    cax.set_xlabel(r'Magnitude relative to mean')
+    cax.set_xlabel(r'Magnitude relative to peak')
     cax.grid(b=False)
     cax.set_yticks([-np.pi, 0, np.pi])
     cax.set_yticklabels([r"$-\pi$", r"$0$",  r"$\pi$"])
