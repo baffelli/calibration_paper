@@ -37,7 +37,7 @@ axes.spines.top : False
 #Grid
 grid.color : grey
 grid.linestyle : solid
-grid.linewidth: 0.02
+grid.linewidth: 0.05
 #Ticks
 #xticks
 xtick.major.size     : 2
