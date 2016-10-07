@@ -20,16 +20,20 @@ def az_idx(ds, idx):
 def plot_figure_7(inputs, outputs, threads, config, params, wildcards):
     plt.style.use(inputs['style'])
     fig_w, fig_h = plt.rcParams['figure.figsize']
-    f, ax = plt.subplots(1, 1, figsize=(fig_w, fig_w ))
+    f, ax = plt.subplots(1, 1, figsize=(2*fig_w, 2*fig_w ))
     C_cal_par = inputs["C_cal_par"]
     C_cal_root, ext = path.splitext(C_cal_par)
     C_cal = mat.coherencyMatrix(C_cal_root, C_cal_par, gamma=True, bistatic=True,
                                 basis='lexicographic').lexicographic_to_pauli()
-
-    C_cal_geo, x_vec, y_vec, lut = geo.geocode_image(C_cal, 2)
-    C_cal_rgb = C_cal_geo.pauli_image(k=0.2, sf=0.3, peak=False, perc=[5, 99.9])
-
-    ax.imshow(C_cal_rgb)
+    C_cal_geo, x_vec, y_vec, lut, direct_lut = geo.geocode_image(C_cal, 2)
+    #compute location of reflectors using LUT
+    ref_dec = np.array([[ref[0], ref[1]//C_cal.azimuth_looks] for ref in params['ref']], dtype=int)
+    ref_gc = direct_lut[ref_dec[:,0],ref_dec[:,1]]
+    C_cal_geo = C_cal_geo.boxcar_filter([3,3])
+    C_cal_rgb = C_cal_geo.pauli_image(k=0.2, sf=0.4,)
+    C_cal_rgb[np.isnan(C_cal_rgb)] = 1
+    ax.imshow(C_cal_rgb, aspect=1)
+    ax.plot(np.real(ref_gc), np.imag(ref_gc), 'bo', lw=0.5, markersize=5, mfc='none' )
     ax.axis('off')
     f.savefig(outputs[0])
 

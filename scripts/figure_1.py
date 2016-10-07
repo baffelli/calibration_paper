@@ -68,7 +68,7 @@ def plot_figure_1(inputs, outputs, threads, config, params, wildcards):
     cax = plt.subplot(gs[-1,:])
     cax.imshow(pal, aspect=1/30.0, extent=[ 0, 1, -np.pi, np.pi,])
     cax.set_ylabel(r'Phase')
-    cax.set_xlabel(r'Magnitude relative to peak')
+    cax.set_xlabel(r'Intensity relative to peak')
     cax.grid(b=False)
     cax.set_yticks([-np.pi, 0, np.pi])
     cax.set_yticklabels([r"$-\pi$", r"$0$",  r"$\pi$"])
