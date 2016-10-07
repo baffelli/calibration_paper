@@ -43,7 +43,7 @@ The complete characterization of the azimuth phase requires the knowledge of the
 \end{equation}
 Where $\phi_{sim} = \phi_{scan} + \phi_{off}$ is the simulated phase with an additional offset that accounts for the phase induced by the noise, the intrinsic scattering phase and the system.
 The model was tested on each reflector of the array: the maximum in range and azimuth was identified and the samples corresponding to the half power beamwidth were extracted at the range of maximum intensity. The unwrapped phase was then used to estimate $r_{ph}$ according to the procedure described in \autoref{eq:rph_estimation}.
-\pgfplotstableread[col sep=comma]{../tab/table_1.csv}{\tabI}
+\pgfplotstableread[col sep=comma]{../tab/table_2.csv}{\tabII}
 \pgfplotstableset{rph style/.style={,
 									columns={rsl, rph, res},
 									every head row/.style={before row=\toprule,after row=\midrule},
@@ -56,7 +56,7 @@ The model was tested on each reflector of the array: the maximum in range and az
 
 \begin{table}[ht]
 	\centering
-	\pgfplotstabletypeset[rph style] {\tabI}
+	\pgfplotstabletypeset[rph style] {\tabII}
 	\caption{Result of the phase center displacement fit for six trihedral corner reflectors located at different ranges.}
 	\label{tab:rph_fit}
 \end{table}
@@ -87,27 +87,28 @@ The phase and amplitude responses for all reflectors are plotted for the VV chan
 	\label{fig:phase_response_VV}
 \end{figure}
 \subsection{Polarimetric Calibration}\label{sec:res_polcal}
+
+								
+\begin{table}[h]
+	\centering
+	\pgfplotstabletypesetfile[
+		col sep=comma,
+		columns={slant range, HH-VV amplitude imbalance, HH-VV phase imbalance, Polarisation purity, RCS},
+		every head row/.style={before row=\toprule,after row=\midrule},
+		every last row/.style={after row=\bottomrule},
+		columns/slant range/.style={precision=2, column name={$R_{0} [m]$}},
+		columns/HH-VV amplitude imbalance/.style={precision=3, column name={$f$}},
+		columns/HH-VV phase imbalance/.style={precision=3, column name={$\phi_r + \phi_t [^\circ]$}},
+		columns/RCS/.style={precision=3, column name={$\sigma_0$ bias}},
+		columns/Polarisation purity/.style={precision=3, column name={Purity $[dB]$}}
+	]{../tab/table_3.csv}
+	\caption{Residual imbalances and polarization purity for all reflectors in the scene.}
+	\label{tab:polcal}
+\end{table}		
 The methods described in the preceding sections were applied to prepare SLC images for each channel. For the final polarimetric calibration the procedure of \autoref{sec:proc_polcal} was used; one reflector in the scene was used as a calibration target, with the four remaining reflectors used for the determination of the calibration performance.\\
 An initial assessment of the data quality is made in \autoref{fig:signatures}  by plotting polarization signatures\cite{VanZyl1987} for two of the five corner reflectors that were not used to determine the calibration parameters.
 The signature in the uncorrected data is complex and cannot be easily interpreted as representing any known basic scattering mechanism. In the calibrated response, both reflectors show a correspondence with the expected polarization signature for trihedral reflector.\\
-As a quantitative assessment of the calibration, the copolar phase and amplitude imbalance $f$ and $\phi_r + \phi_t$ are re-estimated on the calibrated data for the set of reflectors that were not used to compute the calibration parameters. The results are shown in \autoref{tabl:polcal}. Generally, both the amplitude and the phase imbalance appear to be well corrected, with a RMS $f$ of 0.97 and $7^\circ$ for $\phi_r + \phi_t$.
-\pgfplotstableread[col sep=comma]{../tab/table_2.csv}{\tabII}
-\pgfplotstableset{polcal style/.style={,
-									columns={slant range, HH-VV amplitude imbalance, HH-VV phase imbalance, Polarisation purity},
-									every head row/.style={before row=\toprule,after row=\midrule},
-									every last row/.style={after row=\bottomrule},
-									display columns/0/.style={precision=2, column name={$R_{0}$}},
-									display columns/1/.style={precision=3, column name={$f$}},
-									display columns/2/.style={precision=3, column name={$\phi_r + \phi_t$}},
-									display columns/3/.style={precision=3, column name={Purity}}
-									},
-									}
-\begin{table}[ht]
-	\centering
-	\pgfplotstabletypeset[polcal style] {\tabII}
-	\caption{Residual imbalances and polarization purity for all reflectors in the scene.}
-	\label{tab:polcal}
-\end{table}										
+A quantitative assessment of the calibration is obtained by estimating the residual copolar phase and amplitude imbalances $f$ and $\phi_r + \phi_t$ on the calibrated data. The results are shown in \autoref{tabl:polcal}. Generally, both the amplitude and the phase imbalance appear to be well corrected, with a RMS $f$ of 0.97 and $7^\circ$ for $\phi_r + \phi_t$.
 %Finally, to visualize the result of the calibration, RGB Pauli composites of the scene are shown in \autoref{fig:gc:pauli}. Because very little information can be extracted from this image, a more quantitative understanding of the scene is gained by applying the Cloude-Pottier decomposition on the calibrated data. The data is first converted in cartesian coordinates with 1 meter pixel spacing; it is then multi-looked with a window size of $5 \times 2$ pixels, finally the decomposition parameters are computed from the thus obtained covariance matrix. The $\alpha$ and $H$ parameters are plotted in \autoref{fig:gc:alpha} and \autoref{fig:gc:H} . The response of most natural surfaces appears to be a low entropy, low $\alpha$ scattering usually associated with Bragg/X-Bragg surface scattering. The dominance of surface scattering is attributed to a combination of object roughness  at the scale of the radar wavelength (1.7 cm) and the small penetration depth. A few pixels in the far range area corresponding to the town of M\"{u}nsingen display low entropy dihedral scattering behavior, these points can be likely associated with double bounce interaction between buildings and ground.\\
 
 \begin{figure}[hb]

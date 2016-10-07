@@ -27,7 +27,7 @@ def plot_figure_7(inputs, outputs, threads, config, params, wildcards):
                                 basis='lexicographic').lexicographic_to_pauli()
     C_cal_geo, x_vec, y_vec, lut, direct_lut = geo.geocode_image(C_cal, 2)
     #compute location of reflectors using LUT
-    ref_dec = np.array([[ref[0], ref[1]//C_cal.azimuth_looks] for ref in params['ref']], dtype=int)
+    ref_dec = np.array([[ref['ridx'], ref['azidx']//C_cal.azimuth_looks] for ref in params['ref']], dtype=int)
     ref_gc = direct_lut[ref_dec[:,0],ref_dec[:,1]]
     C_cal_geo = C_cal_geo.boxcar_filter([3,3])
     C_cal_rgb = C_cal_geo.pauli_image(k=0.2, sf=0.4,)

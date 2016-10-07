@@ -35,8 +35,10 @@ rule all:
         'fig/figure_5.pdf',
         'fig/figure_6.pdf',
         'fig/figure_7.pdf',
+        #'fig/figure_8.pdf',
         'tab/table_1.csv',
         'tab/table_2.csv',
+        'tab/table_3.csv',
         'tab/RMS_polcal.csv'
 
 
@@ -66,8 +68,8 @@ rule fig1:
         VV_corr = new_data('slc_corr/20160914_145059_BBBl.slc'),
         style = 'paper_style.rc'
     params:
-        ridx = list_of_reflectors[1][0],
-        azidx = list_of_reflectors[1][1]
+        ridx = list_of_reflectors[1]['ridx'],
+        azidx = list_of_reflectors[1]['azidx']
     script:
         'scripts/figure_1.py'
 
@@ -131,17 +133,20 @@ rule fig7:
         C_cal = new_data(expand("cov_cal/20160914_145059_l.c{i}{j}",i=range(4),j=range(4))),
         C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
         style = 'paper_style.rc'
+    params:
+        ref = list_of_reflectors
     output:
         'fig/figure_7.pdf'
     script:
         'scripts/figure_7.py'
 
+
 ###############################################################################
-#Make table 1: Phase center estimate for all reflectors:
+#Make table 1: Location and RCS for all reflectors
 rule table1:
     input:
-        slc = new_data("slc_coreg/20160914_145059_BBBl.slc"),
         slc_par = new_data("slc_coreg/20160914_145059_BBBl.slc.par"),
+        slc = new_data("slc_coreg/20160914_145059_BBBl.slc"),
     output:
         'tab/table_1.csv'
     params:
@@ -150,11 +155,11 @@ rule table1:
         'scripts/table_1.py'
 
 ###############################################################################
-#Make table 2: Calibration residuals:
+#Make table 2: Phase center estimate for all reflectors:
 rule table2:
     input:
-        C = new_data(expand("cov_cal/20160914_145059_l.c{i}{j}",i=range(4),j=range(4))),
-        C_par = new_data("cov_cal/20160914_145059_l.par"),
+        slc = new_data("slc_coreg/20160914_145059_BBBl.slc"),
+        slc_par = new_data("slc_coreg/20160914_145059_BBBl.slc.par"),
     output:
         'tab/table_2.csv'
     params:
@@ -163,14 +168,43 @@ rule table2:
         'scripts/table_2.py'
 
 ###############################################################################
+#Make table 2: Calibration residuals:
+rule table3:
+    input:
+        C = new_data(expand("cov_cal/20160914_145059_l.c{i}{j}",i=range(4),j=range(4))),
+        C_par = new_data("cov_cal/20160914_145059_l.par"),
+    output:
+        'tab/table_3.csv'
+    params:
+        ref = list_of_reflectors
+    script:
+        'scripts/table_3.py'
+
+
+###############################################################################
 #Make table 3: Residuals RMS:
 rule RMS_residual:
     input:
-        res = 'tab/table_2.csv'
+        res = 'tab/table_3.csv'
     output:
         'tab/RMS_polcal.csv'
     script:
         'scripts/RMS_polcal.py'
+
+###############################################################################
+#Make figure 8: dependence of residuals with range
+rule fig8:
+    input:
+        res = 'tab/table_2.csv'
+    output:
+        'fig/figure_8.pdf'
+    run:
+        import matplotlib.pyplot as plt
+        import numpy as np
+        import pandas as pd
+        residuals = pd.read_csv(input.res)
+        plt.plot(residuals['slant range'], residuals['HH-VV phase imbalance'])
+        plt.show()
 
 
 ###############################################################################

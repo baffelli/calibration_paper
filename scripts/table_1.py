@@ -2,7 +2,7 @@ import csv
 
 import pyrat.fileutils.gpri_files as gpf
 import pyrat.gpri_utils.calibration as cal
-
+import pyrat.core.corefun as cf
 
 def table_1(inputs, outputs, threads, config, params, wildcards):
     # list of reflectors
@@ -17,11 +17,10 @@ def table_1(inputs, outputs, threads, config, params, wildcards):
         tabwrite.writerow(
             ["rsl", 'type', 'RCS', "ridx", "azidx"])
         for current_reflector in refl_list:
-            RCS = cal.cr_rcs(current_reflector['side'], slc['radar_frequency'][0], type=current_reflector['type'])
+            RCS = cf.dB(cal.cr_rcs(current_reflector['side'], slc.radar_frequency[0], type=current_reflector['type']))
             row = [slc.r_vec[current_reflector['ridx']], current_reflector['type'], RCS, current_reflector['ridx'],
                    current_reflector['azidx'] // slc.azimuth_looks]
             res_list.append(row)
-            print(row)
             tabwrite.writerow(row)
             # tabwrite.writerow(['average r_ph', 'weighted average r_ph'])
             # res_list = np.array(res_list)

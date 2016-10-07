@@ -155,20 +155,40 @@ If radiometric calibration is desired, the value of $A$ can be determined after 
 \end{equation}
 \subsection{Experimental Data}\label{sec:data}
 In order to develop and test the methods described above, a calibration dataset was acquired in September 2016 at an urban-agricultural area near M\"{u}nsingen, Switzerland. The data was acquired from the top of an hill approximately 800 m high, looking down towards the fields and the town. 5 Trihedral Corner Reflectors were placed in the scene for the determination of calibration parameters and to assess imaging quality. Three of these reflectors have triangular faces with a length of 40 cm, corresponding to a RCS of $\sigma=\frac{4}{3}\pi \frac{a^4}{\lambda^2}=25.5 dB$, while the remaining two are cubic corner reflector with $\sigma= 35 dB$, at the nominal central frequency of 17.2 GHz.\\
-The dataset was acquired with the horizontally polarized antenna group shifted towards the vertical set by 1.8 mm, to optimally compensate for the pattern misalignment as described in \autoref{sec:misalingment}.  A second dataset has been acquired with the same settings in the same location, without correcting for the antenna shift.
+	\begin{figure}
+		\centering
+		\includegraphics{figure_7}
+		\caption{Pauli RGB composite of the imaged scene. The location of calibration corner reflector is marked by blue circles.}
+		\label{fig:pauli_rgb}
+	\end{figure}
+The dataset was acquired with the horizontally polarized antenna group shifted towards the V group by 1.8 mm to compensate for the pattern misalignment as described in \autoref{sec:misalingment}.\\
+\autoref{fig:pauli_rgb} shows the calibrated Pauli RGB composite of the scene, resampled in cartesian coordinates with the location of the reflectors marked using blue circles.
+%\pgfplotstableread[col sep=comma]{../tab/table_1.csv}{\tabI}
+%\pgfplotstableset{ref style/.style={
+%									columns={rsl, RCS},
+%									every head row/.style={before row=\toprule,after row=\midrule},
+%									every last row/.style={after row=\bottomrule},
+%									columns/rsl/.style={precision=3, column name={$R_0$}}
+%									columns/RCS/.style={precision=3, column name={$\sigma_0$}}
+%									%columns/type/.style={column name={Type} ,string type, column type={s}},
+%								%display columns/3/.style={precision=3, column name={$\sigma_0$}},
+%									}
+%									}
+
 \begin{table}[ht]
 	\centering
-	\begin{tabular}{lccl}
-		\hline
-		reflector & $R_0$ & $\sigma$ & comments\\
-		1 & 74 m & 35 dB &  Cubic CR\\
-		2 & 673 m & 25.5 dB &  Triangular CR\\
-		3 & 824 m & 25.5 dB & Triangular CR\\
-		4 & 838 m & 35 dB & Cubic CR\\
-		5 & 1048 m & 35 dB& Cubic CR\\
-		6 & 2690 m & 25.5& Triangular CR\\
-		\hline
-	\end{tabular}
+	\pgfplotstabletypesetfile[
+								every head row/.style={before row=\toprule,after row=\midrule},
+								every last row/.style={after row=\bottomrule},
+								col sep=comma,
+								columns={rsl, RCS, type},
+								%columns/rsl/.style={precision=3, column name=$R_0$}
+								columns/type/.style={column name={Type} ,string type},
+								columns/RCS/.style={precision=3, column name=$\sigma_0$},
+								columns/rsl/.style={precision=3, column name=$R_0$}
+										%columns/type/.style={column name={Type} ,string type, column type={s}},
+									%display columns/3/.style={precision=3, column name={$\sigma_0$}},
+										] {../tab/table_1.csv}
 	\caption{Summary of the employed TCRs. Distance from the radar and expected RCS.}
 	\label{tab:reflectors}
 \end{table}

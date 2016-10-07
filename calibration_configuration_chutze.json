@@ -11,12 +11,12 @@
 			"decimated_sample_spacing":		0.1
 	},
 	"list_of_reflectors": [
-                            [32, 5192, "t"],
-                            [1331, 1490, "t"],
-							[830, 3503, "t"],
-							[1032, 5703, "t"],
-							[1051, 5617, "t"],
-                            [3518, 3545, "t"]
+		{"ridx":32, "azidx":5192,"type":"cubic", "side":0.4},
+		{"ridx":830, "azidx":3503,"type":"triangular", "side":0.4},
+		{"ridx":1032, "azidx":5703,"type":"cubic", "side":0.4},
+		{"ridx":1051, "azidx":5617,"type":"triangular", "side":0.4},
+		{"ridx":1331, "azidx":1490,"type":"cubic", "side":0.4},
+		{"ridx":3518, "azidx":3545,"type":"triangular", "side":0.4}
 							],
 	"crosspolarizer_index": [3409, 2790, "o"],
     "channel_mapping":{
@@ -52,8 +52,7 @@
 			"azwin":	250
 	},
 	"calibration":			{
-			"reflector_index":		2,
-			"reflector_rcs":		25.5,
+			"reflector_index":		1,
 			"correct_HV":           "False"
 	},
 	"geocoding":			{

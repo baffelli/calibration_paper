@@ -31,8 +31,8 @@ def plot_figure_5(inputs, outputs, threads, config, params, wildcards):
                                 basis='lexicographic').to_monostatic().boxcar_filter([3, 3])
 
     #find the maxmium
-    ridx = params.ref[0]
-    azidx = az_idx(C, params.ref[1])
+    ridx = params.ref['ridx']
+    azidx = az_idx(C, params.ref['azidx'])
     mx_idx = cf.maximum_around(np.abs(C), [ridx,azidx, 0,0], [2,4,1,1])
     #compute signature
     co_sig_cal, x_sig_cal, psi, chi = pf.pol_signature(C_cal[mx_idx[0],mx_idx[1]], n_points=300)
