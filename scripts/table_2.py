@@ -11,7 +11,7 @@ import pyrat.gpri_utils.calibration as cal
 import numpy as np
 import csv
 
-def table_1(inputs, outputs, threads, config, params, wildcards):
+def table_2(inputs, outputs, threads, config, params, wildcards):
     #list of reflectors
     refl_list = [ref for ref in params['ref'] if ref[-1]=="t"]
     refl_list = sorted([ [ridx, azidx, ty] for ridx, azidx, ty in refl_list],key=lambda x: x[0])
@@ -36,4 +36,4 @@ def table_1(inputs, outputs, threads, config, params, wildcards):
         # tabwrite.writerow([r_ph_opt, r_ph_opt_w])
 
 
-table_1(snakemake.input, snakemake.output, snakemake.threads, snakemake.config, snakemake.params, snakemake.wildcards)
+table_2(snakemake.input, snakemake.output, snakemake.threads, snakemake.config, snakemake.params, snakemake.wildcards)
