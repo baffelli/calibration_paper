@@ -19,7 +19,7 @@ In order to assess the processing quality and to appreciate the effect of the be
 \end{figure}
 To verify the impact of the $H$-$V$ pattern pointing shift on the performance of crosspolar measurement, the response of a dihedral reflector with an high crosspolar contribution is analyzed for two configurations:\\ \begin{enumerate*}\item the case where the antennas are not mechanically moved \item the case where the optimal shift of 1.8 mm is applied to bring the patterns into alignment.\\ Because of logistical problems, this experiment was carried out at the H\"{o}nggerberg campus separately from the rest of the measurements shown in this section.
 \end{enumerate*}
-In \autoref{fig:hv_power}, the result of the above experiment is shown as the oversampled, coregistered azimuth response in the $HV$ channel; a gain of approx. 2.5 dB is observed after correcting for the pattern misalignment. The estimated gain is very close to the one expected by analyzing the provided antenna patterns. This results confirms that the 1.8 mm shift setting employed to acquire the calibration data can correctly compensate the crosspolar power lost and the $HH-VV$ misregistration. However,  
+In \autoref{fig:hv_power}, the result of the above experiment is shown as the oversampled, coregistered azimuth response in the $HV$ channel; a gain of approx. 2.5 dB is observed after correcting for the pattern misalignment. The estimated gain is very close to the one expected by analyzing the provided antenna patterns. This results confirms that the 1.8 mm shift setting employed to acquire the calibration data can correctly compensate the crosspolar power lost and the $HH-VV$ misregistration.
 \subsection{Azimuth Processing}
 This residual phase observed for the $VV$ channel in \autoref{sec:res_SLC}  is problematic in two manners: \begin{enumerate*}
 	\item because of the coherent average of pixels affected by the phase ramp\label{item:SNR}  $\sigma$ after azimuth averaging (see \autoref{sec:proc_SLC}) will appear smaller than it actually is.
@@ -43,20 +43,19 @@ The complete characterization of the azimuth phase requires the knowledge of the
 \end{equation}
 Where $\phi_{sim} = \phi_{scan} + \phi_{off}$ is the simulated phase with an additional offset that accounts for the phase induced by the noise, the intrinsic scattering phase and the system.
 The model was tested on each reflector of the array: the maximum in range and azimuth was identified and the samples corresponding to the half power beamwidth were extracted at the range of maximum intensity. The unwrapped phase was then used to estimate $r_{ph}$ according to the procedure described in \autoref{eq:rph_estimation}.
-\pgfplotstableread[col sep=comma]{../tab/table_2.csv}{\tabII}
-\pgfplotstableset{rph style/.style={,
-									columns={rsl, rph, res},
-									every head row/.style={before row=\toprule,after row=\midrule},
-									every last row/.style={after row=\bottomrule},
-									display columns/0/.style={precision=3, column name={$R_0$}}
-									display columns/1/.style={precision=3, column name={$L_{ph}$}},
-									display columns/2/.style={precision=3, column name={residual}},
-									},
-									}
+
+
 
 \begin{table}[ht]
 	\centering
-	\pgfplotstabletypeset[rph style] {\tabII}
+	\pgfplotstabletypesetfile[			col sep=comma,
+										columns={rsl, rph, res},
+										every head row/.style={before row=\toprule,after row=\midrule},
+										every last row/.style={after row=\bottomrule},
+										columns/rsl/.style={precision=1, column name={$R_0$}},
+										columns/rph/.style={precision=3, column name={$L_{ph}$}},
+										columns/res/.style={precision=3, column name={residual}},
+										]{../tab/table_2.csv}
 	\caption{Result of the phase center displacement fit for six trihedral corner reflectors located at different ranges.}
 	\label{tab:rph_fit}
 \end{table}
@@ -96,13 +95,13 @@ The phase and amplitude responses for all reflectors are plotted for the VV chan
 		columns={slant range, HH-VV amplitude imbalance, HH-VV phase imbalance, Polarisation purity, RCS},
 		every head row/.style={before row=\toprule,after row=\midrule},
 		every last row/.style={after row=\bottomrule},
-		columns/slant range/.style={precision=2, column name={$R_{0} [m]$}},
+		columns/slant range/.style={precision=1, column name={$R_{0} [m]$}},
 		columns/HH-VV amplitude imbalance/.style={precision=3, column name={$f$}},
 		columns/HH-VV phase imbalance/.style={precision=3, column name={$\phi_r + \phi_t [^\circ]$}},
 		columns/RCS/.style={precision=3, column name={$\sigma_0$ bias}},
 		columns/Polarisation purity/.style={precision=3, column name={Purity $[dB]$}}
 	]{../tab/table_3.csv}
-	\caption{Residual imbalances and polarization purity for all reflectors in the scene.}
+	\caption{Copolar phase and amplitude imbalance computed on the reflectors using the calibrated dataset. The polarization purity (VV/HV ratio) is shown additionally, alongside with the ratio of the measured to the predicted RCS.}
 	\label{tab:polcal}
 \end{table}		
 The methods described in the preceding sections were applied to prepare SLC images for each channel. For the final polarimetric calibration the procedure of \autoref{sec:proc_polcal} was used; one reflector in the scene was used as a calibration target, with the four remaining reflectors used for the determination of the calibration performance.\\

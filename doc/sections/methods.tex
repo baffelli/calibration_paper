@@ -182,12 +182,9 @@ The dataset was acquired with the horizontally polarized antenna group shifted t
 								every last row/.style={after row=\bottomrule},
 								col sep=comma,
 								columns={rsl, RCS, type},
-								%columns/rsl/.style={precision=3, column name=$R_0$}
 								columns/type/.style={column name={Type} ,string type},
 								columns/RCS/.style={precision=3, column name=$\sigma_0$},
 								columns/rsl/.style={precision=3, column name=$R_0$}
-										%columns/type/.style={column name={Type} ,string type, column type={s}},
-									%display columns/3/.style={precision=3, column name={$\sigma_0$}},
 										] {../tab/table_1.csv}
 	\caption{Summary of the employed TCRs. Distance from the radar and expected RCS.}
 	\label{tab:reflectors}
