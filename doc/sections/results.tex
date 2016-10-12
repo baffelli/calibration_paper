@@ -17,10 +17,10 @@ In order to assess the processing quality and to appreciate the effect of the be
 	\caption{Azimuth response for a point-like target with high crosspolarized contribution.}
 	\label{fig:hv_power}
 \end{figure}
-To verify the impact of the $H$-$V$ pattern pointing shift on the performance of crosspolar measurement, the response of a dihedral reflector with an high crosspolar contribution is analyzed for two configurations:\\ \begin{enumerate*}\item the case where the antennas are not mechanically moved \item the case where the optimal shift of 1.8 mm is applied to bring the patterns into alignment.\\ Because of logistical problems, this experiment was carried out at the H\"{o}nggerberg campus separately from the rest of the measurements shown in this section.
+To verify the impact of the $H$-$V$ pattern pointing shift as described in \autoref{sec:misalingment} on the performance of crosspolar measurements, the response of a dihedral reflector with an high crosspolar contribution is analyzed for two configurations:\\ \begin{enumerate*}\item the case where the antennas are not mechanically moved \item the case where the optimal shift of 1.8 mm is applied to bring the patterns into alignment.\\ Because of logistical problems, this experiment was carried out at the H\"{o}nggerberg campus separately from the rest of the measurements shown in this section.
 \end{enumerate*}
 In \autoref{fig:hv_power}, the result of the above experiment is shown as the oversampled, coregistered azimuth response in the $HV$ channel; a gain of approx. 2.5 dB is observed after correcting for the pattern misalignment. The estimated gain is very close to the one expected by analyzing the provided antenna patterns. This results confirms that the 1.8 mm shift setting employed to acquire the calibration data can correctly compensate the crosspolar power lost and the $HH-VV$ misregistration.
-\subsection{Azimuth Processing}
+\subsection{Azimuth Processing}\label{sec:azimuth_processing}
 This residual phase observed for the $VV$ channel in \autoref{sec:res_SLC}  is problematic in two manners: \begin{enumerate*}
 	\item because of the coherent average of pixels affected by the phase ramp\label{item:SNR}  $\sigma$ after azimuth averaging (see \autoref{sec:proc_SLC}) will appear smaller than it actually is.
   \item because of the different phase behavior of the antennas, the coherence magnitude of polarimetric phase differences will be reduced; the resulting coherence phase will be affected by a residual phase variation. For example, if the HH-VV phase is needed for calibration in the method described in \autoref{sec:proc_polcal} and the azimuth variation is not taken into account, the additional phase will lead to incorrect calibration parameters.\label{item:phase_variation}\end{enumerate*}
@@ -92,22 +92,22 @@ The phase and amplitude responses for all reflectors are plotted for the VV chan
 	\centering
 	\pgfplotstabletypesetfile[
 		col sep=comma,
-		columns={slant range, HH-VV amplitude imbalance, HH-VV phase imbalance, Polarisation purity, RCS},
+		columns={slant range, HH-VV amplitude imbalance, HH-VV phase imbalance, Polarisation purity},
 		every head row/.style={before row=\toprule,after row=\midrule},
 		every last row/.style={after row=\bottomrule},
 		columns/slant range/.style={precision=1, column name={$R_{0} [m]$}},
 		columns/HH-VV amplitude imbalance/.style={precision=3, column name={$f$}},
 		columns/HH-VV phase imbalance/.style={precision=3, column name={$\phi_r + \phi_t [^\circ]$}},
-		columns/RCS/.style={precision=3, column name={$\sigma_0$ bias}},
+		%columns/RCS/.style={precision=3, column name={$\sigma_0$ bias}},
 		columns/Polarisation purity/.style={precision=3, column name={Purity $[dB]$}}
 	]{../tab/table_3.csv}
-	\caption{Copolar phase and amplitude imbalance computed on the reflectors using the calibrated dataset. The polarization purity (VV/HV ratio) is shown additionally, alongside with the ratio of the measured to the predicted RCS.}
+	\caption{Copolar phase and amplitude imbalance computed on the reflectors using the calibrated dataset. The polarization purity (VV/HV ratio) is shown additionally.}
 	\label{tab:polcal}
 \end{table}		
 The methods described in the preceding sections were applied to prepare SLC images for each channel. For the final polarimetric calibration the procedure of \autoref{sec:proc_polcal} was used; one reflector in the scene was used as a calibration target, with the four remaining reflectors used for the determination of the calibration performance.\\
 An initial assessment of the data quality is made in \autoref{fig:signatures}  by plotting polarization signatures\cite{VanZyl1987} for two of the five corner reflectors that were not used to determine the calibration parameters.
 The signature in the uncorrected data is complex and cannot be easily interpreted as representing any known basic scattering mechanism. In the calibrated response, both reflectors show a correspondence with the expected polarization signature for trihedral reflector.\\
-A quantitative assessment of the calibration is obtained by estimating the residual copolar phase and amplitude imbalances $f$ and $\phi_r + \phi_t$ on the calibrated data. The results are shown in \autoref{tabl:polcal}. Generally, both the amplitude and the phase imbalance appear to be well corrected, with a RMS $f$ of 0.97 and $7^\circ$ for $\phi_r + \phi_t$.
+A quantitative assessment of the calibration is obtained by estimating the residual copolar phase and amplitude imbalances $f$ and $\phi_r + \phi_t$ on the calibrated data. The results are shown in \autoref{tab:polcal}. Generally, both the amplitude and the phase imbalance appear to be well corrected, with a RMS $f$ of 0.97 and $7^\circ$ for $\phi_r + \phi_t$ and a polarisation purity above 35 dB for all TCR except the very far one.
 %Finally, to visualize the result of the calibration, RGB Pauli composites of the scene are shown in \autoref{fig:gc:pauli}. Because very little information can be extracted from this image, a more quantitative understanding of the scene is gained by applying the Cloude-Pottier decomposition on the calibrated data. The data is first converted in cartesian coordinates with 1 meter pixel spacing; it is then multi-looked with a window size of $5 \times 2$ pixels, finally the decomposition parameters are computed from the thus obtained covariance matrix. The $\alpha$ and $H$ parameters are plotted in \autoref{fig:gc:alpha} and \autoref{fig:gc:H} . The response of most natural surfaces appears to be a low entropy, low $\alpha$ scattering usually associated with Bragg/X-Bragg surface scattering. The dominance of surface scattering is attributed to a combination of object roughness  at the scale of the radar wavelength (1.7 cm) and the small penetration depth. A few pixels in the far range area corresponding to the town of M\"{u}nsingen display low entropy dihedral scattering behavior, these points can be likely associated with double bounce interaction between buildings and ground.\\
 
 \begin{figure}[hb]
