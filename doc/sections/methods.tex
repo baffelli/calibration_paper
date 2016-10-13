@@ -160,7 +160,7 @@ If radiometric calibration is desired, the value of $A$ can be determined after 
 \end{equation}
 where $R$ is the slant range to the trihedral corner reflector.
 \subsection{Experimental Data}\label{sec:data}
-A calibration dataset was acquired in September 2016 at an urban-agricultural area near M\"{u}nsingen, Switzerland to test the methods described above. The data was acquired from the top of an hill approximately 800 m high, looking down towards fields and the town. 6 Trihedral Corner Reflectors were placed in the scene for the determination of calibration parameters and to assess imaging quality. Three of these reflectors have triangular faces with a length of 40 cm, corresponding to a RCS of $\sigma=\frac{4}{3}\pi \frac{a^4}{\lambda^2}=25.5 dB$, while the remaining two are cubic corner reflector with $\sigma= 35 dB$, at the nominal central frequency of 17.2 GHz.\\
+A calibration dataset was acquired in September 2016 at an urban-agricultural area near M\"{u}nsingen, Switzerland to test the methods described above. The data was acquired from the top of an hill approximately 800 m high, looking down towards fields and the town. 6 Trihedral Corner Reflectors were placed in the scene for the determination of calibration parameters and to assess imaging quality. Three of these reflectors have triangular faces with a length of 40 cm, corresponding to a RCS of $\sigma=\frac{4}{3}\pi \frac{a^4}{\lambda^2}=25.5 dB$, while the remaining two are cubic corner reflector with $\sigma= 35 dB$, at the nominal central frequency of 17.2 GHz.
 	\begin{figure}
 		\centering
 		\includegraphics{figure_7}
@@ -168,18 +168,9 @@ A calibration dataset was acquired in September 2016 at an urban-agricultural ar
 		\label{fig:pauli_rgb}
 	\end{figure}
 The dataset was acquired with the horizontally polarized antenna group shifted towards the V group by 1.8 mm to compensate for the pattern misalignment as described in \autoref{sec:misalingment}.\\
-\autoref{fig:pauli_rgb} shows the calibrated Pauli RGB composite of the scene, resampled in cartesian coordinates with the location of the reflectors marked using blue circles.
-%\pgfplotstableread[col sep=comma]{../tab/table_1.csv}{\tabI}
-%\pgfplotstableset{ref style/.style={
-%									columns={rsl, RCS},
-%									every head row/.style={before row=\toprule,after row=\midrule},
-%									every last row/.style={after row=\bottomrule},
-%									columns/rsl/.style={precision=3, column name={$R_0$}}
-%									columns/RCS/.style={precision=3, column name={$\sigma_0$}}
-%									%columns/type/.style={column name={Type} ,string type, column type={s}},
-%								%display columns/3/.style={precision=3, column name={$\sigma_0$}},
-%									}
-%									}
+\autoref{fig:pauli_rgb} shows the calibrated Pauli RGB composite of the scene, resampled in Cartesian coordinates with the location of the reflectors marked using blue circles; their location and RCS is summarized in \autoref{tab:reflectors}.\\
+A separate dataset containing a dihedral reflector was acquired at our H\"{o}nggerberg campus in order to investigate the effect of antenna pattern misalignment on crosspolar acquisitions and to test the suitability of the computed adjustment value as discussed in \autoref{sec:misalingment}. This was done separately because of the logistical complications associated with the transportation and the setup of large calibration targets.
+
 
 \begin{table}[ht]
 	\centering
