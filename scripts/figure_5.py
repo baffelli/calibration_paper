@@ -19,7 +19,7 @@ def az_idx(ds, idx):
 def plot_figure_5(inputs, outputs, threads, config, params, wildcards):
     plt.style.use(inputs['style'])
     fig_w, fig_h = plt.rcParams['figure.figsize']
-    f, fig_arr = plt.subplots(2, 2, subplot_kw=dict(projection='3d'), figsize=(fig_w, fig_h * 2))
+    f, fig_arr = plt.subplots(2, 2, subplot_kw=dict(projection='3d'), figsize=(fig_w * 2, fig_h * 2))#two column figure
 
     C_par = inputs["C_par"]
     C_root, ext = path.splitext(C_par)

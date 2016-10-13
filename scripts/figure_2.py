@@ -13,19 +13,21 @@ sw = [2, 3]  # search window for maxium
 def plot_figure_2(inputs, outputs, threads, config, params, wildcards):
     plt.style.use(inputs['style'])
     slc = gpf.gammaDataset(inputs['VV'] + '.par', inputs['VV'])
-    f, (phase_ax, amp_ax) = plt.subplots(2, sharex=True)
-    sorted_by_range = sorted(params['reflectors'], key=lambda tup: tup[0])
-    sorted_by_range = [ref for ref in sorted_by_range if ref[-1] == "t"]
+    fig_w, fig_h = plt.rcParams['figure.figsize']
+    f, (phase_ax, amp_ax) = plt.subplots(2, sharex=True, figsize=(fig_w * 2, fig_h))
+    sorted_by_range = sorted(params['reflectors'], key=lambda tup: tup['ridx'])
+    # sorted_by_range = [ref for ref in sorted_by_range if ref[] == "t"]
     cm = mpl.cm.get_cmap('viridis', len(sorted_by_range))  # colormap for sorting
-    ridx_vec = [el[0] for el in sorted_by_range]
+    ridx_vec = [el['ridx'] for el in sorted_by_range]
     ranges = slc.r_vec[ridx_vec]
     nm = mpl.colors.Normalize(vmin=ranges[0], vmax=ranges[-1])
     mappable = mpl.cm.ScalarMappable(cmap=cm, norm=nm)
     mappable.set_array(ranges)  # set the array of range distances to the mappable
-    for ridx, azidx, *rest in sorted_by_range:
+    for ref_vec in sorted_by_range:
+
         ws_id = ws / slc.GPRI_az_angle_step[0]  # number of samples in degrees
         # Extract maximum around the supposed position
-        ridx_max, azidx_max = cf.maximum_around(np.abs(slc), [ridx, azidx], [sw[0], ws_id])
+        ridx_max, azidx_max = cf.maximum_around(np.abs(slc), [ref_vec['ridx'], ref_vec['azidx']], [sw[0], ws_id])
         # Slice the slc
         slc_sl = (ridx_max, slice(azidx_max - ws_id / 2, azidx_max + ws_id / 2))
         reflector_slice = slc[slc_sl]
@@ -36,7 +38,7 @@ def plot_figure_2(inputs, outputs, threads, config, params, wildcards):
         refl_ph = np.angle(reflector_slice) - np.angle(max_slc)
         refl_ph = np.unwrap(refl_ph)
         refl_amp = (np.abs(reflector_slice)) ** 2
-        r_sl = slc.r_vec[ridx]
+        r_sl = slc.r_vec[ref_vec['ridx']]
         line, = phase_ax.plot(az_vec, np.rad2deg(refl_ph), color=mappable.to_rgba(r_sl))
         amp_ax.plot(az_vec, refl_amp / refl_amp[reflector_slice.shape[0] / 2], color=mappable.to_rgba(r_sl),
                     label=r"{r_sl:.0f}".format(r_sl=r_sl))

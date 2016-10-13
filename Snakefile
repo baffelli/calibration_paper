@@ -26,6 +26,7 @@ subworkflow new_data:
 
 
 
+
 rule all:
     input:
         'fig/figure_1.pdf',
@@ -39,7 +40,8 @@ rule all:
         'tab/table_1.csv',
         'tab/table_2.csv',
         'tab/table_3.csv',
-        'tab/RMS_polcal.csv'
+        'tab/RMS_polcal.csv',
+        'doc/calibration_paper.pdf'
 
 
 
@@ -206,6 +208,22 @@ rule fig8:
         plt.plot(residuals['slant range'], residuals['HH-VV phase imbalance'])
         plt.show()
 
+###############################################################################
+### Whenever the library is synchronized, cleanup all the {online} tags and
+#the other unecessary things
+rule cleanup_bibtex:
+    input:
+        bib = '../Texts/library.bib'
+    output:
+        'doc/library.bib'
+    run:
+        import re
+        url_re = re.compile(r"url\s=\s{\S+},")
+        month_re = re.compile(r"(?P<tag>month)\s=\s\{{(?P<month>\S+)\}}")
+        with open(input.bib) as infile, open(output[0],'w') as outfile:
+            for line in infile:
+               outfile.write(re.sub(url_re, "",re.sub(month_re,r"\1 = \{\2\} ,",line)))
+
 
 ###############################################################################
 ### Remake the paper when sections or figures change
@@ -213,7 +231,8 @@ rule paper:
     input:
         sections = glob.glob('doc/sections/*.tex'),
         main_paper = 'doc/calibration_paper.tex',
-        figures = glob.glob('fig/*.pdf')
+        figures = glob.glob('fig/*.pdf'),
+        library = 'doc/library.bib'
     output:
         paper_pdf = 'doc/calibration_paper.pdf'
     shell:

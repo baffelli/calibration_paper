@@ -62,12 +62,15 @@ The procedure is similar to azimuth focusing of synthetic aperture data, where t
 The result of applying the correction to the TCR at 673 m is displayed in panels (c) and (f) of \autoref{fig:tcr_mph}; the phase ramp is significantly reduced while the azimuth resolution is slightly degraded. However, the observed azimuth resolution is smaller than $0.6^\circ$, the value that would be observed if the samples were to be summed without accounting for the phase ramp. This result hints again that  most of the phase ramp has been removed by the proposed method.\\
 Similar results are observed for all reflector, as displayed in 	\autoref{fig:phase_response_VV:corrected}.  After the correction, only the reflector at 74 m shows a large residual azimuth phase variation; this behavior is attributed to its closeness to the radar relative to the far field transition distance of the antennas, in the order of 500 m. Excluding this exception, the residual variation is under $10^\circ$ for samples inside the antenna beamwidth.
 \begin{figure*}[ht]
-	\begin{subfigure}[t]{\columnwidth}
+	\centering
+	\begin{subfigure}[t]{\textwidth}
+		\centering
 		\includegraphics{figure_2}
 		\subcaption{Azimuth phase ramp not corrected.}
 		\label{fig:phase_response_VV:uncorrected}
-	\end{subfigure}
-	\begin{subfigure}[t]{\columnwidth}
+	\end{subfigure}\\
+	\begin{subfigure}[t]{\textwidth}
+		\centering
 		\includegraphics{figure_3}
 		\subcaption{Response after azimuth filtering.}
 		\label{fig:phase_response_VV:corrected}
@@ -114,13 +117,14 @@ The signature for the uncorrected data is complex and cannot be seen as indicati
 A quantitative assessment of the calibration is obtained by estimating the residual copolar phase and amplitude imbalances $f$ and $\phi_r + \phi_t$ on the calibrated data. The results are shown in \autoref{tab:polcal}. Generally, both the amplitude and the phase imbalance appear to be well corrected, with a RMS $f$ of 0.97 and $7^\circ$ for $\phi_r + \phi_t$ and a polarisation purity above 35 dB for all TCR except the very far one, where the combination of large azimuth resolution cell size, the relatively low RCS of the TCR and  the difficulty of exactly pointing it towards the radar may have lowered the purity because of a larger influence of clutter in the cell.\\ Generally, the calibration residuals suggest that the simplified polarimetric calibration model is suitable to describe the distortion experienced by full polarimetric KAPRI data during the measurement.
 
 \begin{figure*}[hb]
-	\begin{subfigure}[t]{\columnwidth}
+	\centering
+	\begin{subfigure}[t]{\textwidth}
 	\centering
 	\includegraphics{figure_5}
 	\subcaption{Reflector at 673 m.}
 	\label{fig:signatures:near}
-	\end{subfigure}
-	\begin{subfigure}[t]{\columnwidth}
+	\end{subfigure}\\
+	\begin{subfigure}[t]{\textwidth}
 	\centering
 	\includegraphics{figure_6}
 	\subcaption{Reflector at 2690 m.}
