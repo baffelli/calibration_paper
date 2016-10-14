@@ -34,7 +34,6 @@ def plot_figure_8(inputs, outputs, threads, config, params, wildcards):
     amp_ax.scatter(inc_ref, residuals['HH-VV amplitude imbalance'])
     amp_ax.xaxis.set_label_text(r'incidence angle $\alpha$ [deg] ')
     amp_ax.yaxis.set_label_text(r'residual $f$')
-    bbox_props = dict(boxstyle="square", fc="white", ec="w", lw=2)
     amp_ax.text(0.2, 0.2, r"RMS {:.2f}, Mean {:.2f}".format(amp_rms, amp_mean),
                transform=amp_ax.transAxes, bbox=bbox_props)
     f.subplots_adjust(hspace=0.2)
