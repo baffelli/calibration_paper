@@ -202,7 +202,7 @@ rule RMS_residual:
 rule fig8:
     input:
         res = 'tab/table_3.csv',
-        inc = geo('geo/Chutzen.lv_theta_fgc'),
+        inc = geo('geo/Chutzen.inc_fgc'),
         C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
         style = 'paper_style.rc'
     output:
@@ -235,7 +235,7 @@ rule paper:
     input:
         sections = glob.glob('doc/sections/*.tex'),
         main_paper = 'doc/calibration_paper.tex',
-        figures = glob.glob('fig/*.pdf'),
+        figures = expand('fig/figure_{n}.pdf', n=range(1,9)),
         library = 'doc/library.bib'
     output:
         paper_pdf = 'doc/calibration_paper.pdf'

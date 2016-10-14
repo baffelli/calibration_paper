@@ -37,7 +37,7 @@ def plot_figure_8(inputs, outputs, threads, config, params, wildcards):
     bbox_props = dict(boxstyle="square", fc="white", ec="w", lw=2)
     amp_ax.text(0.2, 0.2, r"RMS {:.2f}, Mean {:.2f}".format(amp_rms, amp_mean),
                transform=amp_ax.transAxes, bbox=bbox_props)
-    plt.show()
+    f.subplots_adjust(hspace=0.2)
     f.savefig(outputs[0])
 
 

@@ -15,10 +15,12 @@ import os.path as path
 def tcr_recap(inputs, outputs, threads, config, params, wildcards):
     #list of reflectors
     refl_list = params['ref']
+    #remove reflector used for calibration
+    refl_list.pop(config['calibration']['reflector_index'])
     #Load matrix and convert to coherency
     C_root, ext = path.splitext(inputs['C_par'])
     C = mat.coherencyMatrix(C_root,  inputs['C_par'], gamma=True, bistatic=True, basis='lexicographic').boxcar_filter([3,3])
-    refl_list = [ref for ref in params['ref'] if ref['type'] == "cubic" or ref['type'] == 'triangular']
+    # refl_list = [ref for ref in params['ref'] if ref['type'] == "cubic" or ref['type'] == 'triangular']
     refl_list = sorted(refl_list, key=lambda x: x['ridx'])
     with open(outputs[0], 'w+') as of:
         tabwrite = csv.writer(of, delimiter=',')
