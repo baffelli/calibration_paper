@@ -31,12 +31,10 @@ def plot_figure_7(inputs, outputs, threads, config, params, wildcards):
     ref_gc = direct_lut[ref_dec[:,0],ref_dec[:,1]]
     C_cal_geo = C_cal_geo.boxcar_filter([3,3])
     C_cal_rgb = C_cal_geo.pauli_image(k=0.2, sf=0.4,)
-    C_cal_rgb[np.isnan(C_cal_rgb[:,:,0])] = [1,1,1]
     ax.imshow(C_cal_rgb.transpose([1,0,2])[::,::-1], aspect=1)
     marker_color = ['orange' if i == config['calibration']['reflector_index'] else 'cyan' for i in range(len(ref_dec))]
-    ax.scatter(C_cal_geo.shape[0] - np.imag(ref_gc), np.real(ref_gc), c=marker_color, s=5)
-    #Add a plot to mark the calibration reflector
-
+    ax.scatter(C_cal_geo.shape[0] - np.imag(ref_gc), np.real(ref_gc), edgecolors=marker_color, s=10, facecolors='none')
+    f.subplots_adjust(left=0,right=1)
     ax.axis('off')
     f.savefig(outputs[0])
 
