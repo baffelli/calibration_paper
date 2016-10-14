@@ -24,6 +24,10 @@ subworkflow new_data:
     snakefile:  pyrat.rules['slc_to_calibrated_c']
     configfile: './calibration_configuration_chutze.json'
 
+subworkflow geo:
+    workdir: './processed'
+    snakefile:  pyrat.rules['geocoding']
+    configfile: './calibration_configuration_chutze.json'
 
 
 
@@ -36,7 +40,7 @@ rule all:
         'fig/figure_5.pdf',
         'fig/figure_6.pdf',
         'fig/figure_7.pdf',
-        #'fig/figure_8.pdf',
+        'fig/figure_8.pdf',
         'tab/table_1.csv',
         'tab/table_2.csv',
         'tab/table_3.csv',
@@ -194,19 +198,19 @@ rule RMS_residual:
         'scripts/RMS_polcal.py'
 
 ###############################################################################
-#Make figure 8: dependence of residuals with range
+#Make figure 8: dependence of residuals with incidence angle
 rule fig8:
     input:
-        res = 'tab/table_2.csv'
+        res = 'tab/table_3.csv',
+        inc = geo('geo/Chutzen.lv_theta_fgc'),
+        C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
+        style = 'paper_style.rc'
     output:
         'fig/figure_8.pdf'
-    run:
-        import matplotlib.pyplot as plt
-        import numpy as np
-        import pandas as pd
-        residuals = pd.read_csv(input.res)
-        plt.plot(residuals['slant range'], residuals['HH-VV phase imbalance'])
-        plt.show()
+    script:
+        'scripts/figure_8.py'
+
+
 
 ###############################################################################
 ### Whenever the library is synchronized, cleanup all the {online} tags and

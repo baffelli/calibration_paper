@@ -25,7 +25,7 @@ In the radar, $s_r$ is mixed with the transmitted chirp $s_t$  to remove the lin
 \end{equation} 
 Its frequency $f_{b} = \frac{4 R B}{c t_{chirp}}$ is proportional to the slant range $R$;
 two phase terms can be identified: $ e^{j 4 \pi \frac{R}{c}f_c}$ is the two way propagation phase, the quantity of interest for  interferometric measurements. The second phase component is the residual video phase (RVP). This component needs to be compensated for SAR processing, where its variation during the aperture time may cause defocussing.\\
-From \autoref{eq:deramp}, it follows by the linearity of the Fourier transform, that the range profile $\hat{\sigma}\left(R, \theta\right)$ of a collection of targets with complex reflectivities $\rho_i$ located at ranges $R_{i}$ is recovered by the transform of $s_{d}\left(t\right)$.\\
+From \autoref{eq:deramp}, it follows by the linearity of the Fourier transform, that the range profile $\hat{\rho}\left(R, \theta\right)$ of a collection of targets with complex reflectivities $\rho_i$ located at ranges $R_{i}$ is recovered by the transform of $s_{d}\left(t\right)$.\\
 As in pulsed radars, the range resolution using FMCW signals is inversely proportional to the bandwidth $\delta_{r} = \frac{c}{2 B}$. With a bandwidth of 200 MHz, KAPRI can achieve a range resolution of 0.75 m\cite{Strozzi2011}; the effective range resolution is lower because the dechirped data is windowed before the Fourier transform to mitigate range sidelobes.\\ It is interesting to note that for FMCW system the sampling rate is not governed by the transmitted bandwidth; instead it is dictated by the extent of ranges to be imaged\cite{Meta2006}.\\
 To obtain two dimensional images, range profiles are acquired while the antenna is rotated with angular velocity $\omega$. 
 Thus, the deramp signal for a point target at $R, \theta_{t}$ in the slow-time versus fast time plane is:
@@ -81,8 +81,12 @@ In the case of GPRI the processing is concluded after range compression and the 
 	\caption{KAPRI with the usual antenna arrangement overlaid. The blue and red dots represent the equivalent phase centers for the upper $HHV$ and $VV$ channels.}
 	\label{fig:antenna_arrangement}
 \end{figure}
-Consider an image $i$ acquired by transmitting at antenna located at $\mathbf{x_t^i}$ and receiving at $\mathbf{x_r^i}$. These antennas can be replaced by an equivalent antenna located at $\mathbf{x_{eq}^i}$, the midpoint between transmitter and receiver \cite{Pipia2009}. Thus, for polarimetric observations using  KAPRI the equivalent antenna phase center $\mathbf{x_{eq}^i}$ location will change depending on the chosen polarization. Therefore, there exist certain combinations of channels $i$ and $j$ where the equivalent phase centers will be separated by a baseline $\mathbf{b_{ij}^{eq}}$. Consequently, the polarimetric phase difference $\phi_{ij} = \phi_{ij}^{pol} + \phi_{ij}^{prop}$  will contain an interferometric contribution $\phi_{ij}^{prop}$. This term appears as topographic fringes when visualizing the polarimetric phase difference and will complicate calibration by adding an additional phase contribution unrelated to the polarimetric properties of the scatterers.\\
-To obtain valid polarimetric phase differences, it is necessary to estimate and subtract the interferometric contribution. This can be done  by considering two additional channel $k$ and $l$  acquired with  a non-zero baseline $\mathbf{b_{ij}^{eq}}$ and with the same polarization, where $\phi_{kl}^{pol} \approx 0$. Generally, for any two channels $m$ and $n$,  the propagation phase difference can be approximated as a function of the local incidence angle and of the perpendicular baseline separating the phase centers:
+Consider an image acquired by transmitting at antenna located at $\mathbf{x_t^i}$ and receiving at $\mathbf{x_r^i}$. These antennas can be replaced by an equivalent antenna located at $\mathbf{x_{eq}^i}$, the midpoint between transmitter and receiver \cite{Pipia2009}. Thus, for polarimetric observations using  KAPRI the equivalent antenna phase center $\mathbf{x_{eq}^i}$ location will change depending on the chosen polarization. Therefore, there exist certain combinations of channels $i$ and $j$ where the equivalent phase centers are separated by a baseline $\mathbf{b_{ij}^{eq}}$. Consequently, the polarimetric phase difference   will contain an interferometric contribution:
+\begin{equation}
+	\phi_{ij} = \phi_{ij}^{pol} + \phi_{ij}^{prop}
+\end{equation}
+This term appears as topographic fringes when visualizing the polarimetric phase difference and will complicate calibration by adding an additional phase contribution unrelated to the polarimetric properties of the scatterers.\\
+To obtain correct polarimetric phase differences, it is necessary to estimate and subtract the interferometric contribution. This can be done  by considering two additional channel $k$ and $l$  acquired with  a non-zero baseline $\mathbf{b_{ij}^{eq}}$ and with the same polarization, where $\phi_{kl}^{pol} \approx 0$. Generally, for any two channels $m$ and $n$,  the propagation phase difference can be approximated as a function of the local incidence angle and of the perpendicular baseline separating the phase centers:
 \begin{equation}\label{eq:prop_approximation}
 		\phi_{mn}^{prop} = \frac{4\pi}{\lambda} b_{mn}^{eq} \sin(\theta - \alpha_{bl}),
 \end{equation}
@@ -91,10 +95,10 @@ Thus from \autoref{eq:prop_approximation}, $\phi_{ij}^{prop}$ can be estimated f
 \begin{equation}
 	\hat{\phi}_{ij}^{prop} = \frac{b_{eq}^{ij}}{b_{eq}^{kl}} \phi_{kl}.
 \end{equation}
-This formula can only be used if $\frac{b_{eq}^{ij}}{b_{eq}^{kl}}$ is integer\cite{Massonnet1996}, if this condition is not met, phase unwrapping of $\phi_{kl}^{prop}$ is necessary before rescaling.\\
-In order to correct for all the possible combinations that have a non-zero baseline, the measured scattering matrix $\mathbf{S}$ is converted into a polarimetric covariance matrix;  $\hat{\phi}_{ij}^{prop}$ it then subtracted from the phase of every non-diagonal element $ij$. The result is a flattened covariance matrix where the sole phase contribution is the polarimetric phase difference.\\
+This formula only holds if $\frac{b_{eq}^{ij}}{b_{eq}^{kl}}$ is integer\cite{Massonnet1996}, otherwise phase unwrapping of $\phi_{kl}^{prop}$ is necessary before rescaling.\\
+In order to correct for all the possible combinations that have a non-zero baseline, the measured scattering matrix $\mathbf{S}$ is converted into a polarimetric covariance matrix $\mathbf{C}$;  $\hat{\phi}_{ij}^{prop}$ it then subtracted from the phase of every non-diagonal element $ij$. The result is a flattened covariance matrix $\mathbf{C_{flat}}$ where the sole phase contribution is the polarimetric phase difference.\\
 This matrix is the starting point for the polarimetric calibration proper;
-the procedure is based on the linear distortion matrix model\cite{Saraband1990, Sarabandi1992a} that relates the observed scattering matrix $\mathbf{S_{meas}}$ with the correct matrix $\mathbf{S}$:
+the procedure is based on the linear distortion matrix model\cite{Saraband1990, Sarabandi1992a} that relates the observed scattering matrix $\mathbf{S_{meas}}$ with the theoretical one $\mathbf{S}$:
 \begin{equation}\label{eq:distorsion_scattering}
 	\mathbf{S_{meas}} = \mathbf{R} \mathbf{S} \mathbf{T}.
 \end{equation}
@@ -119,12 +123,8 @@ Thus, neglecting crosstalk the matrices can be written as:
 \end{equation}
 where $f$ is the one-way copolar amplitude imbalance with respect to the $H$ polarization, and $g$ the amplitude imbalance of the crosspolarized channels. $\phi_t = \phi_{t,h} -\phi_{t,v}$ is the phase offset between the polarizations when transmitting and $\phi_{r} = \phi_{r,h} -\phi_{r,v}$ is the phase offset in reception and $A$ is the absolute amplitude calibration parameter (RCS)\cite{Ainsworth2006a, Fore2015}.\\
 The four unknown complex parameters in $\mathbf{D}$ can be determined using a trihedral corner reflector and a reciprocal scatterer with a significant cross polarized contribution\cite{Sarabandi1989,Pipia2009}.\\
-With the above model, an ideal trihedral reflector with the scattering matrix
-\begin{equation}
- \mathbf{S} = \sqrt{\sigma_{tri}}
- \begin{bmatrix}1 & 0\\ 0 & 1\end{bmatrix}
-\end{equation}
-where $\sigma_{tri}$ is its RCS, has a measured covariance matrix $\mathbf{C^{\prime}}$:
+Thus, observing an ideal trihedral reflector with RCS $\sigma_{tri}$, would give 
+a measured covariance matrix $\mathbf{C^{\prime}}$:
 \begin{equation}
 	\begin{aligned}
 	&\mathbf{C^{\prime}} =\\
@@ -137,7 +137,7 @@ where $\sigma_{tri}$ is its RCS, has a measured covariance matrix $\mathbf{C^{\p
 	\end{bmatrix}
 	\end{aligned}.
 \end{equation}
-The copolar amplitude imbalance $f$ is estimated of the HHHH and VVVV elements of $\mathbf{C^{\prime}}$:
+Therefore, the  copolar amplitude imbalance $f$ can be estimated by the ratio HHHH and VVVV elements of $\mathbf{C^{\prime}}$:
 \begin{equation}
 	f = \left(\frac{C^{\prime}_{VVVV}}{C^{\prime}_{HHHH}}\right)^{\frac{1}{4}}.
 \end{equation}
@@ -145,8 +145,8 @@ Similarly, the copolar imbalance phase $\phi_r + \phi_t$ is determined from the 
 \begin{equation}
 	\phi_r + \phi_t = \operatorname{arg}\left(C_{meas}^{VVHH}\right).
 \end{equation}
-Both parameters are estimated on the oversampled response of a corner reflector.
-Because of the difficulty of placing and correctly orienting a dihedral reflector, the estimation of $g$ and $\phi_t - \phi_r$ is based on the assumption that most pixels in the calibration dataset represent reciprocal scatterers:
+Both parameters are estimated on the oversampled response of a corner reflector. In \cite{Fore2015}, a polynomial model for the copolar calibration parameters is used, that links the imbalances to the incidence angle. In that case, the estimate are performed using a larger array of corner reflectors, which is not available in our case. Thus, a simplified calibration model is used, assuming the copolar parameters to be independent of incidence angle.\\ 
+Because of the difficulty of placing and correctly orienting a cross polarizing target such as a $45^\circ$ dihedral, the estimation of $g$ and $\phi_t - \phi_r$ is based on the assumption that most pixels in the calibration dataset represent reciprocal scatterers:
 \begin{equation}
 	g = \left<\frac{C_{rec}^{HVHV}}{C_{rec}^{VHVH}}\right>^\frac{1}{4},
 \end{equation}
@@ -154,24 +154,23 @@ and:
 \begin{equation}
 	\phi_t - \phi_r =\operatorname{arg}\left( \left<C_{meas}^{HVVH}\right>\right).
 \end{equation}
-When $\mathbf{D}$ is estimated, \autoref{eq:covariance_distortion} is inverted to obtain a calibrated covariance matrix.\\
-If radiometric calibration is desired, the value of $A$ can be determined after imbalance correction:
+Once $\mathbf{D}$ is estimated, \autoref{eq:covariance_distortion} is inverted to obtain a calibrated covariance matrix.\\
+If radiometric calibration is desired, the value of $A$ can be determined after imbalance correction from the ratio of the expected and the measured RCS.
 \begin{equation}
-	A =	\left(\frac{\sigma_{tri}}{C^{\prime}_{HHHH} R^{3}}\right).
+	A =	\left(\frac{\sigma_{tri}}{C^{\prime}_{HHHH} R_{tri}^{3}}\right).
 \end{equation}
-where $R$ is the slant range to the trihedral corner reflector. This is necessary to compensate for the range spread loss compensation as performed in \autoref{sec:methods}.
+where $R_{tri}$ is the slant range to the trihedral corner reflector. This is necessary to remove the range spread loss compensation as performed in \autoref{sec:methods}.
 \subsection{Experimental Data}\label{sec:data}
-A calibration dataset was acquired in September 2016 at an urban-agricultural area near M\"{u}nsingen, Switzerland to test the methods described above. The data was acquired from the top of an hill approximately 800 m high, looking down towards fields and the town. 6 Trihedral Corner Reflectors were placed in the scene for the determination of calibration parameters and to assess imaging quality. Three of these reflectors have triangular faces with a length of 40 cm, corresponding to a RCS of $\sigma=\frac{4}{3}\pi \frac{a^4}{\lambda^2}=25.5 dB$, while the remaining two are cubic corner reflector with $\sigma= 35 dB$, at the nominal central frequency of 17.2 GHz.
+A calibration dataset was acquired in September 2016 at an urban-agricultural area near M\"{u}nsingen, Switzerland to test the methods described in the preceding sections. The data was acquired from the top of an hill approximately 800 m high, looking down towards a mixture of fields and forests, with the town in the far range region. 6 Trihedral Corner Reflectors were placed in the area for the determination of calibration parameters and to assess imaging quality. Three of these reflectors have triangular faces with a length of 40 cm, corresponding to a RCS of $\sigma=\frac{4}{3}\pi \frac{a^4}{\lambda^2}=25.5 dB$, while the remaining two are cubic corner reflector with $\sigma= 35 dB$, at the nominal central frequency of 17.2 GHz.
 	\begin{figure*}
 		\centering
 		\includegraphics{figure_7}
-		\caption{Pauli RGB composite of the imaged scene, resampled to cartesian coordinates with 2 m pixel spacing, The radar is scanning from left to right. The location of corner reflectors is marked by blue circles. The bright structures on the bottoms are buildings in the town of M\"{u}nsingen.}
+		\caption{Pauli RGB composite of the imaged scene, resampled to cartesian coordinates with 2 m pixel spacing, The radar is scanning from left to right. The location of corner reflectors is marked by cyan circles. The bright structures on the bottoms are buildings in the town of M\"{u}nsingen. Because of the acquisition geometry, a large parte of the scene lies in shadow.}
 		\label{fig:pauli_rgb}
 	\end{figure*}
 The dataset was acquired with the horizontally polarized antenna group shifted towards the V group by 1.8 mm to compensate for the pattern misalignment as described in \autoref{sec:misalingment}.\\
 \autoref{fig:pauli_rgb} shows the calibrated Pauli RGB composite of the scene, resampled in Cartesian coordinates with the location of the reflectors marked using blue circles; their location and RCS is summarized in \autoref{tab:reflectors}.\\
 A separate dataset containing a dihedral reflector was acquired at our H\"{o}nggerberg campus in order to investigate the effect of antenna pattern misalignment on crosspolar acquisitions and to test the suitability of the computed adjustment value as discussed in \autoref{sec:misalingment}. This was done separately because of the logistical complications associated with the transportation and the setup of large calibration targets.
-
 
 \begin{table}[ht]
 	\centering
