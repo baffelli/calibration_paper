@@ -20,7 +20,7 @@ def az_idx(ds, idx):
 def plot_figure_7(inputs, outputs, threads, config, params, wildcards):
     plt.style.use(inputs['style'])
     fig_w, fig_h = plt.rcParams['figure.figsize']
-    f, ax = plt.subplots(1, 1, figsize=(2.5 * fig_w,  2.5 * fig_w))
+    f, ax = plt.subplots(1, 1, figsize=(2 * fig_w,  2 * fig_w))
     C_cal_par = inputs["C_cal_par"]
     C_cal_root, ext = path.splitext(C_cal_par)
     C_cal = mat.coherencyMatrix(C_cal_root, C_cal_par, gamma=True, bistatic=True,

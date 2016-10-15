@@ -16,7 +16,8 @@ def plot_figure_4(inputs, outputs, threads, config, params, wildcards):
                                                                                     azwin=30)
     HV_gain = cf.dB(ptarg_zoom_corr[mx_idx_zoom_corr] / ptarg_zoom[mx_idx_zoom])
     x_shift = 50
-    f, ax = plt.subplots()
+    fig_w, fig_h = plt.rcParams['figure.figsize']
+    f, ax = plt.subplots(1, 1, figsize=(2 * fig_w, 2 * fig_h))
     bbox_props = dict(boxstyle="square", fc="white", ec="w", lw=2)
     norm_plot = plt.plot(az_vec, cf.dB(np.abs(azplot)), label='No shift')
     corr_plot = plt.plot(az_vec_corr, cf.dB(np.abs(azplot_corr)), label='Optimal shift')
