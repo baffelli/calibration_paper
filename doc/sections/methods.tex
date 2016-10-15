@@ -5,7 +5,7 @@ For this purpose a signal model for type II\cite{Caduff2015} radar data using FM
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=1]{real_aperture_signal_model_geometry}
-	\caption{Geometry used to derive the FMCW signal model. $R$ is the slant range from the radar to the point scatterer, $\theta_{3dB}$ is the antenna half power beamwidth, which is represented by the gray triangle. The size of the antenna aperture is $L_{ant}$, the corresponding azimuth resolution (in distance units) is $\delta_{az}$. The inset figure is used to derive the azimuth phase variation. $L_{ph}$ is the phase center displacement, $L_{arm}$ is the antenna rotation lever arm, $R_{0}$ the range of closest approach and $\alpha$ the additional angle to obtain closest approach when the phase center is not in the midpoint of the array.}
+	\caption{Geometry used to derive the FMCW signal model. $R$ is the slant range from the radar to the point scatterer, $\theta_{3dB}$ is the antenna half power beamwidth, which is represented by the gray triangle. The size of the antenna aperture is $L_{wg}$, the corresponding azimuth resolution (in distance units) is $\delta_{az}$. The inset figure is used to derive the azimuth phase variation. $L_{ph}$ is the phase center displacement, $L_{arm}$ is the antenna rotation lever arm, $R_{0}$ the range of closest approach and $\alpha$ the additional angle to obtain closest approach when the phase center is not in the midpoint of the array but the rotation angle is measured assuming $L_{ph}=0$.}
 	\label{fig:real_aperture_signal_model_geometry}
 \end{figure}
 Consider a coordinate system having its origin at the location of a radar, as depicted in \autoref{fig:real_aperture_signal_model_geometry}. In this system, the antenna is mounted on a lever arm of length $L_{arm}$; its mainlobe is parallel to the $x$ axis when the pointing angle $\theta$ is 0. The radar images a scene with a complex reflectivity distribution $\rho\left(x,y\right)$ by measuring range profiles $\hat{\rho}\left(R, \theta\right)$ for a number of antenna azimuths angles $\theta = \operatorname{arctan}\left(\frac{y}{x}\right)$ by rotating the antenna assembly with angular speed $\omega$. Each profile is measured by transmitting a linearly modulated signal of duration $t_{chirp}$ with bandwidth $B$ and center frequency $f_c$:
@@ -37,13 +37,13 @@ Thus, the deramp signal for a point target at $R, \theta_{t}$ in the slow-time v
 \end{equation} 
 where $t$ is the fast time, $\tau = n t_{chirp}$ is the slow time variable and $P\left(\tau \omega\right)$ describes the two way antenna pattern. Its beamwidth is approximated by:
 \begin{equation}\label{eq:azimuth_resolution}
-	\theta_{3dB} = \frac{\lambda}{L_{ant}}
+	\theta_{3dB} = \frac{\lambda}{L_{wg}}
 \end{equation}
-where $L_{ant}$ is the size of the antenna aperture and $\lambda$ is the wavelength employed.
+where $L_{wg}$ is the size of the antenna aperture and $\lambda$ is the wavelength employed.
 If the rotation speed is chosen such that $\omega \tau \ll \theta_{3dB}$, the acquisition is oversampled in azimuth and several range profiles represent the same target. Assuming they are all subject to the same white noise process, their average -also called azimuth presum or decimation- produces measurements with an increased SNR and an azimuth resolution limited by the real beam size.\\ 
 Due to diffraction, the radiation beam emitted by the antenna broadens linearly with increasing distance consequently, the spatial resolution in cross-range $\delta_{az}$ increases with distance:
 \begin{equation}\label{eq:azimuth_ground_resolution}
-	\delta_{az} = \frac{R \lambda}{L_{ant}}.
+	\delta_{az} = \frac{R \lambda}{L_{wg}}.
 \end{equation}
 KAPRI employs a traveling wave slotted waveguide antenna\cite{Hines1953a,Granet2007}; it is constructed by cutting slots resonating at the design frequency in a section of rectangular waveguide. When they are appropriately spaced, the fields emitted at each cut combine in phase, producing a narrow beam in the desired direction. Two types of slotted waveguide antenna exist\cite{Enjiu2013}: the resonant and the traveling wave design. The second type has been chosen because it can be operated with a larger bandwidth; achieving a finer range resolution. The main drawback of this antenna design is its frequency-dependent beam squint: when it is operated at frequency differing from the design value, the phase differences at the slots change; altering the direction of the mainlobe. This effect has been uses for several fast imaging radar, where a mechanical antenna rotation would not be possible\cite{Yang2014,Yang2012,Mayer2003,Alvarez2013}. However, in the case of KAPRI the squint is undesired: with a large amount of squint w.r.t beamwidth, the beam only illuminates a scatterer for a fraction of $t_{chirp}$, decreasing the effective transmitted bandwidth and hence the range resolution. \\ 
 If the antenna is rotated slowly enough,  the spacing of each range profile is less than the beamwidth and the effect of beam squint is visible in the slow-fast time domain as skewing of point target responses, as illustrated in~\autoref{fig:squint_correction}: during the chirp, the target is only at the center of the beamwidth when the antenna rotation angle matches the beam squint angle. 
@@ -98,16 +98,16 @@ Thus from \autoref{eq:prop_approximation}, $\phi_{ij}^{prop}$ can be estimated f
 This formula only holds if $\frac{b_{eq}^{ij}}{b_{eq}^{kl}}$ is integer\cite{Massonnet1996}, otherwise phase unwrapping of $\phi_{kl}^{prop}$ is necessary before rescaling.\\
 In order to correct for all the possible combinations that have a non-zero baseline, the measured scattering matrix $\mathbf{S}$ is converted into a polarimetric covariance matrix $\mathbf{C}$;  $\hat{\phi}_{ij}^{prop}$ it then subtracted from the phase of every non-diagonal element $ij$. The result is a flattened covariance matrix $\mathbf{C_{flat}}$ where the sole phase contribution is the polarimetric phase difference.\\
 This matrix is the starting point for the polarimetric calibration proper;
-the procedure is based on the linear distortion matrix model\cite{Saraband1990, Sarabandi1992a} that relates the observed scattering matrix $\mathbf{S_{meas}}$ with the theoretical one $\mathbf{S}$:
+the procedure is based on the linear distortion matrix model\cite{Saraband1990, Sarabandi1992a} that relates the observed scattering matrix $\mathbf{S^\prime}$ with the theoretical one $\mathbf{S}$:
 \begin{equation}\label{eq:distorsion_scattering}
-	\mathbf{S_{meas}} = \mathbf{R} \mathbf{S} \mathbf{T}.
+	\mathbf{S^\prime} = \mathbf{R} \mathbf{S} \mathbf{T}.
 \end{equation}
 or in covariance form
 \begin{equation}\label{eq:covariance_distortion}
-	\mathbf{C}_{meas} = \mathbf{D} \mathbf{C} \mathbf{D}^{H}.
+	\mathbf{C}^\prime = \mathbf{D} \mathbf{C} \mathbf{D}^{H}.
 \end{equation}
 where $\mathbf{D}$ is the Kronecker product of $\mathbf{R}$ and $\mathbf{T}$, the matrices that describe the phase and amplitude imbalances and crosstalk in reception and transmission.
-In the case of KAPRI, crosstalk calibration is not performed as the radar is expected to have a good polarization isolation, largely due to the fact that only one polarization is acquired at a time by selecting the appropriate combination of transmitting and receiving antennas. The only source of crosstalk is the presence of cross-polarized lobes in the direction of the antenna mainlobe. The manufacturer has provided simulated radiation patterns for the horizontally polarized antennas, where the isolation between the co and the cross polarized pattern in the main-lobe direction is observed to be better than 60 dB. By computing the $VV-HV$ ratio of the oversampled response of a trihedral corner reflector, the polarization purity of the system was estimated to be better than 35 dB.\\
+In the case of KAPRI, crosstalk calibration is not performed as the radar is expected to have a good polarization isolation, largely due to the fact that only one polarization is acquired at a time by selecting the appropriate combination of transmitting and receiving antennas. The only source of crosstalk is the presence of cross-polarized lobes in the direction of the antenna mainlobe. The manufacturer has provided simulated radiation patterns for the horizontally polarized antennas, where the isolation between the co and the cross polarized pattern in the main-lobe direction is observed to be better than 60 dB. Additionally, by computing the VV-HV ratio of the oversampled response of a trihedral corner reflector, the polarization purity of the system was estimated to be better than 35 dB.\\
 Thus, neglecting crosstalk the matrices can be written as:
 \begin{equation}
 	\begin{aligned}
@@ -121,7 +121,7 @@ Thus, neglecting crosstalk the matrices can be written as:
 		\end{bmatrix}
 	\end{aligned}
 \end{equation}
-where $f$ is the one-way copolar amplitude imbalance with respect to the $H$ polarization, and $g$ the amplitude imbalance of the crosspolarized channels. $\phi_t = \phi_{t,h} -\phi_{t,v}$ is the phase offset between the polarizations when transmitting and $\phi_{r} = \phi_{r,h} -\phi_{r,v}$ is the phase offset in reception and $A$ is the absolute amplitude calibration parameter (RCS)\cite{Ainsworth2006a, Fore2015}.\\
+where $f$ is the one-way copolar amplitude imbalance with respect to the H polarization, and $g$ the amplitude imbalance of the crosspolarized channels. $\phi_t = \phi_{t,h} -\phi_{t,v}$ is the phase offset between the polarizations when transmitting and $\phi_{r} = \phi_{r,h} -\phi_{r,v}$ is the phase offset in reception and $A$ is the absolute amplitude calibration parameter (RCS)\cite{Ainsworth2006a, Fore2015}.\\
 The four unknown complex parameters in $\mathbf{D}$ can be determined using a trihedral corner reflector and a reciprocal scatterer with a significant cross polarized contribution\cite{Sarabandi1989,Pipia2009}.\\
 Thus, observing an ideal trihedral reflector with RCS $\sigma_{tri}$, would give 
 a measured covariance matrix $\mathbf{C^{\prime}}$:
@@ -137,22 +137,22 @@ a measured covariance matrix $\mathbf{C^{\prime}}$:
 	\end{bmatrix}
 	\end{aligned}.
 \end{equation}
-Therefore, the  copolar amplitude imbalance $f$ can be estimated by the ratio HHHH and VVVV elements of $\mathbf{C^{\prime}}$:
+Therefore, the  copolar amplitude imbalance $f$ can be estimated by the ratio of $C_{HHHH}^\prime$ and $C_{VVVV}^\prime$:
 \begin{equation}
 	f = \left(\frac{C^{\prime}_{VVVV}}{C^{\prime}_{HHHH}}\right)^{\frac{1}{4}}.
 \end{equation}
 Similarly, the copolar imbalance phase $\phi_r + \phi_t$ is determined from the phase of $C_{VVHH}^{\prime}$:
 \begin{equation}
-	\phi_r + \phi_t = \operatorname{arg}\left(C_{meas}^{VVHH}\right).
+	\phi_r + \phi_t = \operatorname{arg}\left(C_{VVHH}^\prime\right).
 \end{equation}
 Both parameters are estimated on the oversampled response of a corner reflector. In \cite{Fore2015}, a polynomial model for the copolar calibration parameters is used, that links the imbalances to the incidence angle. In that case, the estimate are performed using a larger array of corner reflectors, which is not available in our case. Thus, a simplified calibration model is used, assuming the copolar parameters to be independent of incidence angle.\\ 
 Because of the difficulty of placing and correctly orienting a cross polarizing target such as a $45^\circ$ dihedral, the estimation of $g$ and $\phi_t - \phi_r$ is based on the assumption that most pixels in the calibration dataset represent reciprocal scatterers:
 \begin{equation}
-	g = \left<\frac{C_{rec}^{HVHV}}{C_{rec}^{VHVH}}\right>^\frac{1}{4},
+	g = \left<\frac{C_{HVHV}^{prime}}{C_{VHVH}^{\prime}}\right>^\frac{1}{4},
 \end{equation}
 and:
 \begin{equation}
-	\phi_t - \phi_r =\operatorname{arg}\left( \left<C_{meas}^{HVVH}\right>\right).
+	\phi_t - \phi_r =\operatorname{arg}\left( \left<C_{HVVH}^{\prime}\right>\right).
 \end{equation}
 Once $\mathbf{D}$ is estimated, \autoref{eq:covariance_distortion} is inverted to obtain a calibrated covariance matrix.\\
 If radiometric calibration is desired, the value of $A$ can be determined after imbalance correction from the ratio of the expected and the measured RCS.
@@ -161,7 +161,7 @@ If radiometric calibration is desired, the value of $A$ can be determined after 
 \end{equation}
 where $R_{tri}$ is the slant range to the trihedral corner reflector. This is necessary to remove the range spread loss compensation as performed in \autoref{sec:methods}.
 \subsection{Experimental Data}\label{sec:data}
-A calibration dataset was acquired in September 2016 at an urban-agricultural area near M\"{u}nsingen, Switzerland to test the methods described in the preceding sections. The data was acquired from the top of an hill approximately 800 m high, looking down towards a mixture of fields and forests, with the town in the far range region. 6 Trihedral Corner Reflectors were placed in the area for the determination of calibration parameters and to assess imaging quality. Three of these reflectors have triangular faces with a length of 40 cm, corresponding to a RCS of $\sigma=\frac{4}{3}\pi \frac{a^4}{\lambda^2}=25.5 dB$, while the remaining two are cubic corner reflector with $\sigma= 35 dB$, at the nominal central frequency of 17.2 GHz.
+A calibration dataset was acquired in September 2016 at an urban-agricultural area near M\"{u}nsingen, Switzerland to test the methods described in the preceding sections. The data was acquired from the top of an hill approximately 800 m a.s.l, looking down towards a mixture of fields and forests, with the town in the far range region. 6 Trihedral Corner Reflectors were placed in the area for the determination of calibration parameters and to assess imaging quality. Three of these reflectors have triangular faces with a length of 40 cm, corresponding to a RCS of $\sigma=\frac{4}{3}\pi \frac{a^4}{\lambda^2}=25.5 dB$, while the remaining two are cubic corner reflector with $\sigma= 35 dB$, at the nominal central frequency of 17.2 GHz.
 	\begin{figure*}
 		\centering
 		\includegraphics{figure_7}

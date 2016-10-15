@@ -164,8 +164,10 @@ rule table1:
 #Make table 2: Phase center estimate for all reflectors:
 rule table2:
     input:
-        slc = new_data("slc_coreg/20160914_145059_BBBl.slc"),
-        slc_par = new_data("slc_coreg/20160914_145059_BBBl.slc.par"),
+        slc_VV = new_data("slc_coreg/20160914_145059_BBBl.slc"),
+        slc_VV_par = new_data("slc_coreg/20160914_145059_BBBl.slc.par"),
+        slc_HH = new_data("slc_coreg/20160914_145059_AAAl.slc"),
+        slc_HH_par = new_data("slc_coreg/20160914_145059_AAAl.slc.par"),
     output:
         'tab/table_2.csv'
     params:
