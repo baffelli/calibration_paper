@@ -28,11 +28,11 @@ two phase terms can be identified: $ e^{j 4 \pi \frac{R}{c}f_c}$ is the two way 
 From \autoref{eq:deramp}, it follows by the linearity of the Fourier transform, that the range profile $\hat{\rho}\left(R, \theta\right)$ of a collection of targets with complex reflectivities $\rho_i$ located at ranges $R_{i}$ is recovered by the transform of $s_{d}\left(t\right)$.\\
 As in pulsed radars, the range resolution using FMCW signals is inversely proportional to the bandwidth $\delta_{r} = \frac{c}{2 B}$. With a bandwidth of 200 MHz, KAPRI can achieve a range resolution of 0.75 m\cite{Strozzi2011}; the effective range resolution is lower because the dechirped data is windowed before the Fourier transform to mitigate range sidelobes.\\ It is interesting to note that for FMCW system the sampling rate is not governed by the transmitted bandwidth; instead it is dictated by the extent of ranges to be imaged\cite{Meta2006}.\\
 To obtain two dimensional images, range profiles are acquired while the antenna is rotated with angular velocity $\omega$. 
-Thus, the deramp signal for a point target at $R, \theta_{t}$ in the slow-time versus fast time plane is:
+Thus, the deramp signal for a point target at $R,\theta_t$ in the slow-time versus fast time plane is:
 \begin{equation}\label{eq:signal_model}
 	\begin{aligned}
 	& s_{d}\left(t,\tau\right) = \rho e^{j 4 \pi \frac{ R}{c}f_c}   \\
-	& e^{j 4 \pi \frac{2 R B }{c t_{chirp}} t}  e^{j 4 \pi \frac{2 R^2 B}{c^2}} P\left(\tau \omega - \theta\right),
+	& e^{j 4 \pi \frac{2 R B }{c t_{chirp}} t}  e^{j 4 \pi \frac{2 R^2 B}{c^2}} P\left(\tau \omega - \theta_t\right),
 	\end{aligned}
 \end{equation} 
 where $t$ is the fast time, $\tau = n t_{chirp}$ is the slow time variable and $P\left(\tau \omega\right)$ describes the two way antenna pattern. Its beamwidth is approximated by:
@@ -58,12 +58,12 @@ In processing KAPRI data a linear approximation for the squint relative to the p
 \end{equation}
 this choice is necessary because manufacturer-provided antenna pattern measurements at different frequencies suggest that the vertically and the horizontally polarized units have different squint characteristics.\\ No other design information being available, a data-driven method had to be used for the correction of the beam squint. To estimate the linear squint rate $\alpha$, the response of a strong point-like target is extracted from the data by windowing it in range compressed data and converting it back in the fast time domain; its envelope is then extracted with a discrete Hilbert transform. Finally a fit using the model of \autoref{eq:squint_linearised} is performed to obtain an estimate of $\alpha$.\\
 To correct the frequency-dependent beam squint the azimuth sample spacing must be smaller than the antenna beamwidth: this permits to reconstruct the full bandwidth illumination of each scatterer with by combining chirp samples acquired at subsequent azimuth positions.
-\begin{figure}[ht]
+\begin{figure*}[ht]
 	\centering
-	\includegraphics[scale=0.2]{squint_correction}
-	\caption{Illustration of the frequency-dependent antenna squint. When the antenna rotates during the electronic scan, the energy of the target is spread through several azimuth bins.}
+	\includegraphics[scale=0.5]{squint_correction}
+	\caption{Illustration of the frequency-dependent antenna squint. When the antenna rotates during the electronic scan, the energy of the target is spread through several azimuth bins. $\theta_{sq}$ is the squint angle from the designed pointing direction. $t_{chirp}$ is the chirp duration. $t$ is the fast (chirp) time, $\tau = n t_{chirp}$ the slow (azimuth) time. }
 	\label{fig:squint_correction}
-\end{figure}
+\end{figure*}
 After correcting the beam squint, azimuth presumming can be applied if desired to reduce the data size and increase SNR. Then, an Hann window is applied to the first and last $z$ samples of the raw data $s_{d}$ to mitigate the transient signal caused by the abrupt change in frequency due to the repetition of the chirp and the end of each pulse. A second Kaiser Window is then applied to reduce range processing sidelobes that are caused by the finite bandwidth. Finally, a fast time Fourier transform implements the range compression to obtain the SLC image $\hat{\rho}\left(R, \theta\right)$.\\ Each range line of the SLC thus compressed is then multiplied by $\sqrt{R^3}$ to compensate for the power spreading loss. In this manner, the intensity of the SLC data is directly proportional to the radar brightness $\beta_{0}$\cite{Raney1994}. 
 \subsection{Antenna Pattern Misalingment}\label{sec:misalingment}
 In addition to the difference in frequency-dependent squint rate, the horizontally and the vertically polarized antennas appear have an azimuth mispointing of approx. $0.2^\circ$. It was first observed by analyzing the response of strong point-like target, where a significant misregistration between the $HH$ and the $VV$ images was observed. The misalignment is particularly problematic for cross-polar measurements: the transmitting and receiving patterns are not aligned. Using the available pattern information a power loss of approx 2.5 dB  compared to the ideal case is predicted. This loss reduces the SNR for the cross-polar channels, leading to noisier measurements.\\ While the offset between copolar channels can be corrected by coregistration without major consequences, there is no method capable to compensate the SNR loss in the crosspolar measurements a posteriori. An adjustable antenna mount was manufactured by replacing one of two hinges where the antennas are fixed on the towers (see \autoref{fig:adjustable_bracket}) with an adjustable bracket that allows to slide the antenna back and forth on the one side, obtaining the effect of rotating it around the center. Basing on the size of the antenna mounting bracket and on the amount of misaligment, it was determined that the horizontally polarized antennas need to be shifted by 1.8 mm to compensate form the pattern mispointing.
@@ -77,7 +77,7 @@ In addition to the difference in frequency-dependent squint rate, the horizontal
 In the case of GPRI the processing is concluded after range compression and the data is ready for interferometric applications.  For KAPRI data, additional steps are necessary to obtain polarimetric measurements that are well calibrated.\\ The first of these steps requires a brief review of the polarimetric antenna configuration, as it is depicted in \autoref{fig:antenna_arrangement}:\\ Six antennas are mounted on a supporting structure connected to the rotary scanner. Of these, 2 are transmitting antennas, one for each polarization. The remaining 4 are connected in pairs through switches to the receivers; each pair composed of an horizontally and a vertically polarized unit. This configuration permits to acquire full polarimetric dataset by selecting the desired antennas for the transmitter and for each receiver separately. This arrangement ensures a low level of polarimetric crosstalk because only one combination is acquired at each time and the antennas are physically separated. Additionally, the separation of transmitting and receiving antennas increases the transmit-receive isolation, a fundamental requirement for FMCW performance\cite{Beasley1990,Stove1992, Strozzi2011}.  Unfortunately this configuration complicates the phase calibration of polarimetric data by introducing additional phase terms unrelated to scattering properties.
 \begin{figure}[ht]
 	\centering
-	\includegraphics[scale=0.15]{kapri_antenna_arrangement}
+	\includegraphics[scale=0.5]{kapri_antenna_arrangement}
 	\caption{KAPRI with the usual antenna arrangement overlaid. The blue and red dots represent the equivalent phase centers for the upper $HHV$ and $VV$ channels.}
 	\label{fig:antenna_arrangement}
 \end{figure}

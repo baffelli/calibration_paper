@@ -4,7 +4,7 @@ In order to assess the processing quality and to appreciate the effect of the be
 \begin{figure*}[ht]
 	\centering
 	\includegraphics{figure_1}
-	\caption{Oversampled phase and amplitude responses for a trihedral corner reflector. (a) HH channel without correction, (b) HH channel with frequency-dependent squint compensation (c) same as (b) with azimuth phase ramp removal. Bottom row: same processing for the VV channel.
+	\caption{Oversampled phase and amplitude responses for the corner reflector at 673 m. (a) HH channel without correction, (b) HH channel with frequency-dependent squint compensation (c) same as (b) with azimuth phase ramp removal. Bottom row: same for the VV channel.
 	The phase of each response is referenced to its maximum.}
 	\label{fig:tcr_mph}
 \end{figure*}
@@ -115,17 +115,6 @@ In \autoref{fig:hv_power}, the result of the above experiment is shown as the ov
 \end{table}		
 The methods described in the preceding sections were applied to prepare SLC images for each channel. For the final polarimetric calibration the procedure of \autoref{sec:proc_polcal} was used; one reflector in the scene was used as a calibration target, with the four remaining reflectors used for the determination of the calibration performance.\\
 An initial assessment of the data quality is made  by computing polarization signatures\cite{VanZyl1987} for two of the five corner reflectors that were not used to determine the calibration parameters. They are plotted in \autoref{fig:signatures}.
-The signature for the uncorrected data does not correspond to the signatures of any basic scattering mechanism. In the calibrated response, both reflectors show a correspondence with the expected polarization signature for trihedral reflectors.\\
-\begin{figure*}[ht!]
-	\centering
-	\includegraphics{figure_8}
-	\caption{Dependence of the residual copolar phase and amplitude imbalances on the local incidence angle. The mean and RMS imbalances are shown in each plot. The data point at $0^\circ$ represents the reflector at 73 m, where the geocoding procedure used to compute the incidence angle map did not deliver the correct  local incidence angle. The reflector used for the determination of calibration parameters has been excluded from the plot.}
-	\label{fig:inc_angle_trend}
-\end{figure*}
-A quantitative evaluation of the calibration is obtained by estimating the residual copolar phase and amplitude imbalances $f$ and $\phi_r + \phi_t$ on the trihedral from calibrated data, excluding the reflector used to determine the parameter. The results are shown in \autoref{tab:polcal}. Generally, both the amplitude and the phase imbalance appear to be well corrected. The mean residual for $f$ is 0.97 with an RMS of 0.05. Similarly, for the residual phase difference a mean of $4^\circ$ is observed, with a RMS of $7^\circ$. The biggest outlier for $f$ is represented by the reflector very close to the radar, at 73 m slant range. As previously discussed, it is not located sufficiently far away to be in the far field region of the antennas; this could explain the discrepancy from the rest of the array.
-In \autoref{fig:inc_angle_trend}, the dependence of the residuals on the local incidence angle is plotted; no clear trend can be distinguished, however it is rather difficult to judge this observation given the small number of data points available and the rather limited extent of covered incidence angles. However, given the small RMS and mean residual errors, the choice of a model that does not consider variation of calibration parameters with incidence angle appears to be justified. The absence of clear incidence-angle related trends is also seen as hinting the appropriateness of the method proposed in \autoref{sec:proc_polcal} to remove the topographic contribution from the polarimetric phase differences; larger variation would be otherwise observed.\\
-The assumption of negligible crosstalk seems plausible considering that all reflectors  except the very far one show a polarization purity above 35 dB. In the former case, the combination of large azimuth resolution cell size, the relatively low RCS of the TCR and  the difficulty of exactly pointing it towards the radar may have lowered the purity because of a larger influence of clutter in the cell.
-
 \begin{figure*}[hb]
 	\centering
 	\begin{subfigure}[t]{\textwidth}
@@ -143,5 +132,17 @@ The assumption of negligible crosstalk seems plausible considering that all refl
 	\caption{Polarisation signatures for two trihedral corner reflectors located at different distances from the radar. Left column: copolar signature, right crosspolar signature; top row: uncalibrated, bottom row: calibrated. The power is shown normalized to the peak of the response.}
 	\label{fig:signatures}
 \end{figure*}
+
+The signature for the uncorrected data does not correspond to the signatures of any basic scattering mechanism. In the calibrated response, both reflectors show a correspondence with the expected polarization signature for trihedral reflectors.\\
+\begin{figure*}[ht!]
+	\centering
+	\includegraphics{figure_8}
+	\caption{Dependence of the residual copolar phase and amplitude imbalances on the local incidence angle. The mean and RMS imbalances are shown in each plot. The data point at $0^\circ$ represents the reflector at 73 m, where the geocoding procedure used to compute the incidence angle map did not deliver the correct  local incidence angle. The reflector used for the determination of calibration parameters has been excluded from the plot.}
+	\label{fig:inc_angle_trend}
+\end{figure*}
+A quantitative evaluation of the calibration is obtained by estimating the residual copolar phase and amplitude imbalances $f$ and $\phi_r + \phi_t$ on the trihedral from calibrated data, excluding the reflector used to determine the parameter. The results are shown in \autoref{tab:polcal}. Generally, both the amplitude and the phase imbalance appear to be well corrected. The mean residual for $f$ is 0.97 with an RMS of 0.05. Similarly, for the residual phase difference a mean of $4^\circ$ is observed, with a RMS of $7^\circ$. The biggest outlier for $f$ is represented by the reflector very close to the radar, at 73 m slant range. As previously discussed, it is not located sufficiently far away to be in the far field region of the antennas; this could explain the discrepancy from the rest of the array.
+In \autoref{fig:inc_angle_trend}, the dependence of the residuals on the local incidence angle is plotted; no clear trend can be distinguished, however it is rather difficult to judge this observation given the small number of data points available and the rather limited extent of covered incidence angles. However, given the small RMS and mean residual errors, the choice of a model that does not consider variation of calibration parameters with incidence angle appears to be justified. The absence of clear incidence-angle related trends is also seen as hinting the appropriateness of the method proposed in \autoref{sec:proc_polcal} to remove the topographic contribution from the polarimetric phase differences; larger variation would be otherwise observed.\\
+The assumption of negligible crosstalk seems plausible considering that all reflectors  except the very far one show a polarization purity above 35 dB. In the former case, the combination of large azimuth resolution cell size, the relatively low RCS of the TCR and  the difficulty of exactly pointing it towards the radar may have lowered the purity because of a larger influence of clutter in the cell.
+
 
 
