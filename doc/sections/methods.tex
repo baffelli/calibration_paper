@@ -70,7 +70,7 @@ In addition to the difference in frequency-dependent squint rate, the horizontal
 \begin{figure}[ht]
 	\centering
 	\includegraphics[scale=0.4]{antenna_offset_2}
-	\caption{Illustration of the adjustable antenna mount allowing to shift the patterns to bring the H and the V antennas into alignment. The left bracket can slide back an forth, allowing the antenna to pivot on the right hinge. For small shifts, this movement approximates a rotation around the center of the antenna tower.}
+	\caption{Illustration of the adjustable antenna mount allowing to shift the patterns to bring the H and the V antennas into alignment. The left bracket can be slid towards the front, allowing the antenna to pivot on the right hinge. For small shifts, this movement approximates a rotation around the center of the antenna tower, as depicted by the blue antenna pattern.}
 	\label{fig:adjustable_bracket}
 \end{figure}
 \subsection{Polarimetric Calibration}\label{sec:proc_polcal}
@@ -78,7 +78,7 @@ In the case of GPRI the processing is concluded after range compression and the 
 \begin{figure}[ht]
 	\centering
 	\includegraphics[scale=0.5]{kapri_antenna_arrangement}
-	\caption{KAPRI with the usual antenna arrangement overlaid. The blue and red dots represent the equivalent phase centers for the upper $HHV$ and $VV$ channels.}
+	\caption{KAPRI with the usual antenna arrangement overlaid. The blue and red dots represent the equivalent phase centers for the  HH and VV channels from the upper receiver. The lower blue dot the one for the lower HH channel, which is used in conjunction with the upper HH phase center to estimate the topographic phase contribution.}
 	\label{fig:antenna_arrangement}
 \end{figure}
 Consider an image acquired by transmitting at antenna located at $\mathbf{x_t^i}$ and receiving at $\mathbf{x_r^i}$. These antennas can be replaced by an equivalent antenna located at $\mathbf{x_{eq}^i}$, the midpoint between transmitter and receiver \cite{Pipia2009}. Thus, for polarimetric observations using  KAPRI the equivalent antenna phase center $\mathbf{x_{eq}^i}$ location will change depending on the chosen polarization. Therefore, there exist certain combinations of channels $i$ and $j$ where the equivalent phase centers are separated by a baseline $\mathbf{b_{ij}^{eq}}$. Consequently, the polarimetric phase difference   will contain an interferometric contribution:
