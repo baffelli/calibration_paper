@@ -13,7 +13,6 @@ import pyrat.geo.geofun as geo
 
 # Return the decimated azimuth position
 def az_idx(ds, idx):
-    print(ds.azimuth_looks)
     return idx / ds.azimuth_looks
 
 
