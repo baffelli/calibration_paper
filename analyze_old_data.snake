@@ -11,7 +11,7 @@ import json
 include: pyrat.rules['raw_to_slc']
 include: pyrat.rules['slc_to_calibrated_c']
 include: pyrat.rules['geocoding']
-
+include: pyrat.rules['remote']
 
 ##############################################################################
 ## Check HV gain before and after calibration
