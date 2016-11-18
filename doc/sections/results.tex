@@ -4,7 +4,7 @@ In order to assess the processing quality and to appreciate the effect of the be
 \begin{figure*}[ht]
 	\centering
 	\includegraphics{figure_1}
-	\caption{Oversampled phase and amplitude responses for the corner reflector at 673 m. (a) HH channel without correction, (b) HH channel with frequency-dependent squint compensation (c) same as (b) with azimuth phase ramp removal. Bottom row: same for the VV channel.
+	\caption{Oversampled phase and amplitude responses for the corner reflector at 673 m. (a) HH channel without correction, (b) HH channel with frequency-dependent squint compensation (c) same as (b) with azimuth phase ramp removal. (d) VV channel without correction, (e) VV channel with frequency-dependent squint compensation (f) same as (e) with azimuth phase ramp removal.
 	The phase of each response is referenced to its maximum.}
 	\label{fig:tcr_mph}
 \end{figure*}
@@ -45,12 +45,12 @@ The model has been tested on each reflector in the array: the maximum in range a
 										columns={rsl, LphHH, LphVV},
 										every head row/.style={before row=\toprule,after row=\midrule},
 										every last row/.style={after row=\bottomrule},
-										columns/rsl/.style={precision=1, column name={$R_0$}},
-										columns/LphHH/.style={precision=2, column name={$L_{ph}^{H}$}},
-										columns/LphVV/.style={precision=2, column name={$L_{ph}^{V}$}},
+										columns/rsl/.style={precision=1, column name={$R_0 [m]$}},
+										columns/LphHH/.style={precision=2, column name={$L_{ph}^{H} [m]$}},
+										columns/LphVV/.style={precision=2, column name={$L_{ph}^{V} [m]$}},
 										%columns/res/.style={precision=3, column name={residual}},
 										]{../tab/table_2.csv}
-	\caption{Result of the phase center displacement fit for six trihedral corner reflectors located at different ranges. In the first column, the values for the H antenna are shown, in the second the ones for the V unit.}
+	\caption{Result of the phase center displacement fit for six trihedral corner reflectors located at different ranges. In the first column, the estimated phase center displacements for the H antenna are shown, in the second the ones for the V unit.}
 	\label{tab:rph_fit}
 \end{table}
 The resulting model parameters fit values  are shown in \autoref{tab:rph_fit} for the H and V antenna; they appear to be consistent and display a standard deviation of less than 2 \% of the antenna length, suggesting that the model is able to predict most of the phase variation. The estimated phase center shift for the H unit is less than 2 cm wile the one for the V antenna is almost one order of magnitude larger. This difference presumably explains the presence of the azimuthal phase ramp in the VV channel only:\\
@@ -72,7 +72,7 @@ Similar results are observed for all reflector, as displayed in \autoref{fig:pha
 	\begin{subfigure}[t]{\textwidth}
 		\centering
 		\includegraphics{figure_2}
-		\subcaption{Azimuth phase ramp not corrected.}
+		\subcaption{Response without azimuth filtering.}
 		\label{fig:phase_response_VV:uncorrected}
 	\end{subfigure}\\
 	\begin{subfigure}[t]{\textwidth}
@@ -106,12 +106,12 @@ In \autoref{fig:hv_power}, the result of the above experiment is shown as the ov
 		columns={slant range, HH-VV amplitude imbalance, HH-VV phase imbalance, Polarisation purity},
 		every head row/.style={before row=\toprule,after row=\midrule},
 		every last row/.style={after row=\bottomrule},
-		columns/slant range/.style={precision=1, column name={$R_{0} [m]$}},
+		columns/slant range/.style={precision=1, column name=\makecell{$R_{0} [m]$\\ Range distance}},
 		columns/HH-VV amplitude imbalance/.style={precision=3, column name={$f$}},
 		columns/HH-VV phase imbalance/.style={precision=3, column name={$\phi_r + \phi_t [^\circ]$}},
 		columns/Polarisation purity/.style={precision=3, column name={Purity $[dB]$}}
 	]{../tab/table_3.csv}
-	\caption{Copolar phase and amplitude imbalance computed on the reflectors using the calibrated dataset. The polarization purity (VV/HV ratio) is shown additionally. Results for the reflector used to determine calibration parameters are not shown.}
+	\caption{Copolar phase ($\phi_r + \phi_t$) and amplitude imbalance ($f$) computed on the reflectors using the calibrated dataset. The polarization purity (VV/HV ratio) is shown additionally. Results for the reflector used to determine calibration parameters are not shown.}
 	\label{tab:polcal}
 \end{table}		
 The methods described in the preceding sections were applied to prepare SLC images for each channel. For the final polarimetric calibration the procedure of \autoref{sec:proc_polcal} was used; one reflector in the scene was used as a calibration target, with the four remaining reflectors used for the determination of the calibration performance.\\
@@ -138,7 +138,7 @@ The signature for the uncorrected data does not correspond to the signatures of 
 \begin{figure*}[ht!]
 	\centering
 	\includegraphics{figure_8}
-	\caption{Dependence of the residual copolar phase and amplitude imbalances on the local incidence angle. The mean and RMS imbalances are shown in each plot. The data point at $0^\circ$ represents the reflector at 73 m, where the geocoding procedure used to compute the incidence angle map did not deliver the correct  local incidence angle. The reflector used for the determination of calibration parameters has been excluded from the plot.}
+	\caption{Dependence of the residual copolar phase and amplitude imbalances on the local incidence angle. The mean and RMS imbalances are shown in each plot. The reflector used for the determination of calibration parameters has been excluded from the plot.}
 	\label{fig:inc_angle_trend}
 \end{figure*}
 A quantitative evaluation of the calibration is obtained by estimating the residual copolar phase and amplitude imbalances $f$ and $\phi_r + \phi_t$ on the trihedral from calibrated data, excluding the reflector used to determine the parameter. The results are shown in \autoref{tab:polcal}. Generally, both the amplitude and the phase imbalance appear to be well corrected. The mean residual for $f$ is 0.97 with an RMS of 0.05. Similarly, for the residual phase difference a mean of $4^\circ$ is observed, with a RMS of $7^\circ$. The biggest outlier for $f$ is represented by the reflector very close to the radar, at 73 m slant range. As previously discussed, it is not located sufficiently far away to be in the far field region of the antennas; this could explain the discrepancy from the rest of the array.
