@@ -51,7 +51,7 @@ def plot_figure_7(inputs, outputs, threads, config, params, wildcards):
     ext1=geo.get_ds_extent(map_ds)
     ext2=LUT.get_extent()
     print(ext1,ext2)
-    ax.imshow(map_ds.ReadAsArray().transpose((1, 2, 0)), extent=ext1)
+    ax.imshow(map_ds.ReadAsArray().transpose((1, 2, 0))[::,::-1], extent=ext1)
     ax.imshow(C_cal_rgb.transpose(1,0,2), extent=ext2)
     plt.show()
 
