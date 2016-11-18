@@ -24,15 +24,16 @@ subworkflow new_data:
     snakefile:  pyrat.rules['slc_to_calibrated_c']
     configfile: './calibration_configuration_chutze.json'
 
-subworkflow geo:
-    workdir: './processed'
-    snakefile:  pyrat.rules['geocoding']
-    configfile: './calibration_configuration_chutze.json'
+#subworkflow geo:
+#    workdir: './processed'
+#    snakefile:  pyrat.rules['geocoding']
+#    configfile: './calibration_configuration_chutze.json'
 
 
 
 rule all:
     input:
+        new_data('geo/Chutzen.mli_gc.tif'),
         'fig/figure_1.pdf',
         'fig/figure_2.pdf',
         'fig/figure_3.pdf',
@@ -137,7 +138,10 @@ rule fig5:
 rule fig7:
     input:
         C_cal = new_data(expand("cov_cal/20160914_145059_l.c{i}{j}",i=range(4),j=range(4))),
+        map = 'processed/geo/pk25krel_latest_Clip.tif',
         C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
+        LUT = new_data('geo/Chutzen.gpri_to_dem'),
+        dem_seg_par = new_data('geo/Chutzen.dem_seg.par'),
         style = 'paper_style.rc'
     params:
         ref = list_of_reflectors
@@ -204,7 +208,7 @@ rule RMS_residual:
 rule fig8:
     input:
         res = 'tab/table_3.csv',
-        inc = geo('geo/Chutzen.inc_fgc'),
+        inc = new_data('geo/Chutzen.inc_fgc'),
         C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
         style = 'paper_style.rc'
     output:
