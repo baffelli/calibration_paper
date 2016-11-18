@@ -48,8 +48,11 @@ def plot_figure_7(inputs, outputs, threads, config, params, wildcards):
     C_cal_alpha[np.isnan(C_cal_geo[:,:,0,0])] = 0
     C_cal_rgb = np.dstack((C_cal_rgb,C_cal_alpha))
     #Plot map
-    ax.imshow(map_ds.ReadAsArray().transpose((1, 2, 0)), extent=geo.get_ds_extent(map_ds))
-    ax.imshow(C_cal_rgb.transpose(1,0,2), extent=LUT.get_extent())
+    ext1=geo.get_ds_extent(map_ds)
+    ext2=LUT.get_extent()
+    print(ext1,ext2)
+    ax.imshow(map_ds.ReadAsArray().transpose((1, 2, 0)), extent=ext1)
+    ax.imshow(C_cal_rgb.transpose(1,0,2), extent=ext2)
     plt.show()
 
     # # C_cal_geo, x_vec, y_vec, lut, direct_lut = geo.geocode_image(C_cal, 2)
