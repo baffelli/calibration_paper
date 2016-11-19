@@ -33,7 +33,6 @@ subworkflow new_data:
 
 rule all:
     input:
-        new_data('geo/Chutzen.mli_gc.tif'),
         'fig/figure_1.pdf',
         'fig/figure_2.pdf',
         'fig/figure_3.pdf',
@@ -42,6 +41,8 @@ rule all:
         'fig/figure_6.pdf',
         'fig/figure_7.pdf',
         'fig/figure_8.pdf',
+        'fig/figure_9.pdf',
+        'fig/figure_10.pdf',
         'tab/table_1.csv',
         'tab/table_2.csv',
         'tab/table_3.csv',
@@ -151,6 +152,19 @@ rule fig7:
     script:
         'scripts/figure_7.py'
 
+###############################################################################
+#Plot figure 9/10: HH/VV phase before and after removal of topographic contribution
+rule fig9:
+    input:
+        style = 'paper_style.rc',
+#        HHVV_phase = lambda wildcards: new_data("cov_{type}/20160914_145059_l.c03".format(type=("normal" if int(wildcards.n) == 9 else 'flat'))),
+        C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
+    output:
+        'fig/figure_{n, (9|10)}.pdf'
+    params:
+        a = lambda wildcards: print(wildcards.n == 10)
+    script:
+        'scripts/figure_9.py'
 
 ###############################################################################
 #Make table 1: Location and RCS for all reflectors
