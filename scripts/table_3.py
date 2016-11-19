@@ -40,7 +40,7 @@ def tcr_recap(inputs, outputs, threads, config, params, wildcards):
             f = (C_zoom[3,3].real / C_zoom[0,0].real)**(1/4.0)
             purity = cf.dB(C_zoom[(0,0)].real) - cf.dB(C_zoom[(1,1)].real)
             C_sigma = C_zoom[0,0]
-            RCS = C_sigma.real / cal.cr_rcs(ref['side'], C.radar_frequency[0], type=ref['type'])
+            RCS = C_sigma.real / cal.cr_rcs(ref['side'], C.radar_frequency, type=ref['type'])
             str = "{HHVV_phase},{f}".format(HHVV_phase=HHVV_phase, f=f)
             row = [r_sl, f, HHVV_phase, purity, RCS,  idx_r, idx_az]
             tabwrite.writerow(row)
