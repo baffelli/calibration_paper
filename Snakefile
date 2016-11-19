@@ -141,6 +141,7 @@ rule fig7:
         map = 'processed/geo/pk25krel_latest_Clip.tif',
         C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
         LUT = new_data('geo/Chutzen.gpri_to_dem'),
+        sh_map = new_data('geo/Chutzen.sh_map_gc'),
         dem_seg_par = new_data('geo/Chutzen.dem_seg.par'),
         style = 'paper_style.rc'
     params:
