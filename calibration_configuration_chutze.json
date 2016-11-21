@@ -43,6 +43,16 @@
 			"ABB_phase_center_offset": -0.12,
 			"BAA_phase_center_offset": -0.12
 	},
+    "coregistration":{
+			"rlks":1,
+			"azlks":1,
+            "ridx":1051,
+            "azidx":5617,
+			"rwin":8,
+			"azwin":24,
+			"noff_r":20,
+			"noff_az":20
+						   },
 	"interferogram":		{
 		"rlks":	"1",
 		"azlks": "1"

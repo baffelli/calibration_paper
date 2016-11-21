@@ -157,10 +157,10 @@ rule fig7:
 rule fig9:
     input:
         style = 'paper_style.rc',
-#        HHVV_phase = lambda wildcards: new_data("cov_{type}/20160914_145059_l.c03".format(type=("normal" if int(wildcards.n) == 9 else 'flat'))),
+        HHVV_phase = lambda wildcards: new_data("cov_{type}/20160914_145059_l.c03".format(type=('normal' if int(wildcards.n) == 9 else 'flat'))),
         C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
     output:
-        'fig/figure_{n, (9|10)}.pdf'
+        'fig/figure_{n, (9)|(10)}.pdf'
     params:
         a = lambda wildcards: print(wildcards.n == 10)
     script:

@@ -14,16 +14,17 @@ def plot_figure_8(inputs, outputs, threads, config, params, wildcards):
     sl = [slice(0,1500), Ellipsis, ]
     HHVV = gpf.load_binary(inputs.HHVV_phase, C_par['range_samples'], dtype=gpf.type_mapping['FCOMPLEX'])
     #Create RGB
-    mph_dict = {'k': 0.1, 'sf': 1e-2, 'coherence': False, 'peak': True}
+    mph_dict = {'k': 0.1, 'sf': 1e-1, 'coherence': False, 'peak': False}
     mph, rgb, norm = vf.dismph(HHVV[sl], **mph_dict)  # create rgb image
     pal, ext = vf.dismph_palette(HHVV[sl], **mph_dict)
-    plt.style.use(inputs.style)
+
+    plt.style.use(inputs['style'])
     fig_w, fig_h = plt.rcParams['figure.figsize']
     f, ax = plt.subplots(1, 1, figsize=(fig_w,fig_h))
     ax.imshow(mph)
     ax.xaxis.set_label_text(r'range samples')
     ax.yaxis.set_label_text(r'azimuth samples')
-    plt.show()
+    # plt.show()
     f.savefig(outputs[0])
     # inc = gpf.load_binary(inputs.inc, C_par['range_samples'], dtype=gpf.type_mapping['FLOAT'])
     # residuals = pd.read_csv(inputs.res)

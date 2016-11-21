@@ -1,7 +1,6 @@
 {
 "style":  "/home/baffelli/PhD/trunk/Code/pyrat/pyrat/rcfiles/paper_rc.rc",
 	"project_name": "2014-2016_GPRI_HIL_Calibration",
-	"datetime": ["20160224_111518", "20160224_123413"],
 	"master_slc": "20160224_105201_AAAl",
 	"range_compression":	{
 			"rmin":		50,
@@ -27,6 +26,16 @@
               "RX_Al_position": 0.725,
               "RX_Bu_position": 0.6,
               "RX_Bl_position": 0.85 },
+	"coregistration":{
+			"rlks":1,
+			"azlks":3,
+            "ridx":673,
+            "azidx":899,
+			"rwin":10,
+			"azwin":512,
+			"noff_r":20,
+			"noff_az":20
+						   },
 	"desquint":				{
 			"AAA_squint_rate":	4.21e-9,
 			"BBB_squint_rate":	3.92e-9,
