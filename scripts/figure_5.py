@@ -13,7 +13,7 @@ from mpl_toolkits.mplot3d import Axes3D
 # Return the decimated azimuth position
 def az_idx(ds, idx):
     print(ds.azimuth_looks)
-    return idx / ds.azimuth_looks
+    return idx / ds.GPRI_decimation_factor
 
 
 def plot_figure_5(inputs, outputs, threads, config, params, wildcards):

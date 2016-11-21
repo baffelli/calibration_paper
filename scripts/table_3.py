@@ -30,7 +30,7 @@ def tcr_recap(inputs, outputs, threads, config, params, wildcards):
         HHVV_arr = []
         for ref in refl_list:
             idx_r = ref['ridx']
-            idx_az = ref['azidx'] / C.azimuth_looks
+            idx_az = ref['azidx'] / C.GPRI_decimation_factor
             ptarg_zoom_C, rplot_C, azplot_C, mx_pos, resolution_dict, azvec, rvec = cf.ptarg(C[:,:,:,:], float(idx_r), float(idx_az), azwin=10, rwin=10, sw=(2,4))
             ptarg_zoom_C = mat.coherencyMatrix(ptarg_zoom_C, basis='lexicographic', bistatic=True)
             #Now estimate calibration parameters

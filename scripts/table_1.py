@@ -4,22 +4,35 @@ import pyrat.fileutils.gpri_files as gpf
 import pyrat.gpri_utils.calibration as cal
 import pyrat.core.corefun as cf
 
+import pyrat.geo.geofun as geo
+
 def table_1(inputs, outputs, threads, config, params, wildcards):
+    #Geocoding table to compute location of reflectors
+    #Geocode
+    LUT = geo.GeocodingTable(inputs.dem_seg_par, inputs.LUT)
+
     # list of reflectors
     refl_list = [ref for ref in params['ref'] if ref['type'] == "cubic" or ref['type'] == 'triangular']
     refl_list = sorted(refl_list, key=lambda x: x['ridx'])
     # Load matrix and convert to coherency
     slc = gpf.gammaDataset(inputs['slc_par'], inputs['slc'])
+    print(slc._params)
     # list of results
     res_list = []
     with open(outputs[0], 'w+') as of:
         tabwrite = csv.writer(of, delimiter=',')
         tabwrite.writerow(
-            ["rsl", 'type', 'RCS', "ridx", "azidx"])
+            ["name","rsl", 'type', 'RCS', "ridx", "azidx", 'easting', 'northing'])
         for current_reflector in refl_list:
-            RCS = cf.dB(cal.cr_rcs(current_reflector['side'], slc.radar_frequency[0], type=current_reflector['type']))
-            row = [slc.r_vec[current_reflector['ridx']], current_reflector['type'], RCS, current_reflector['ridx'],
-                   current_reflector['azidx'] // slc.azimuth_looks]
+            #compute rcs
+            RCS = cf.dB(cal.cr_rcs(current_reflector['side'], slc.radar_frequency, type=current_reflector['type']))
+            #compute indices
+            azidx_dec = current_reflector['azidx'] // slc.GPRI_decimation_factor
+            ridx =  current_reflector['ridx']
+            #Compute geographical location
+            geo_coord = LUT.dem_coord_to_geo_coord(LUT.radar_coord_to_dem_coord([ridx, azidx_dec]))
+            row = [current_reflector.get('name', "N/A"), slc.r_vec[current_reflector['ridx']], current_reflector['type'], RCS, current_reflector['ridx'],
+                   azidx_dec, geo_coord[0], geo_coord[1]]
             res_list.append(row)
             tabwrite.writerow(row)
             # tabwrite.writerow(['average r_ph', 'weighted average r_ph'])

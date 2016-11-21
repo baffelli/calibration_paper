@@ -11,12 +11,12 @@
 			"decimated_sample_spacing":		0.1
 	},
 	"list_of_reflectors": [
-		{"ridx":32, "azidx":5192,"type":"cubic", "side":0.4},
-		{"ridx":830, "azidx":3484,"type":"triangular", "side":0.4},
-		{"ridx":1032, "azidx":5703,"type":"cubic", "side":0.4},
-		{"ridx":1051, "azidx":5617,"type":"triangular", "side":0.4},
-		{"ridx":1331, "azidx":1466,"type":"cubic", "side":0.4},
-		{"ridx":3518, "azidx":3522,"type":"triangular", "side":0.4}
+		{"ridx":32, "azidx":5192,"type":"cubic", "side":0.4, "name":"Chutzen"},
+		{"ridx":830, "azidx":3484,"type":"triangular", "side":0.4, "name":"Hindere Chlapf"},
+		{"ridx":1032, "azidx":5703,"type":"cubic", "side":0.4, "name":"Simmleremoos 1"},
+		{"ridx":1051, "azidx":5617,"type":"triangular", "side":0.4, "name":"Simmleremoos 2"},
+		{"ridx":1331, "azidx":1466,"type":"cubic", "side":0.4, "name":"Bifang"},
+		{"ridx":3518, "azidx":3522,"type":"triangular", "side":0.4, "name":"Vog"}
 							],
 	"crosspolarizer_index": [3409, 2790, "o"],
     "channel_mapping":{
@@ -66,7 +66,7 @@
 			"correct_HV":           "False"
 	},
 	"geocoding":			{
-			"scan_heading":	"56",
+			"scan_heading":	"58",
 			"DEM"			: "geo/swissALTI3D_2016_Clip.dem",
 			"ref_mli_par"   : "slc_corr/20160914_145059_AAAl.mli_dec.par",
 			"table_name" 	: "Chutzen"

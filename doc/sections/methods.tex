@@ -179,12 +179,13 @@ A separate dataset containing a dihedral reflector was acquired at our H\"{o}ngg
 								every head row/.style={before row=\toprule,after row=\midrule},
 								every last row/.style={after row=\bottomrule},
 								col sep=comma,
-								columns={rsl, RCS, type},
+								columns={name, rsl, RCS, type},
+								columns/name/.style={column name={Name} ,string type},
 								columns/type/.style={column name={Type} ,string type},
 								columns/RCS/.style={precision=3, column name=$\sigma_0$},
 								columns/rsl/.style={precision=3, column name=$R_0$}
 										] {../tab/table_1.csv}
-	\caption{Summary of the employed TCRs: Distance from the radar, expected radar crosssection, type of reflector.}
+	\caption{Summary of the employed TCRs: Name of nearest map feature, Distance from the radar, expected radar crosssection, type of reflector.}
 	\label{tab:reflectors}
 \end{table}
 

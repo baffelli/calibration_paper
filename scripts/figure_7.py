@@ -50,7 +50,7 @@ def plot_figure_7(inputs, outputs, threads, config, params, wildcards):
     LUT = geo.GeocodingTable(inputs.dem_seg_par, inputs.LUT)
 
     #Decimate reflector location
-    ref_dec = np.array([[ref['ridx'], ref['azidx'] // C_cal.azimuth_looks] for ref in params['ref']], dtype=int)
+    ref_dec = np.array([[ref['ridx'], ref['azidx'] // C_cal.GPRI_decimation_factor] for ref in params['ref']], dtype=int)
     ref_dec_geo = np.array([LUT.dem_coord_to_geo_coord(LUT.radar_coord_to_dem_coord(ref_pos)) for ref_pos in ref_dec])
 
     #Geocode

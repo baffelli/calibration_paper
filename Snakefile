@@ -33,6 +33,7 @@ subworkflow new_data:
 
 rule all:
     input:
+        new_data('geo/Chutzen.mli_gc.tif'),
         'fig/figure_1.pdf',
         'fig/figure_2.pdf',
         'fig/figure_3.pdf',
@@ -86,16 +87,18 @@ rule fig1:
 #before and after the phase correction
 
 #this serves to select the proper channel
-def select_slc(wildcards):
+def select_slc_for_rule_2(wildcards):
     proc_type = 'coreg' if int(wildcards.n) == 2 else 'corr'
-    VV = new_data('slc_{name}/20160914_145059_BBBl.slc'.format(name=proc_type))
+    name = "slc_{name}/20160914_145059_BBBl.slc".format(name=proc_type)
+    VV = new_data(name)
     return VV
 
 rule fig2:
     output:
         'fig/figure_{n,(2|3)}.pdf'
     input:
-        VV = select_slc,
+        VV = new_data("slc_corr/20160914_145059_BBBl.slc"),
+        HH = new_data("slc_corr/20160914_145059_AAAl.slc"),
         style = 'paper_style.rc'
     params:
         reflectors = list_of_reflectors,
@@ -154,10 +157,18 @@ rule fig7:
 
 ###############################################################################
 #Plot figure 9/10: HH/VV phase before and after removal of topographic contribution
+#this serves to select the proper channel
+def select_cov_for_rule_9(wildcards):
+    proc_type = 'normal' if int(wildcards.n) == 9 else 'flat'
+    name = "cov_{name}/20160914_145059_l.c03".format(name=proc_type)
+    HHVV = new_data(name)
+    return HHVV
+
 rule fig9:
     input:
         style = 'paper_style.rc',
-        HHVV_phase = lambda wildcards: new_data("cov_{type}/20160914_145059_l.c03".format(type=('normal' if int(wildcards.n) == 9 else 'flat'))),
+        aui = new_data("cov_normal/20160914_145059_l.par"),
+        HHVV_phase = select_cov_for_rule_9,
         C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
     output:
         'fig/figure_{n, (9)|(10)}.pdf'
@@ -170,8 +181,10 @@ rule fig9:
 #Make table 1: Location and RCS for all reflectors
 rule table1:
     input:
-        slc_par = new_data("slc_coreg/20160914_145059_BBBl.slc.par"),
-        slc = new_data("slc_coreg/20160914_145059_BBBl.slc"),
+        LUT = new_data('geo/Chutzen.gpri_to_dem'),
+        dem_seg_par = new_data('geo/Chutzen.dem_seg.par'),
+        slc_par = new_data("slc_corr/20160914_145059_BBBl.slc_dec.par"),
+        slc = new_data("slc_corr/20160914_145059_BBBl.slc_dec"),
     output:
         'tab/table_1.csv'
     params:

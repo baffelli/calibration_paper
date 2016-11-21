@@ -36,7 +36,7 @@ def plot_figure_1(inputs, outputs, threads, config, params, wildcards):
             current_ax.title.set_text(r"({label_name})".format(label_name=label_name))
             file_name = inputs[chan_str + proc_str]
             current_slc = gpf.gammaDataset(file_name + '.par', file_name)  # load slc
-            sw_idx = sw / current_slc.GPRI_az_angle_step[0]
+            sw_idx = sw / current_slc.GPRI_az_angle_step
             ptarg_zoom, r_plot, az_plot, mx_pos, res_dict, r_vec, az_vec = cf.ptarg(current_slc, params['ridx'],
                                                                                     params['azidx'],
                                                                                     azwin=azwin, rwin=rwin, osf=32,
