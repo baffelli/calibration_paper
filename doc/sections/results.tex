@@ -98,7 +98,7 @@ To verify the impact of the H-V pattern pointing shift as described in \autoref{
 In \autoref{fig:hv_power}, the result of the above experiment is shown as the oversampled, coregistered azimuth response in the HV channel; a gain of approx. 2.5 dB is observed after correcting for the pattern misalignment. The estimated gain is very close to the one expected by analyzing the provided antenna patterns. This results confirms that the 1.8 mm shift setting employed to acquire the calibration data can correctly compensate the crosspolar power loss and the HH-VV misregistration.
 
 \subsection{Removal of Topographic Phase}\label{sec:topo_removal}
-The removal of the topographic phase contribution in the copolar phase difference is visualized in  \autoref{fig:topo_phase}. When the topographic contribution is not compensated for, fringes are clearly visible (\autoref{fig:topo_phase:uncorrected});
+The removal of the topographic phase contribution in the copolar phase difference, as described in \autoref{sec:topo_removal}, is visualized in  \autoref{fig:topo_phase}. When the topographic contribution is not compensated for, fringes are clearly visible (\autoref{fig:topo_phase:uncorrected}). An estimate of this contribution is obtained by the unwrapped and rescaled interferogram between the upper and the lower HH channels, which due to their being separated by a spatial baseline (as seen in \autoref{fig:antenna_arrangement}) provides an estimate of the topographic phase without additional polarimetric phase differences. The contribution thus obtained is then subtracted from the covariance matrix; the resulting flattened covariance matrix is virtually free of topographic contributions up to unwrapping errors and can be employed for polarimetric calibration.
 \begin{figure*}[hb]
 	\centering
 	\begin{subfigure}[t]{\textwidth}
@@ -113,7 +113,7 @@ The removal of the topographic phase contribution in the copolar phase differenc
 	\subcaption{Without topographic phase.}
 	\label{fig:topo_phase:corrected}
 	\end{subfigure}
-	\caption{HHVV phase difference in radar coordinates, before and after the removal of the topographic phase term as described in \autoref{sec:topo_removal}. The hue of the image is modulated by the covariance phase, the intensity by the magnitude. A fringe pattern is clearly visible in (a), which is completely removed after applying the proposed correction, as plotted in (b) .}
+	\caption{HHVV phase difference in radar coordinates, before and after the removal of the topographic phase term as described in \autoref{sec:topo_removal}. The hue of the image is modulated by the covariance phase, the intensity by the magnitude. A fringe pattern is clearly visible in (a), which is completely removed after applying the proposed correction, as plotted in (b).}
 	\label{fig:topo_phase}
 \end{figure*}
 \subsection{Polarimetric Calibration}\label{sec:res_polcal}
