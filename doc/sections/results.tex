@@ -4,7 +4,7 @@ In order to assess the processing quality and to appreciate the effect of the be
 \begin{figure*}[ht]
 	\centering
 	\includegraphics{figure_1}
-	\caption{Oversampled phase and amplitude responses for the corner reflector at 673 m. (a) HH channel without correction, (b) HH channel with frequency-dependent squint compensation (c) same as (b) with azimuth phase ramp removal. (d) VV channel without correction, (e) VV channel with frequency-dependent squint compensation (f) same as (e) with azimuth phase ramp removal.
+	\caption{Oversampled phase and amplitude responses for the corner reflector "Hindere Chlapf" at 673 m slant range. (a) HH channel without correction, (b) HH channel with frequency-dependent squint compensation (c) same as (b) with azimuth phase ramp removal. (d) VV channel without correction, (e) VV channel with frequency-dependent squint compensation (f) same as (e) with azimuth phase ramp removal.
 	The phase of each response is referenced to its maximum.}
 	\label{fig:tcr_mph}
 \end{figure*}
@@ -66,8 +66,8 @@ When $L_{ph}$ is known, the azimuth phase variation is corrected in each range l
 \end{equation}
 The formula replaces the azimuth averaging described in \autoref{sec:proc_SLC}: the samples are now averaged with the appropriate phase factor so that the SNR improvement and the correction of the azimuth trend are combined in a single step. Usually, after convolution only the central pixel of the integration window is kept, to reduce the amount of data, as the original acquisition is always oversampled in azimuth. Because the model only describes the variation of the phase relative to closest approach $R_{0}$, the absolute phase is preserved; this is very important for interferometric applications.\\
 The procedure is similar to azimuth focusing of synthetic aperture data, where the cross-range resolution is obtained by the integration of the data in the azimuth-time direction. However, in the case of real aperture systems the resolution is limited by physical antenna beamwidth and the response of a target  occupies a single azimuth sample; unless the data is oversampled. In the first case, integrating the data in azimuth degrades the resolution because samples that do represent the same scatterer are combined.\\ To correct the phase variation without an excessive increase in azimuth resolution, the integration is limited to a window of size $\theta_{int}$. The optimal trade-off is empirically determined to be $0.6^\circ$, slightly larger than $\theta_{3dB}$.\\
-The result of applying the correction to the TCR at 673 m is displayed in panels (c) and (f) of \autoref{fig:tcr_mph}; the phase ramp is significantly reduced while the azimuth resolution is slightly degraded. However, the observed azimuth resolution is still smaller than $0.6^\circ$, the value that would be observed if the samples were to be summed incoherently, without accounting for the phase ramp. This result hints again that  most of the phase ramp has been removed by the proposed method.\\
-Similar results are observed for all reflector, as displayed in \autoref{fig:phase_response_VV:corrected}.  After the correction, only the reflector at 74 m shows a large residual azimuth phase variation; this behavior is attributed to its closeness to the radar relative to the far field transition distance of the antennas, in the order of 500 m. Excluding this exception, the residual variation is under $10^\circ$ for samples inside the antenna beamwidth.
+The result of applying the correction to the TCR "Hindere Chlapf" at 673 m is displayed in panels (c) and (f) of \autoref{fig:tcr_mph}; the phase ramp is significantly reduced while the azimuth resolution is slightly degraded. However, the observed azimuth resolution is still smaller than $0.6^\circ$, the value that would be observed if the samples were to be summed incoherently, without accounting for the phase ramp. This result hints again that  most of the phase ramp has been removed by the proposed method.\\
+Similar results are observed for all reflector, as displayed in \autoref{fig:phase_response_VV:corrected} where the phase and amplitude response in both the HH and VV channel is plotted. Generally, the HH data shows a much smaller variation, while the VV phase displays an almost linear increase of 30$^\circ$. As expected from the estimated phase center location in \autoref{tab:rph_fit}, the phase slopes for the two antennas have opposite signs.\\  After the correction, only the reflector "Chutzen" shows a large residual azimuth phase variation; this behavior is attributed to its closeness to the radar relative to the far field transition distance of the antennas, in the order of 500 m. Excluding this exception, the residual variation is under $10^\circ$ for samples inside the antenna beamwidth, while the azimuth resolution is slightly increased due to the azimuth integration.
 \begin{figure*}[ht]
 	\centering
 	\begin{subfigure}[t]{\textwidth}
@@ -97,6 +97,25 @@ To verify the impact of the H-V pattern pointing shift as described in \autoref{
 \end{enumerate*}
 In \autoref{fig:hv_power}, the result of the above experiment is shown as the oversampled, coregistered azimuth response in the HV channel; a gain of approx. 2.5 dB is observed after correcting for the pattern misalignment. The estimated gain is very close to the one expected by analyzing the provided antenna patterns. This results confirms that the 1.8 mm shift setting employed to acquire the calibration data can correctly compensate the crosspolar power loss and the HH-VV misregistration.
 
+\subsection{Removal of Topographic Phase}\label{sec:topo_removal}
+The removal of the topographic phase contribution in the copolar phase difference is visualized in  \autoref{fig:topo_phase}. When the topographic contribution is not compensated for, fringes are clearly visible (\autoref{fig:topo_phase:uncorrected});
+\begin{figure*}[hb]
+	\centering
+	\begin{subfigure}[t]{\textwidth}
+	\centering
+	\includegraphics{figure_9}
+	\subcaption{With topographic phase.}
+	\label{fig:topo_phase:uncorrected}
+	\end{subfigure}\\
+	\begin{subfigure}[t]{\textwidth}
+	\centering
+	\includegraphics{figure_10}
+	\subcaption{Without topographic phase.}
+	\label{fig:topo_phase:corrected}
+	\end{subfigure}
+	\caption{HHVV phase difference in radar coordinates, before and after the removal of the topographic phase term as described in \autoref{sec:topo_removal}. The hue of the image is modulated by the covariance phase, the intensity by the magnitude. A fringe pattern is clearly visible in (a), which is completely removed after applying the proposed correction, as plotted in (b) .}
+	\label{fig:topo_phase}
+\end{figure*}
 \subsection{Polarimetric Calibration}\label{sec:res_polcal}
 
 								
@@ -143,7 +162,7 @@ The signature for the uncorrected data does not correspond to the signatures of 
 	\caption{Dependence of the residual copolar phase and amplitude imbalances on the local incidence angle. The mean and RMS imbalances are shown in each plot. The reflector used for the determination of calibration parameters has been excluded from the plot.}
 	\label{fig:inc_angle_trend}
 \end{figure*}
-A quantitative evaluation of the calibration is obtained by estimating the residual copolar phase and amplitude imbalances $f$ and $\phi_r + \phi_t$ on the trihedral from calibrated data, excluding the reflector used to determine the parameter. The results are shown in \autoref{tab:polcal}. Generally, both the amplitude and the phase imbalance appear to be well corrected. The mean residual for $f$ is 0.97 with an RMS of 0.05. Similarly, for the residual phase difference a mean of $4^\circ$ is observed, with a RMS of $7^\circ$. The biggest outlier for $f$ is represented by the reflector very close to the radar, at 73 m slant range. As previously discussed, it is not located sufficiently far away to be in the far field region of the antennas; this could explain the discrepancy from the rest of the array.
+A quantitative evaluation of the calibration is obtained by estimating the residual copolar phase and amplitude imbalances $f$ and $\phi_r + \phi_t$ on the trihedral from calibrated data, excluding the reflector used to determine the parameter. The results are shown in \autoref{tab:polcal}. Generally, both the amplitude and the phase imbalance appear to be well corrected. The mean residual for $f$ is 0.97 with an RMS of 0.05. Similarly, for the residual phase difference a mean of $4^\circ$ is observed, with a RMS of $7^\circ$. The biggest outlier for $f$ is represented by reflector "Chutzen", placed very close to the radar, at 73 m slant range. As previously discussed, it is not located sufficiently far away to be in the far field region of the antennas; this could explain the discrepancy from the rest of the array.
 In \autoref{fig:inc_angle_trend}, the dependence of the residuals on the local incidence angle is plotted; no clear trend can be distinguished, however it is rather difficult to judge this observation given the small number of data points available and the rather limited extent of covered incidence angles. However, given the small RMS and mean residual errors, the choice of a model that does not consider variation of calibration parameters with incidence angle appears to be justified. The absence of clear incidence-angle related trends is also seen as hinting the appropriateness of the method proposed in \autoref{sec:proc_polcal} to remove the topographic contribution from the polarimetric phase differences: larger variation would otherwise be observed.\\
 The assumption of negligible crosstalk seems plausible considering that all reflectors  except the very far one show a polarization purity above 35 dB. In the former case, the combination of large azimuth resolution cell size, the relatively low RCS of the TCR and  the difficulty of exactly pointing it towards the radar may have lowered the purity because of a larger influence of clutter in the cell.
 

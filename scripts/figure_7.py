@@ -70,6 +70,14 @@ def plot_figure_7(inputs, outputs, threads, config, params, wildcards):
     marker_color = ['orange' if i == config['calibration']['reflector_index'] else 'cyan' for i in range(len(ref_dec))]
     ax.scatter(ref_dec_geo[:,0], ref_dec_geo[:,1], edgecolors=marker_color, s=90, facecolors='none',
                linewidths=0.5)
+    #annotate scatter
+    pos_list = {'Chutzen': (45,20), 'Hindere Chlapf':(90,-10), 'Bifang':(10,10), 'Turle':(10,-20), 'Simmleremoos 1': (55,15),'Simmleremoos 2': (95,-20)}
+    for ref, ref_pos in zip(params['ref'], ref_dec_geo):#iterate reflector and positions
+        plt.annotate(
+            ref['name'],
+            xy = ref_pos, xytext = pos_list[ref['name']],
+            textcoords = 'offset points', ha = 'right', va = 'bottom',
+            arrowprops = dict(arrowstyle = '->', connectionstyle = 'arc3,rad=0', color='grey'), color='white')
     ext = [606630,610072,188060,192957]
     ax.set_xlim(ext[0:2])
     ax.set_ylim(ext[2:])

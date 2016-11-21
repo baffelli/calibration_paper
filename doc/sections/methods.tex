@@ -74,7 +74,7 @@ In addition to the difference in frequency-dependent squint rate, the horizontal
 	\caption{Illustration of the adjustable antenna mount allowing to shift the patterns to bring the H and the V antennas into alignment. The left bracket can be slid towards the front, allowing the antenna to pivot on the right hinge. For small shifts, this movement approximates a rotation around the center of the antenna tower, as depicted by the blue antenna pattern.}
 	\label{fig:adjustable_bracket}
 \end{figure}
-\subsection{Polarimetric Calibration}\label{sec:proc_polcal}
+\subsection{Removal of Topographic Phase Calibration}\label{sec:topo_removal}
 \begin{figure}[ht]
 	\centering
 	\includegraphics[scale=0.5]{kapri_antenna_arrangement}
@@ -98,6 +98,7 @@ Thus from \autoref{eq:prop_approximation}, $\phi_{ij}^{prop}$ can be estimated f
 \end{equation}
 This formula only holds if $\frac{b_{eq}^{ij}}{b_{eq}^{kl}}$ is integer\cite{Massonnet1996}, otherwise phase unwrapping of $\phi_{kl}^{prop}$ is necessary before rescaling.\\
 In order to correct for all the possible combinations that have a non-zero baseline, the measured scattering matrix $\mathbf{S}$ is converted into a polarimetric covariance matrix $\mathbf{C}$;  $\hat{\phi}_{ij}^{prop}$ it then subtracted from the phase of every non-diagonal element $ij$. The result is a flattened covariance matrix $\mathbf{C_{flat}}$ where the sole phase contribution is the polarimetric phase difference.\\
+\subsection{Polarimetric Calibration}\label{sec:proc_polcal}
 This matrix is the starting point for the polarimetric calibration proper;
 the procedure is based on the linear distortion matrix model\cite{Saraband1990, Sarabandi1992a} that relates the observed scattering matrix $\mathbf{S^\prime}$ with the theoretical one $\mathbf{S}$:
 \begin{equation}\label{eq:distorsion_scattering}

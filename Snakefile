@@ -134,7 +134,7 @@ rule fig5:
     output:
         'fig/figure_{n, (5|6)}.pdf'
     params:
-        ref = lambda wildcards: list_of_reflectors[1] if wildcards.n == 1 else list_of_reflectors[-1]
+        ref = lambda wildcards: list_of_reflectors[1] if int(wildcards.n) == 5 else list_of_reflectors[-1]
     script:
         'scripts/figure_5.py'
 

@@ -60,7 +60,9 @@ def plot_figure_2(inputs, outputs, threads, config, params, wildcards):
         map(vf.format_axes, f.get_axes())
     leg = amp_ax.legend(loc='lower center', ncol=len(ranges) // 2, fancybox=True, frameon=True, shadow=False, framealpha=None, handlelength=0.3)
     leg.get_title().set_fontsize(plt.rcParams['legend.fontsize'])
-    f.colorbar(mappable=mappable)#colorbar encoding distance
+    cbar_ax = f.add_axes([0.95, 0.15, 0.03, 0.7])
+    cbar = f.colorbar(mappable=mappable, cax=cbar_ax)#colorbar encoding distance
+    cbar.set_label('Distance from radar [m]')
     f.subplots_adjust(top=1)
     f.savefig(outputs[0])
     plt.close(f)

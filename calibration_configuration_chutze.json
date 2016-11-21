@@ -62,7 +62,7 @@
 			"azwin":	250
 	},
 	"calibration":			{
-			"reflector_index":		1,
+			"reflector_index":		3,
 			"correct_HV":           "False"
 	},
 	"geocoding":			{
