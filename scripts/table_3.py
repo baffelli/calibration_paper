@@ -25,7 +25,7 @@ def tcr_recap(inputs, outputs, threads, config, params, wildcards):
     with open(outputs[0], 'w+') as of:
         tabwrite = csv.writer(of, delimiter=',')
         tabwrite.writerow(
-            ['slant range', 'HH-VV amplitude imbalance', 'HH-VV phase imbalance', 'Polarisation purity', 'RCS', 'range_index', "azimuth_index"])
+            ['name', 'slant range', 'HH-VV amplitude imbalance', 'HH-VV phase imbalance', 'Polarisation purity', 'RCS', 'range_index', "azimuth_index"])
         f_arr = []
         HHVV_arr = []
         for ref in refl_list:
@@ -42,7 +42,7 @@ def tcr_recap(inputs, outputs, threads, config, params, wildcards):
             C_sigma = C_zoom[0,0]
             RCS = C_sigma.real / cal.cr_rcs(ref['side'], C.radar_frequency, type=ref['type'])
             str = "{HHVV_phase},{f}".format(HHVV_phase=HHVV_phase, f=f)
-            row = [r_sl, f, HHVV_phase, purity, RCS,  idx_r, idx_az]
+            row = [ref['name'], r_sl, f, HHVV_phase, purity, RCS,  idx_r, idx_az]
             tabwrite.writerow(row)
 
 

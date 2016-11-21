@@ -89,16 +89,17 @@ rule fig1:
 #this serves to select the proper channel
 def select_slc_for_rule_2(wildcards):
     proc_type = 'coreg' if int(wildcards.n) == 2 else 'corr'
-    name = "slc_{name}/20160914_145059_BBBl.slc".format(name=proc_type)
-    VV = new_data(name)
-    return VV
+    name_HH = "slc_{name}/20160914_145059_AAAl.slc".format(name=proc_type)
+    name_VV = "slc_{name}/20160914_145059_BBBl.slc".format(name=proc_type)
+    VV = new_data(name_VV)
+    HH = new_data(name_HH)
+    return HH, VV
 
 rule fig2:
     output:
         'fig/figure_{n,(2|3)}.pdf'
     input:
-        VV = new_data("slc_corr/20160914_145059_BBBl.slc"),
-        HH = new_data("slc_corr/20160914_145059_AAAl.slc"),
+        VV = select_slc_for_rule_2,
         style = 'paper_style.rc'
     params:
         reflectors = list_of_reflectors,

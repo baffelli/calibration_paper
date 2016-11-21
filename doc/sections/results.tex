@@ -42,9 +42,10 @@ The model has been tested on each reflector in the array: the maximum in range a
 \begin{table}[ht]
 	\centering
 	\pgfplotstabletypesetfile[			col sep=comma,
-										columns={rsl, LphHH, LphVV},
+										columns={name, rsl, LphHH, LphVV},
 										every head row/.style={before row=\toprule,after row=\midrule},
 										every last row/.style={after row=\bottomrule},
+										columns/name/.style={column name={Name} ,string type},
 										columns/rsl/.style={precision=1, column name={$R_0 [m]$}},
 										columns/LphHH/.style={precision=2, column name={$L_{ph}^{H} [m]$}},
 										columns/LphVV/.style={precision=2, column name={$L_{ph}^{V} [m]$}},
@@ -81,7 +82,7 @@ Similar results are observed for all reflector, as displayed in \autoref{fig:pha
 		\subcaption{Response after azimuth filtering.}
 		\label{fig:phase_response_VV:corrected}
 	\end{subfigure}
-	\caption{Relative phase/amplitude response for all reflectors in the calibration array, VV channel. To display the relative phase variation, the phase at the maximum is subtracted from each plot. The vertical lines indicate the theoretical 3 dB resolution of the antenna $\theta_{3dB}$. The responses for the HH channel are not plotted because no significant phase trend is observed.}
+	\caption{Relative phase/amplitude response for all reflectors in the calibration array, continous line: VV channel, dashed: HH channel. To display the relative phase variation, the phase at the maximum is subtracted from each plot. The vertical lines indicate the theoretical 3 dB resolution of the antenna $\theta_{3dB}$. The responses for the HH channel are not plotted because no significant phase trend is observed.}
 	\label{fig:phase_response_VV}
 \end{figure*}
 
@@ -103,9 +104,10 @@ In \autoref{fig:hv_power}, the result of the above experiment is shown as the ov
 	\centering
 	\pgfplotstabletypesetfile[
 		col sep=comma,
-		columns={slant range, HH-VV amplitude imbalance, HH-VV phase imbalance, Polarisation purity},
+		columns={name, slant range, HH-VV amplitude imbalance, HH-VV phase imbalance, Polarisation purity},
 		every head row/.style={before row=\toprule,after row=\midrule},
 		every last row/.style={after row=\bottomrule},
+		columns/name/.style={column name={Name} ,string type},
 		columns/slant range/.style={precision=1, column name=\makecell{$R_{0} [m]$\\ Range distance}},
 		columns/HH-VV amplitude imbalance/.style={precision=3, column name={$f$}},
 		columns/HH-VV phase imbalance/.style={precision=3, column name={$\phi_r + \phi_t [^\circ]$}},
