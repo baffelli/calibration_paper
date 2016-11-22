@@ -24,7 +24,7 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     az_vec = HHVV.az_vec
     r_vec = HHVV.r_vec
     # Create RGB
-    mph_dict = {'k': 0.07, 'sf': 0.9, 'coherence': True, 'peak': False, 'mli':mli, 'coherence_threshold':0.45, 'coherence_slope':25}
+    mph_dict = {'k': 0.15, 'sf': 0.9, 'coherence': True, 'peak': False, 'mli':mli, 'coherence_threshold':0.45, 'coherence_slope':25}
     mph, rgb, norm = vf.dismph(HHVV, **mph_dict)  # create rgb image
     pal, ext = vf.dismph_palette(HHVV, **mph_dict)
     print(ext)
@@ -36,14 +36,24 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     gs.update(hspace=0.3, wspace=0.0)
     im_ax = f.add_subplot(gs[0,::])
     aspect = fig_h / fig_w
-    im_ax.imshow(mph, extent=[az_vec[0], az_vec[-1], r_vec[-1], r_vec[1]], aspect=1/25, origin='upper')
+    im_ax.imshow(mph, extent=[az_vec[0], az_vec[-1], r_vec[-1], r_vec[1]], aspect=1/20, origin='upper')
     im_ax.yaxis.set_label_text(r'range [m]')
     im_ax.xaxis.set_label_text(r'azimuth [$^\circ$]')
     im_ax.yaxis.set_major_locator(tick.MultipleLocator(500))
     im_ax.xaxis.set_major_locator(tick.MultipleLocator(20))
+    #Plot reflectors
+    ann_list = []
+    for ref in params['ref']:
+        dec_pos = (int(ref['ridx']) / win[0],HHVV.azidx_dec(int(ref['azidx'])))
+        grid_pos = (az_vec[dec_pos[1]], r_vec[dec_pos[0]])
+        im_ax.plot(*grid_pos,marker='o', markeredgecolor='#43a2ca', mfc='none', mew=0.4)
+        annotations = plt.annotate(ref['name'], xy=grid_pos, color='grey', fontsize='x-small', xytext=(-20,-10), textcoords = 'offset points')
+        ann_list.append(annotations)
+    print(type(ann_list))
+    vf.optimize_annotations(ann_list, im_ax)
     #plot palette
     pal_ax = f.add_subplot(gs[-1,1])
-    pal_ax.imshow(pal, extent=ext, aspect=1e4)
+    pal_ax.imshow(pal, extent=ext, aspect=500)
     pal_ax.set_ylabel(r'Phase')
     pal_ax.set_xlabel(r'Intensity')
     pal_ax.grid(b=False)

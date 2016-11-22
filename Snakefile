@@ -178,7 +178,7 @@ rule fig9:
     output:
         'fig/figure_{n, (9)|(10)}.pdf'
     params:
-        a = lambda wildcards: print(wildcards.n == 10)
+        ref = list_of_reflectors
     script:
         'scripts/figure_9.py'
 
