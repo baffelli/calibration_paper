@@ -23,7 +23,7 @@ def plot_figure_8(inputs, outputs, threads, config, params, wildcards):
 
     plt.style.use(inputs['style'])
     fig_w, fig_h = plt.rcParams['figure.figsize']
-    f, im_ax = plt.subplots(1, 1, figsize=(fig_w,fig_h), sharey=True)
+    f, im_ax = plt.subplots(1, 1, figsize=(2* fig_w,fig_h), sharey=True)
     im_ax.imshow(mph, extent=[az_vec[0], az_vec[-1],r_vec[-1], r_vec[1]], aspect=1/10, origin='upper')
     im_ax.yaxis.set_label_text(r'range [m]')
     im_ax.xaxis.set_label_text(r'azimuth [$^\circ$]')
