@@ -161,9 +161,13 @@ rule fig7:
 #this serves to select the proper channel
 def select_cov_for_rule_9(wildcards):
     proc_type = 'normal' if int(wildcards.n) == 9 else 'flat'
-    name = "cov_{name}/20160914_145059_l.c03".format(name=proc_type)
-    HHVV = new_data(name)
-    return HHVV
+    HHVV = "cov_{name}/20160914_145059_l.c03".format(name=proc_type)
+    HH = "cov_{name}/20160914_145059_l.c00".format(name=proc_type)
+    VV = "cov_{name}/20160914_145059_l.c11".format(name=proc_type)
+    HHVV = new_data(HHVV)
+    HH = new_data(HH)
+    VV = new_data(VV)
+    return HHVV, HH, VV
 
 rule fig9:
     input:

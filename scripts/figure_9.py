@@ -1,63 +1,39 @@
 import matplotlib.pyplot as plt
-import matplotlib as mpl
 import matplotlib.ticker as tick
-import numpy as np
-import pandas as pd
+import pyrat.core.corefun as cf
 import pyrat.fileutils.gpri_files as gpf
-
 import pyrat.visualization.visfun as vf
+import pyrat.diff.intfun as _ifun
+import numpy as np
+
 # Return the decimated azimuth position
 def az_idx(ds, idx):
     return idx / ds.azimuth_looks
 
 
 def plot_figure_8(inputs, outputs, threads, config, params, wildcards):
-    C_par = gpf.par_to_dict(inputs.C_cal_par)
-    r_vec = C_par.near_range_slc + C_par.range_pixel_spacing * np.arange(C_par['range_samples'])
-    az_vec = C_par.GPRI_az_start_angle + C_par.GPRI_az_angle_step * np.arange(C_par['azimuth_lines'])
-    HHVV = gpf.load_binary(inputs.HHVV_phase, C_par['range_samples'], dtype=gpf.type_mapping['FCOMPLEX'])
-    #Create RGB
-    mph_dict = {'k': 0.1, 'sf': 1e-2, 'coherence': False, 'peak': False}
+    print(inputs.HHVV_phase)
+    HHVV = gpf.gammaDataset(inputs.C_cal_par, inputs.HHVV_phase[0], dtype=gpf.type_mapping['FCOMPLEX'])
+    HH = gpf.gammaDataset(inputs.C_cal_par, inputs.HHVV_phase[1], dtype=gpf.type_mapping['FCOMPLEX'])
+    VV = gpf.gammaDataset(inputs.C_cal_par, inputs.HHVV_phase[2], dtype=gpf.type_mapping['FCOMPLEX'])
+    HHVV = _ifun.estimate_coherence(HHVV, HH, VV, [5,5])
+    az_vec = HHVV.az_vec
+    r_vec = HHVV.r_vec
+    # Create RGB
+    mph_dict = {'k': 0.2, 'sf': 1.2, 'coherence': True, 'peak': False, 'mli':HH, 'coherence_threshold':0.6}
     mph, rgb, norm = vf.dismph(HHVV, **mph_dict)  # create rgb image
-    pal, ext = vf.dismph_palette(HHVV, **mph_dict)
+    # pal, ext = vf.dismph_palette(HHVV, **mph_dict)
+
 
     plt.style.use(inputs['style'])
     fig_w, fig_h = plt.rcParams['figure.figsize']
-    f, im_ax = plt.subplots(1, 1, figsize=(2* fig_w,fig_h), sharey=True)
-    im_ax.imshow(mph, extent=[az_vec[0], az_vec[-1],r_vec[-1], r_vec[1]], aspect=1/10, origin='upper')
+    f, im_ax = plt.subplots(1, 1, figsize=(2 * fig_w, 2 * fig_h), sharey=True)
+    im_ax.imshow(mph, extent=[az_vec[0], az_vec[-1], r_vec[-1], r_vec[1]], aspect=1 / 10, origin='upper')
     im_ax.yaxis.set_label_text(r'range [m]')
     im_ax.xaxis.set_label_text(r'azimuth [$^\circ$]')
     im_ax.yaxis.set_major_locator(tick.MultipleLocator(500))
     im_ax.xaxis.set_major_locator(tick.MultipleLocator(20))
-    #plot mean phase
-    # mean_ax.plot(np.mean(np.angle(HHVV[sl]), axis=1), r_vec)
-    # plt.show()
     f.savefig(outputs[0])
-    # inc = gpf.load_binary(inputs.inc, C_par['range_samples'], dtype=gpf.type_mapping['FLOAT'])
-    # residuals = pd.read_csv(inputs.res)
-    # phase_rms = np.std(residuals['HH-VV phase imbalance'])
-    # phase_mean = np.mean(residuals['HH-VV phase imbalance'])
-    # amp_rms = np.std(residuals['HH-VV amplitude imbalance'])
-    # amp_mean = np.mean(residuals['HH-VV amplitude imbalance'])
-    # inc_ref = np.rad2deg(inc[residuals['range_index'], residuals['azimuth_index'] / C_par['azimuth_looks']])
-    # # perform fit
-    # phase_coeff, cov = np.polyfit(inc_ref, residuals['HH-VV phase imbalance'], 3, cov=True)  # thir order for phase
-    # plt.style.use(inputs.style)
-    # fig_w, fig_h = plt.rcParams['figure.figsize']
-    # f, (ph_ax, amp_ax) = plt.subplots(2, 1, figsize=(fig_w * 2, 2* fig_h))
-    # ph_ax.scatter(inc_ref, residuals['HH-VV phase imbalance'])
-    # ph_ax.xaxis.set_label_text(r'incidence angle $\alpha$ [deg]')
-    # ph_ax.yaxis.set_label_text(r'residual $\phi_r + \phi_t$ [deg]')
-    # bbox_props = dict(boxstyle="square", fc="white", ec="w", lw=2)
-    # ph_ax.text(0.2, 0.2, r"RMS {:.2f}$^\circ$, Mean {:.2f}$^\circ$".format(phase_rms, phase_mean),
-    #            transform=ph_ax.transAxes, bbox=bbox_props)
-    # ph_ax.set_ylim([-20, 20])
-    # amp_ax.scatter(inc_ref, residuals['HH-VV amplitude imbalance'])
-    # amp_ax.xaxis.set_label_text(r'incidence angle $\alpha$ [deg] ')
-    # amp_ax.yaxis.set_label_text(r'residual $f$')
-    # amp_ax.text(0.2, 0.2, r"RMS {:.2f}, Mean {:.2f}".format(amp_rms, amp_mean),
-    #            transform=amp_ax.transAxes, bbox=bbox_props)
-    # f.subplots_adjust(hspace=0.2)
 
 
 plot_figure_8(snakemake.input, snakemake.output, snakemake.threads, snakemake.config, snakemake.params,
