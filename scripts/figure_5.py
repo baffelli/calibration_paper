@@ -42,10 +42,14 @@ def plot_figure_5(inputs, outputs, threads, config, params, wildcards):
     pp, cc = (np.rad2deg(psi), np.rad2deg(chi))
     # plot uncalibrated
     fig_arr[0, 0].plot_surface(pp, cc, co_sig, cmap='RdBu_r', lw=0.2)
+    fig_arr[0,0].set_title(r"(a)")
     fig_arr[0, 1].plot_surface(pp, cc, x_sig, cmap='RdBu_r', lw=0.2)
+    fig_arr[0, 1].set_title(r"(b)")
     #plot calibrated
     fig_arr[1, 0].plot_surface(pp, cc, co_sig_cal, cmap='RdBu_r', lw=0.2)
+    fig_arr[1, 0].set_title(r"(c)")
     fig_arr[1, 1].plot_surface(pp, cc, x_sig_cal, cmap='RdBu_r', lw=0.2)
+    fig_arr[1, 1].set_title(r"(d)")
         # fig_arr[ref_count, 0].auto_scale_xyz([-90, 90], [-45, 45], [0, 1])
     #Set label etc https://dawes.wordpress.com/2014/06/27/publication-ready-3d-figures-from-matplotlib/
     for row in fig_arr:
