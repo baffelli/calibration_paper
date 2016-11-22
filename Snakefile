@@ -163,7 +163,7 @@ def select_cov_for_rule_9(wildcards):
     proc_type = 'normal' if int(wildcards.n) == 9 else 'flat'
     HHVV = "cov_{name}/20160914_145059_l.c03".format(name=proc_type)
     HH = "cov_{name}/20160914_145059_l.c00".format(name=proc_type)
-    VV = "cov_{name}/20160914_145059_l.c11".format(name=proc_type)
+    VV = "cov_{name}/20160914_145059_l.c33".format(name=proc_type)
     HHVV = new_data(HHVV)
     HH = new_data(HH)
     VV = new_data(VV)
@@ -172,7 +172,7 @@ def select_cov_for_rule_9(wildcards):
 rule fig9:
     input:
         style = 'paper_style.rc',
-        aui = new_data("cov_normal/20160914_145059_l.par"),
+#        aui = new_data("cov_normal/20160914_145059_l.par"),
         HHVV_phase = select_cov_for_rule_9,
         C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
     output:
