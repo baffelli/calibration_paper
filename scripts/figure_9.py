@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+import matplotlib.ticker as tick
 import numpy as np
 import pandas as pd
 import pyrat.fileutils.gpri_files as gpf
@@ -11,19 +13,24 @@ def az_idx(ds, idx):
 
 def plot_figure_8(inputs, outputs, threads, config, params, wildcards):
     C_par = gpf.par_to_dict(inputs.C_cal_par)
-    sl = [slice(0,1500), Ellipsis, ]
+    r_vec = C_par.near_range_slc + C_par.range_pixel_spacing * np.arange(C_par['range_samples'])
+    az_vec = C_par.GPRI_az_start_angle + C_par.GPRI_az_angle_step * np.arange(C_par['azimuth_lines'])
     HHVV = gpf.load_binary(inputs.HHVV_phase, C_par['range_samples'], dtype=gpf.type_mapping['FCOMPLEX'])
     #Create RGB
-    mph_dict = {'k': 0.1, 'sf': 1e-1, 'coherence': False, 'peak': False}
-    mph, rgb, norm = vf.dismph(HHVV[sl], **mph_dict)  # create rgb image
-    pal, ext = vf.dismph_palette(HHVV[sl], **mph_dict)
+    mph_dict = {'k': 0.1, 'sf': 1e-2, 'coherence': False, 'peak': False}
+    mph, rgb, norm = vf.dismph(HHVV, **mph_dict)  # create rgb image
+    pal, ext = vf.dismph_palette(HHVV, **mph_dict)
 
     plt.style.use(inputs['style'])
     fig_w, fig_h = plt.rcParams['figure.figsize']
-    f, ax = plt.subplots(1, 1, figsize=(fig_w,fig_h))
-    ax.imshow(mph)
-    ax.xaxis.set_label_text(r'range samples')
-    ax.yaxis.set_label_text(r'azimuth samples')
+    f, im_ax = plt.subplots(1, 1, figsize=(fig_w,fig_h), sharey=True)
+    im_ax.imshow(mph, extent=[az_vec[0], az_vec[-1],r_vec[-1], r_vec[1]], aspect=1/10, origin='upper')
+    im_ax.yaxis.set_label_text(r'range [m]')
+    im_ax.xaxis.set_label_text(r'azimuth [$^\circ$]')
+    im_ax.yaxis.set_major_locator(tick.MultipleLocator(500))
+    im_ax.xaxis.set_major_locator(tick.MultipleLocator(20))
+    #plot mean phase
+    # mean_ax.plot(np.mean(np.angle(HHVV[sl]), axis=1), r_vec)
     # plt.show()
     f.savefig(outputs[0])
     # inc = gpf.load_binary(inputs.inc, C_par['range_samples'], dtype=gpf.type_mapping['FLOAT'])

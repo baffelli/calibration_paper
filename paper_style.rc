@@ -49,8 +49,7 @@ xtick.minor.pad     : 0.25
 xtick.color         : black
 xtick.direction: out
 xtick.labelsize     : x-small
-xtick.major.top     : False
-xtick.minor.top     : False
+xtick.top     : False
 #yticks
 ytick.major.size     : 2
 ytick.minor.size     : 0.5
@@ -61,8 +60,7 @@ ytick.minor.pad     : 0.25
 ytick.color         : black
 ytick.direction: out
 ytick.labelsize     : x-small
-ytick.major.top     : False
-ytick.minor.top     : False
+ytick.top     : False
 #Lines
 lines.linewidth     : 1.5
 #Color cycle
