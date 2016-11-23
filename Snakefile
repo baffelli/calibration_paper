@@ -183,6 +183,9 @@ rule fig9:
         'scripts/figure_9.py'
 
 ###############################################################################
+#Plot figure 10: Data matrix before
+
+###############################################################################
 #Make table 1: Location and RCS for all reflectors
 rule table1:
     input:
