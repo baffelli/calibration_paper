@@ -46,7 +46,7 @@ def plot_figure_2(inputs, outputs, threads, config, params, wildcards):
             r_sl = slc.r_vec[ref_vec['ridx']]
             line, = phase_ax.plot(az_vec, np.rad2deg(refl_ph), color=mappable.to_rgba(r_sl), ls=ls)
             #Only format VV
-            lab = r"{name}".format(name=ref_vec['name']) if chan_name == 'HH' else None
+            lab = r"{name}, {chan}".format(name=ref_vec['name'], chan=chan_name)
             amp_ax.plot(az_vec, refl_amp / refl_amp[reflector_slice.shape[0] / 2], color=mappable.to_rgba(r_sl),
                         label=lab, ls=ls)
         # Plot line for beamwidth
