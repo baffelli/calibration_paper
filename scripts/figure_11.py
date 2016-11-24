@@ -6,27 +6,60 @@ import pyrat.diff.intfun as _ifun
 import pyrat.fileutils.gpri_files as gpf
 import pyrat.visualization.visfun as vf
 from matplotlib import gridspec
+import matplotlib.ticker as tick
+import string
+import scipy.signal as _sig
 
 
 # Return the decimated azimuth position
 def az_idx(ds, idx):
     return idx / ds.azimuth_looks
 
+def center_width_from_slice(sl):
+    center = (sl.stop + sl.start)//2
+    width = (sl.stop - sl.start)
+    return center, width
+
+k = 0.3
+sf = 0.4
+mph_dict = {'k': k, 'sf': sf, 'coherence': False, 'peak': False}
+az_sl = slice(1392,3600)
+r_sl = slice(550,1850)
+
+
 
 def plot_figure_11(inputs, outputs, threads, config, params, wildcards):
-    #Load raw
-    raw = gpf.rawData(inputs.raw_par, inputs.raw)
-    #Create figure
+    # Create figure
     plt.style.use(inputs['style'])
     fig_w, fig_h = plt.rcParams['figure.figsize']
     f = plt.figure(figsize=(2 * fig_w, 2 * fig_h))
-    #Grid of plots for figures
-    gs = gridspec.GridSpec(*(2, 4), height_ratios=[1, 0.2])
-    #Plot raw channel
-    raw_ax = f.add_subplot(gs[0,0])
-    raw_ax.imshow(np.abs(raw))
-    plt.show()
-
+    # Grid of plots for figures
+    gs = gridspec.GridSpec(*(2, 3), height_ratios=[1, 1])
+    gs.update(hspace=0.2, wspace=0.2)
+    #data to plot
+    slc_names = ['slc', 'slc_desq', 'slc_corr']
+    for plot_idx, slc_name in enumerate(slc_names):
+        #Load slc
+        slc = gpf.gammaDataset(inputs[slc_name + '_par'], inputs[slc_name])
+        az_sl_dec = slice(az_sl.start//slc.GPRI_decimation_factor, az_sl.stop//slc.GPRI_decimation_factor)
+        slc = slc[r_sl, az_sl_dec]
+        slc_ext = [slc.az_vec[0], slc.az_vec[-1], slc.r_vec[-1], slc.r_vec[0]]
+        #Plot raw channel
+        # raw_ax = f.add_subplot(gs[0,plot_idx])
+        # raw_ax.imshow(vf.exp_im(np.abs(_sig.hilbert(raw[raw_sl],axis=0)),k,sf), extent=raw_ext, aspect=1e-5, interpolation='none', cmap='gray')
+        #Plot slc
+        mph, rgb, norm = vf.dismph(slc, **mph_dict)  # create rgb image
+        pal, ext = vf.dismph_palette(slc, **mph_dict)
+        slc_ax = f.add_subplot(gs[::,plot_idx])
+        slc_ax.imshow(mph, extent=slc_ext, aspect=1/10,  origin='upper', interpolation='none', cmap='gray')
+        slc_ax.xaxis.set_major_locator(tick.MultipleLocator(10))
+        tit = string.ascii_lowercase[plot_idx]
+        slc_ax.title.set_text(r"({label_name})".format(label_name=tit))
+        if plot_idx == 0:
+            slc_ax.set_xlabel(r"Azimuth [deg]")
+            slc_ax.set_ylabel(r'Range [m]')
+    f.savefig(outputs[0])
+    # plt.show()
     # print(inputs.HHVV_phase)
     # HHVV = gpf.gammaDataset(inputs.C_cal_par, inputs.HHVV_phase[0], dtype=gpf.type_mapping['FCOMPLEX'])
     # HH = gpf.gammaDataset(inputs.C_cal_par, inputs.HHVV_phase[1], dtype=gpf.type_mapping['FCOMPLEX'])

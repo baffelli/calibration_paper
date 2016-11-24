@@ -43,7 +43,7 @@ def plot_figure_1(inputs, outputs, threads, config, params, wildcards):
                                                                                     sw=(4, sw_idx))
             # remove phase at maximum
             ptarg_zoom *= np.exp(1j * np.angle(ptarg_zoom[mx_pos].conj()))
-            mph_dict = {'k':0.35, 'sf':0.3, 'coherence':False, 'peak':True}
+            mph_dict = {'k':0.2, 'sf':0.8, 'coherence':False, 'peak':True}
             mph, rgb, norm = vf.dismph(ptarg_zoom, **mph_dict)  # create rgb image
             pal, ext = vf.dismph_palette(ptarg_zoom, **mph_dict)
             aspect = fig_h / fig_w
@@ -51,8 +51,8 @@ def plot_figure_1(inputs, outputs, threads, config, params, wildcards):
             mappable = current_ax.imshow(mph, cmap=rgb, extent=[az_vec.min(), az_vec.max(), r_vec.min(), r_vec.max()],
                                          aspect=new_aspect)
             # add resolution analysis
-            resolution_text = r"""Range resolution: {r_res:.3f} m
-            Azimuth resolution: {az_res:.3f}$^\circ$""".format(r_res=res_dict['range_resolution'][0],
+            resolution_text = r"""Range resolution: {r_res:.2f} m
+            Azimuth resolution: {az_res:.2f}$^\circ$""".format(r_res=res_dict['range_resolution'][0],
                                                                az_res=res_dict['azimuth_resolution'][
                                                                    0])
             bbox_props = dict(boxstyle="square", fc="white", ec="w", lw=2)

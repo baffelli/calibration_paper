@@ -43,12 +43,12 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     im_ax.yaxis.set_major_locator(tick.MultipleLocator(500))
     im_ax.xaxis.set_major_locator(tick.MultipleLocator(20))
     # Plot reflectors
-    pos_list = {'Simmleremoos 2': (-10, 15), 'Simmleremoos 1': (-10, -15)}  # position to avoid overlapping
+    pos_list = {'Simmleremoos 2': (-20, 15), 'Simmleremoos 1': (-15, -15)}  # position to avoid overlapping
     box = dict(boxstyle="round", fc="w", lw=0.2)
     for ref in params['ref']:
         dec_pos = (int(ref['ridx']) / win[0], HHVV.azidx_dec(int(ref['azidx'])))
         grid_pos = (az_vec[dec_pos[1]], r_vec[dec_pos[0]])
-        im_ax.plot(*grid_pos, marker='o', markeredgecolor='#43a2ca', mfc='none', mew=2, ms=10)
+        im_ax.plot(*grid_pos, marker='o', markeredgecolor='#43a2ca', mfc='none', mew=1, ms=10)
         annotations = plt.annotate(ref['name'], xy=grid_pos, color='black', size=7,
                                    xytext=pos_list.get(ref['name'], (0 ,-15)), textcoords='offset points', bbox=box,
                                    horizontalalignment='center')
