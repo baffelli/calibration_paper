@@ -44,6 +44,7 @@ rule all:
         'fig/figure_8.pdf',
         'fig/figure_9.pdf',
         'fig/figure_10.pdf',
+        'fig/figure_11.pdf',
         'tab/table_1.csv',
         'tab/table_2.csv',
         'tab/table_3.csv',
@@ -183,8 +184,22 @@ rule fig9:
         'scripts/figure_9.py'
 
 ###############################################################################
-#Plot figure 10: Data matrix before
-
+#Plot figure 11: Data matrix before and after desquint and range compression
+rule fig11:
+    input:
+        style = 'paper_style.rc',
+        raw = new_data("raw_chan/20160914_145059_BBBl.raw"),
+        raw_par =  new_data("raw_chan/20160914_145059_BBBl.raw_par"),
+        raw_desq = new_data("raw_desq/20160914_145059_BBBl.raw"),
+        raw_desq_par = new_data("raw_desq/20160914_145059_BBBl.raw_par"),
+        slc = new_data("slc_chan/20160914_145059_BBBl.slc"),
+        slc_par = new_data("slc_chan/20160914_145059_BBBl.slc.par"),
+        slc_desq = new_data("slc_desq/20160914_145059_BBBl.slc"),
+        slc_desq_par = new_data("slc_desq/20160914_145059_BBBl.slc.par"),
+    output:
+        'fig/figure_11.pdf'
+    script:
+        'scripts/figure_11.py'
 ###############################################################################
 #Make table 1: Location and RCS for all reflectors
 rule table1:
