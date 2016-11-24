@@ -1,5 +1,5 @@
 \section{Methods and Data}\label{sec:methods}
-\subsection{KAPRI: FMCW radar data processing}\label{sec:proc_SLC}
+\subsection{KAPRI: FMCW radar signal model}\label{sec:methods:signal_model}
 A basic requirement to generate calibrated polarimetric data is the availability of properly processed SLC images for all elements of the polarimetric scattering matrix. It is therefore necessary to understand the data acquisition process and correct several effects specific to KAPRI.  
 For this purpose a signal model for type II\cite{Caduff2015} radar data using FMCW signaling\cite{Stove1992} is introduced.\\
 \begin{figure}[h]
@@ -41,11 +41,11 @@ where $t$ is the fast time, $\tau = n t_{chirp}$ is the slow time variable and $
 \end{equation}
 where $L_{wg}$ is the size of the antenna aperture and $\lambda$ is the wavelength employed.
 If the rotation speed is chosen such that $\omega \tau \ll \theta_{3dB}$, the acquisition is oversampled in azimuth and several range profiles represent the same target. Assuming they are all subject to the same white noise process, their average -also called azimuth presum or decimation- produces measurements with an increased SNR and an azimuth resolution limited by the real beam size.\\ 
-
 Due to diffraction, the radiation beam emitted by the antenna broadens linearly with increasing distance consequently, the spatial resolution in cross-range $\delta_{az}$ increases with distance:
 \begin{equation}\label{eq:azimuth_ground_resolution}
 	\delta_{az} = \frac{R \lambda}{L_{wg}}.
 \end{equation}
+\subsection{Frequency Squint Correction}\label{sec:methods:squint_correction}
 KAPRI employs a traveling wave slotted waveguide antenna\cite{Hines1953a,Granet2007}; it is constructed by cutting slots resonating at the design frequency in a section of rectangular waveguide. When they are appropriately spaced, the fields emitted at each cut combine in phase, producing a narrow beam in the desired direction. Two types of slotted waveguide antenna exist\cite{Enjiu2013}: the resonant and the traveling wave design. The second type has been chosen because it can be operated with a larger bandwidth; achieving a finer range resolution. The main drawback of this antenna design is its frequency-dependent beam squint: when it is operated at frequency differing from the design value, the phase differences at the slots change; altering the direction of the mainlobe. This effect has been uses for several fast imaging radar, where a mechanical antenna rotation would not be possible\cite{Yang2014,Yang2012,Mayer2003,Alvarez2013}. However, in the case of KAPRI the squint is undesired: with a large amount of squint w.r.t beamwidth, the beam only illuminates a scatterer for a fraction of $t_{chirp}$, decreasing the effective transmitted bandwidth and hence the range resolution. \\ 
 If the antenna is rotated slowly enough,  the spacing of each range profile is less than the beamwidth and the effect of beam squint is visible in the time domain as skewing of point target responses, as illustrated in~\autoref{fig:squint_correction}: during the chirp, the target is only at the center of the beamwidth when the antenna rotation angle matches the beam squint angle. 
 The azimuth-frequency skewing observed in oversampled data is key to mitigate the effect of the beam squint. For each chirp frequency $f$, the data at the corresponding fast time $s_{d}\left(t,\tau\right)$ is shifted back in azimuth by $\tau_{sq}=\frac{\theta_{sq}}{\omega}$, where the squint angle is:
@@ -67,12 +67,12 @@ To correct the frequency-dependent beam squint the azimuth sample spacing must b
 	\label{fig:squint_correction}
 \end{figure*}
 After correcting the beam squint, azimuth presumming can be applied if desired to reduce the data size and increase SNR. Then, an Hann window is applied to the first and last $z$ samples of the raw data $s_{d}$ to mitigate the transient signal caused by the abrupt change in frequency due to the repetition of the chirp and the end of each pulse. A second Kaiser Window is then applied to reduce range processing sidelobes that are caused by the finite bandwidth. Finally, a fast time Fourier transform implements the range compression to obtain the SLC image $\hat{\rho}\left(R, \theta\right)$.\\ Each range line of the SLC thus compressed is then multiplied by $\sqrt{R^3}$ to compensate for the power spreading loss. In this manner, the intensity of the SLC data is directly proportional to the radar brightness $\beta_{0}$\cite{Raney1994}. 
-\subsection{Azimuth Processing}\label{sec:azimuth_processing}
+\subsection{Azimuth Processing}\label{sec:methods:azimuth_processing}
 In the case of KAPRI, the azimuth decimation after the correction of frequency-dependent squint as described in the preceding section is not sufficient to produce correct slc data: a strong residual  azimuth phase is observed on the response of point-like scatterer, especially in the VV channel. This additional phase contribution represents a problem for two reasons.
 \begin{enumerate*}
 	\item Because the azimuth samples have differing phases
 	, it will lead to a reduced amplitude and worse SNR after azimuth presumming. 
-  \item as each polarization displays a different ramp, the coherence magnitude of polarimetric phase differences will be reduced and the resulting coherence phase will be affected by a residual phase variation. For example, if the HH-VV phase is needed for calibration in the method described in \autoref{sec:proc_polcal} and the azimuth variation is not taken into account, the additional phase will lead to incorrect calibration parameters.\label{item:phase_variation}\end{enumerate*}\\
+  \item as each polarization displays a different ramp, the coherence magnitude of polarimetric phase differences will be reduced and the resulting coherence phase will be affected by a residual phase variation. For example, if the HH-VV phase is needed for calibration in the method described in \autoref{sec:methods:proc_polcal} and the azimuth variation is not taken into account, the additional phase will lead to incorrect calibration parameters.\label{item:phase_variation}\end{enumerate*}\\
 The azimuthal phase variation is attributed to the rotational geometry of acquisition: as the antennas are mounted with an  offset $L_{arm}$(see \autoref{fig:real_aperture_signal_model_geometry}) from their center of rotation~\cite{Lee2014}, the distance from the phase center to a scatterer varies with the azimuth position, which in turn results in a change in propagation phase. If the variation in distance is sufficiently large compared to the range resolution, the target will move through several range cells during the acquisition, an effect named \emph{range cell migration} in SAR processing, where it needs to be compensated before using the phase variation to synthesize the aperture. Fortunately, in the case of KAPRI the variation in distance is orders of magnitude smaller than the range resolution; thus only observed effect it the azimuth phase variation.\\
 To model the phase ramp, consider again the radar acquisition geometry of \autoref{fig:real_aperture_signal_model_geometry}:
 The antennas are mounted on a lever arm of length $L_{arm}$ that connects them to the azimuth scanner.
@@ -101,9 +101,9 @@ When $L_{ph}$ is known, the azimuth phase variation is corrected in each range l
 		&s_{d}\left(\theta^\prime\right) d\theta^\prime,
 	\end{aligned}
 \end{equation}
-The formula replaces the azimuth averaging described in \autoref{sec:proc_SLC}: the samples are now averaged with the appropriate phase factor so that the SNR improvement and the correction of the azimuth trend are combined in a single step. Usually, after convolution only the central pixel of the integration window is kept, to reduce the amount of data, as the original acquisition is always oversampled in azimuth. Because the model only describes the variation of the phase relative to closest approach $R_{0}$, the absolute phase is preserved; this is very important for interferometric applications.\\
+The formula replaces the azimuth averaging described in \autoref{sec:methods:signal_model}: the samples are now averaged with the appropriate phase factor so that the SNR improvement and the correction of the azimuth trend are combined in a single step. Usually, after convolution only the central pixel of the integration window is kept, to reduce the amount of data, as the original acquisition is always oversampled in azimuth. Because the model only describes the variation of the phase relative to closest approach $R_{0}$, the absolute phase is preserved; this is very important for interferometric applications.\\
 The procedure is similar to azimuth focusing of synthetic aperture data, where the cross-range resolution is obtained by the integration of the data in the azimuth-time direction. However, in the case of real aperture systems the resolution is limited by physical antenna beamwidth and the response of a target  occupies a single azimuth sample; unless the data is oversampled. In the first case, integrating the data in azimuth degrades the resolution because samples that do represent the same scatterer are combined.\\ To correct the phase variation without an excessive increase in azimuth resolution, the integration is limited to a window of size $\theta_{int}$. The optimal trade-off is empirically determined to be $0.6^\circ$, slightly larger than $\theta_{3dB}$.
-\subsection{Antenna Pattern Misalingment}\label{sec:misalingment}
+\subsection{Antenna Pattern Misalingment}\label{sec:methods:misalingment}
 In addition to the difference in frequency-dependent squint rate, the horizontally and the vertically polarized antennas appear have an azimuth mispointing of approx. $0.2^\circ$. It was first observed by analyzing the response of strong point-like target, where a significant misregistration between the $HH$ and the $VV$ images was observed. The misalignment is particularly problematic for cross-polar measurements: the transmitting and receiving patterns are not aligned. Using the available pattern information a power loss of approx 2.5 dB  compared to the ideal case is predicted. This loss reduces the SNR for the cross-polar channels, leading to noisier measurements.\\ While the offset between copolar channels can be corrected by coregistration without major consequences, there is no method capable to compensate the SNR loss in the crosspolar measurements a posteriori. An adjustable antenna mount was manufactured by replacing one of two hinges where the antennas are fixed on the towers (see \autoref{fig:adjustable_bracket}) with an adjustable bracket that allows to slide the antenna back and forth on the one side, obtaining the effect of rotating it around the center. Basing on the size of the antenna mounting bracket and on the amount of misaligment, it was determined that the horizontally polarized antennas need to be shifted by 1.8 mm to compensate form the pattern mispointing.
 \begin{figure}[ht]
 	\centering
@@ -111,7 +111,7 @@ In addition to the difference in frequency-dependent squint rate, the horizontal
 	\caption{Illustration of the adjustable antenna mount allowing to shift the patterns to bring the H and the V antennas into alignment. The left bracket can be slid towards the front, allowing the antenna to pivot on the right hinge. For small shifts, this movement approximates a rotation around the center of the antenna tower, as depicted by the blue antenna pattern.}
 	\label{fig:adjustable_bracket}
 \end{figure}
-\subsection{Removal of Topographic Phase}\label{sec:topo_removal}
+\subsection{Removal of Topographic Phase}\label{sec:methods:topo_removal}
 \begin{figure}[ht]
 	\centering
 	\includegraphics[scale=0.5]{kapri_antenna_arrangement}
@@ -135,7 +135,7 @@ Thus from \autoref{eq:prop_approximation}, $\phi_{ij}^{prop}$ can be estimated f
 \end{equation}
 This formula only holds if $\frac{b_{eq}^{ij}}{b_{eq}^{kl}}$ is integer\cite{Massonnet1996}, otherwise phase unwrapping of $\phi_{kl}^{prop}$ is necessary before rescaling.\\
 In order to correct for all the possible combinations that have a non-zero baseline, the measured scattering matrix $\mathbf{S}$ is converted into a polarimetric covariance matrix $\mathbf{C}$;  $\hat{\phi}_{ij}^{prop}$ it then subtracted from the phase of every non-diagonal element $ij$. The result is a flattened covariance matrix $\mathbf{C_{flat}}$ where the sole phase contribution is the polarimetric phase difference.\\
-\subsection{Polarimetric Calibration}\label{sec:proc_polcal}
+\subsection{Polarimetric Calibration}\label{sec:methods:proc_polcal}
 This matrix is the starting point for the polarimetric calibration proper;
 the procedure is based on the linear distortion matrix model\cite{Saraband1990, Sarabandi1992a} that relates the observed scattering matrix $\mathbf{S^\prime}$ with the theoretical one $\mathbf{S}$:
 \begin{equation}\label{eq:distorsion_scattering}
@@ -199,7 +199,7 @@ If radiometric calibration is desired, the value of $A$ can be determined after 
 	A =	\left(\frac{\sigma_{tri}}{C^{\prime}_{HHHH} R_{tri}^{3}}\right).
 \end{equation}
 where $R_{tri}$ is the slant range to the trihedral corner reflector. This is necessary to remove the range spread loss compensation as performed in \autoref{sec:methods}.
-\subsection{Experimental Data}\label{sec:data}
+\subsection{Experimental Data}\label{sec:methods:data}
 A calibration dataset was acquired in September 2016 at an urban-agricultural area near M\"{u}nsingen, Switzerland to test the methods described in the preceding sections. The data was acquired from the top of an hill approximately 800 m a.s.l, looking down towards a mixture of fields and forests, with the town in the far range region. 6 Trihedral Corner Reflectors were placed in the area for the determination of calibration parameters and to assess imaging quality. Three of these reflectors have triangular faces with a length of 40 cm, corresponding to a RCS of $\sigma=\frac{4}{3}\pi \frac{a^4}{\lambda^2}=25.5 dB$, while the remaining two are cubic corner reflector with $\sigma= 35 dB$, at the nominal central frequency of 17.2 GHz.
 	\begin{figure*}
 		\centering
@@ -207,9 +207,9 @@ A calibration dataset was acquired in September 2016 at an urban-agricultural ar
 		\caption{Pauli RGB composite ($R=\abs{HH-VV},G=\abs{HV}, B=\abs{HH+VV}$) of the imaged scene, geocoded using a DEM with 2m pixel spacing. Each channel is scaled according to its dynamics. The location of corner reflectors is marked by cyan circles, the reflector used the determination of polarimetric calibration parameters in orange. The image is overlaid on a 1:25000 scale Swiss topographic map (Reproduced with the authorisation of swisstopo  JD100042).}
 		\label{fig:pauli_rgb}
 	\end{figure*}
-The dataset was acquired with the horizontally polarized antenna group shifted towards the V group by 1.8 mm to compensate for the pattern misalignment as described in \autoref{sec:misalingment}.\\
+The dataset was acquired with the horizontally polarized antenna group shifted towards the V group by 1.8 mm to compensate for the pattern misalignment as described in \autoref{sec:methods:misalingment}.\\
 \autoref{fig:pauli_rgb} shows the calibrated Pauli RGB composite of the scene, resampled in Cartesian coordinates with the location of the reflectors marked using blue circles; their location and RCS is summarized in \autoref{tab:reflectors}.\\
-A separate dataset containing a dihedral reflector was acquired at our H\"{o}nggerberg campus in order to investigate the effect of antenna pattern misalignment on crosspolar acquisitions and to test the suitability of the computed adjustment value as discussed in \autoref{sec:misalingment}. This was done separately because of the logistical complications associated with the transportation and the setup of large calibration targets.
+A separate dataset containing a dihedral reflector was acquired at our H\"{o}nggerberg campus in order to investigate the effect of antenna pattern misalignment on crosspolar acquisitions and to test the suitability of the computed adjustment value as discussed in \autoref{sec:methods:misalingment}. This was done separately because of the logistical complications associated with the transportation and the setup of large calibration targets.
 
 \begin{table}[ht]
 	\centering
