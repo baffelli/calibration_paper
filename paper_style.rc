@@ -5,6 +5,7 @@ font.sans-serif : computer modern sans serif
 font.size       : 12
 text.usetex     : True  # use latex for all text handling
 #text.latex.preamble:
+text.latex.unicode : True
 #Math text
 mathtext.fontset:  cm
 axes.unicode_minus  : False

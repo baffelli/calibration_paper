@@ -8,7 +8,6 @@ import numpy as np
 def plot_phase(inputs, outputs, threads, config, params, wildcards):
     dem_seg_par = gpf.par_to_dict(inputs['dem_seg_par'])
     ifgram = gpf.load_binary(inputs['data'], dem_seg_par['width'], dtype=gpf.type_mapping['FCOMPLEX']).T
-    print(ifgram.shape)
     #Create rgb image
     mph, rgb, norm = vf.dismph(ifgram, k=0.2, sf=1)
     mph[mph==0] = 1

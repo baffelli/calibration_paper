@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os.path as path
 
 import matplotlib.pyplot as plt
@@ -29,11 +31,11 @@ def plot_figure_5(inputs, outputs, threads, config, params, wildcards):
                             basis='lexicographic').to_monostatic().boxcar_filter([3, 3])
     C_cal = mat.coherencyMatrix(C_cal_root, C_cal_par, gamma=True, bistatic=True,
                                 basis='lexicographic').to_monostatic().boxcar_filter([3, 3])
-
     #find the maxmium
     ridx = params.ref['ridx']
     azidx = az_idx(C, params.ref['azidx'])
     mx_idx = cf.maximum_around(np.abs(C), [ridx,azidx, 0,0], [2,4,1,1])
+    print(C_cal[mx_idx[0],mx_idx[1]].shape)
     #compute signature
     co_sig_cal, x_sig_cal, psi, chi = pf.pol_signature(C_cal[mx_idx[0],mx_idx[1]], n_points=300)
     co_sig, x_sig, psi, chi = pf.pol_signature(C[mx_idx[0], mx_idx[1]],
@@ -64,7 +66,7 @@ def plot_figure_5(inputs, outputs, threads, config, params, wildcards):
             ax.dist = 12.5
             ax.auto_scale_xyz([-90, 90], [-45, 45], [0, 1])
     f.subplots_adjust(wspace=0.1, hspace=0.1, bottom=0.25, top=1, left=0.2)
-    f.suptitle(params.ref['name'])
+    f.suptitle(u"{name}".format(name=params.ref['name']))
     f.savefig(outputs[0])
 
 

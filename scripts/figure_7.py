@@ -71,7 +71,7 @@ def plot_figure_7(inputs, outputs, threads, config, params, wildcards):
     ax.scatter(ref_dec_geo[:,0], ref_dec_geo[:,1], edgecolors=marker_color, s=90, facecolors='none',
                linewidths=0.5)
     #annotate scatter
-    pos_list = {'Chutzen': (45,20), 'Hindere Chlapf':(90,-10), 'Bifang':(10,10), 'Turle':(10,-20), 'Simmleremoos 1': (55,15),'Simmleremoos 2': (95,-20)}
+    pos_list = {'Chutzen': (45,20), 'Hindere Chlapf':(90,-10), 'Bifang':(10,10), 'Türle':(10,-20), 'Simmleremoos 1': (55,15),'Simmleremoos 2': (95,-20)}
     for ref, ref_pos in zip(params['ref'], ref_dec_geo):#iterate reflector and positions
         plt.annotate(
             ref['name'],
