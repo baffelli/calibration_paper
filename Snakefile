@@ -34,7 +34,6 @@ subworkflow new_data:
 rule all:
     input:
         new_data('geo/Chutzen.mli_gc.tif'),
-        old_data('diff/20160224_105201_ABBl_20160224_130521_ABBl.off_par'),
         'fig/figure_1.pdf',
         'fig/figure_2.pdf',
         'fig/figure_3.pdf',
@@ -278,11 +277,13 @@ rule cleanup_bibtex:
         'doc/library.bib'
     run:
         import re
-        url_re = re.compile(r"url\s=\s{\S+},")
+        url_re = re.compile(r"url = .+,")
         month_re = re.compile(r"(?P<tag>month)\s=\s\{{(?P<month>\S+)\}}")
         with open(input.bib) as infile, open(output[0],'w') as outfile:
             for line in infile:
-               outfile.write(re.sub(url_re, "",re.sub(month_re,r"\1 = \{\2\} ,",line)))
+                new_line = re.sub(url_re, "",re.sub(month_re,r"\1 = \{ \2 \},",line))
+                print(new_line)
+                outfile.write(new_line)
 
 
 ###############################################################################
