@@ -34,6 +34,7 @@ subworkflow new_data:
 rule all:
     input:
         new_data('geo/Chutzen.mli_gc.tif'),
+        old_data('diff/20160224_105201_ABBl_20160224_130521_ABBl.off_par'),
         'fig/figure_1.pdf',
         'fig/figure_2.pdf',
         'fig/figure_3.pdf',
@@ -112,8 +113,8 @@ rule fig2:
 #Plot figure 4: Gain in HV response after coregistration
 rule fig4:
     input:
-        C_HV_new = old_data("slc_corr/20160224_130521_ABBl.mli_dec"),
-        C_HV_old = old_data("slc_corr/20160224_105201_ABBl.mli_dec"),
+        C_HV_new = old_data("slc_coreg_common/20160224_130521_ABBl.mli_dec"),
+        C_HV_old = old_data("slc_coreg_common/20160224_105201_ABBl.mli_dec"),
         style = 'paper_style.rc'
     output:
         'fig/figure_4.pdf'

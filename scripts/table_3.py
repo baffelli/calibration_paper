@@ -25,7 +25,7 @@ def tcr_recap(inputs, outputs, threads, config, params, wildcards):
     with open(outputs[0], 'w+') as of:
         tabwrite = csv.writer(of, delimiter=',')
         tabwrite.writerow(
-            ['name', 'slant range', 'HH-VV amplitude imbalance', 'HH-VV phase imbalance', 'Polarisation purity', 'RCS', 'range_index', "azimuth_index"])
+            ['name', 'slant range', 'HH-VV amplitude imbalance', 'HH-VV phase imbalance', 'Polarization purity', 'RCS', 'range_index', "azimuth_index"])
         f_arr = []
         HHVV_arr = []
         for ref in refl_list:

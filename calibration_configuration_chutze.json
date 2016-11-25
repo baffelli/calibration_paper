@@ -43,7 +43,7 @@
 			"ABB_phase_center_offset": -0.12,
 			"BAA_phase_center_offset": -0.12
 	},
-    "coregistration":{
+    "polarimetric_coregistration":{
 			"rlks":1,
 			"azlks":1,
             "ridx":1051,
