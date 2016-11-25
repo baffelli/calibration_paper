@@ -90,22 +90,22 @@ The removal of the topographic phase contribution in the copolar phase differenc
 \subsection{Polarimetric Calibration}\label{sec:results:proc_polcal}
 
 								
-\begin{table}[h]
+\begin{table*}[h]
 	\centering
 	\pgfplotstabletypesetfile[
 		col sep=comma,
-		columns={name, slant range, HH-VV amplitude imbalance, HH-VV phase imbalance, Polarisation purity},
+		columns={name, slant range, HH-VV amplitude imbalance, HH-VV phase imbalance, Polarization purity},
 		every head row/.style={before row=\toprule,after row=\midrule},
 		every last row/.style={after row=\bottomrule},
 		columns/name/.style={column name={Name} ,string type},
 		columns/slant range/.style={precision=1, column name=\makecell{$R_{0} [m]$\\ Range distance}},
 		columns/HH-VV amplitude imbalance/.style={precision=3, column name={$f$}},
 		columns/HH-VV phase imbalance/.style={precision=3, column name={$\phi_r + \phi_t [^\circ]$}},
-		columns/Polarisation purity/.style={precision=3, column name={Purity $[dB]$}}
+		columns/Polarization purity/.style={precision=3, column name={Purity $[dB]$}}
 	]{../tab/table_3.csv}
 	\caption{Copolar phase ($\phi_r + \phi_t$) and amplitude imbalance ($f$) computed on the reflectors using the calibrated dataset. The polarization purity (VV/HV ratio) is shown additionally. Results for the reflector used to determine calibration parameters are not shown.}
 	\label{tab:polcal}
-\end{table}		
+\end{table*}		
 The methods described in the preceding sections were applied to prepare SLC images for each channel. For the final polarimetric calibration the procedure of \autoref{sec:methods:proc_polcal} was used; one reflector in the scene was used as a calibration target, with the four remaining reflectors used for the determination of the calibration performance.\\
 An initial assessment of the data quality is made  by computing polarization signatures\cite{VanZyl1987} for two of the five corner reflectors that were not used to determine the calibration parameters. They are plotted in \autoref{fig:signatures}.
 \begin{figure*}[hb]
@@ -122,7 +122,7 @@ An initial assessment of the data quality is made  by computing polarization sig
 	\subcaption{Reflector at 2690 m.}
 	\label{fig:signatures:far}
 	\end{subfigure}
-	\caption{Polarisation signatures for two trihedral corner reflectors at the locations "Hindere Chlapf" and "T\"{u}rle". For both plots, each panels shows: (a) uncalibrated copolar signature, (b) uncalibrated crosspolar signature; (c) calibrated copolar signature,(d): calibrated crosspolar signature. The power of each response is normalized to the corresponding maxium. A dramatic change in signature shape is observed after the calibration; it is mostly due to the removal of the global HHVV phase offset.}
+	\caption{Polarization signatures for two trihedral corner reflectors at the locations "Hindere Chlapf" and "T\"{u}rle". For both plots, each panels shows: (a) uncalibrated copolar signature, (b) uncalibrated crosspolar signature; (c) calibrated copolar signature,(d): calibrated crosspolar signature. The power of each response is normalized to the corresponding maximum. A dramatic change in signature shape is observed after the calibration; it is mostly due to the removal of the global HHVV phase offset.}
 	\label{fig:signatures}
 \end{figure*}
 

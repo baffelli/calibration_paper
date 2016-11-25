@@ -28,7 +28,7 @@
               "RX_Bl_position": 0.85 },
 	"coregistration":{
 			"rlks":1,
-			"azlks":3,
+			"azlks":1,
             "ridx":673,
             "azidx":899,
 			"rwin":10,
