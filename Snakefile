@@ -101,6 +101,10 @@ rule fig2:
         'fig/figure_{n,(2|3)}.pdf'
     input:
         VV = select_slc_for_rule_2,
+        a = new_data("slc_corr/20160914_145059_AAAl.slc"),
+        b = new_data("slc_coreg/20160914_145059_AAAl.slc"),
+        c = new_data("slc_corr/20160914_145059_BBBl.slc"),
+        d = new_data("slc_coreg/20160914_145059_BBBl.slc"),
         style = 'paper_style.rc'
     params:
         reflectors = list_of_reflectors,
@@ -173,9 +177,10 @@ def select_cov_for_rule_9(wildcards):
 rule fig9:
     input:
         style = 'paper_style.rc',
-#        aui = new_data("cov_normal/20160914_145059_l.par"),
-        HHVV_phase = select_cov_for_rule_9,
+        aui = new_data("cov_normal/20160914_145059_l.par"),#dummy
+        ali = new_data("cov_flat/20160914_145059_l.par"),
         C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
+#        HHVV_phase = select_cov_for_rule_9,
     output:
         'fig/figure_{n, (9)|(10)}.pdf'
     params:
