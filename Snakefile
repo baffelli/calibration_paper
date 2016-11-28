@@ -33,7 +33,7 @@ subworkflow new_data:
 
 rule all:
     input:
-        new_data('geo/Chutzen.mli_gc.tif'),
+#        new_data('geo/Chutzen.mli_gc.tif'),
         'fig/figure_1.pdf',
         'fig/figure_3.pdf',
         'fig/figure_3.pdf',
@@ -180,7 +180,7 @@ rule fig9:
         aui = new_data("cov_normal/20160914_145059_l.par"),#dummy
         ali = new_data("cov_flat/20160914_145059_l.par"),
         C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
-#        HHVV_phase = select_cov_for_rule_9,
+        HHVV_phase = select_cov_for_rule_9,
     output:
         'fig/figure_{n, (9)|(10)}.pdf'
     params:

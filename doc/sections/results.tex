@@ -19,7 +19,7 @@ In order to assess the processing quality and to appreciate the effect of the be
 
 
 \subsection{Azimuth Processing}\label{sec:results:azimuth_processing}
-The ability of the phase model described in \autoref{sec:methods:azimuth_processing} to explain the phase variation observed on the $VV$ channel response is tested on each reflector in the array: the maximum in range and azimuth was identified and the samples corresponding to the half power beamwidth were extracted at the range of maximum intensity. The unwrapped phase was then used to estimate $r_{ph}$ according to the procedure described in \autoref{eq:rph_estimation}.
+The ability of the phase model described in \autoref{sec:methods:azimuth_processing} to explain the observed phase variation  on the $VV$ channel response is tested on each reflector in the array: the maximum in range and azimuth was identified and the samples corresponding to the half power beamwidth were extracted at the range of maximum intensity. The unwrapped phase was then used to estimate $r_{ph}$ according to described in \autoref{eq:rph_estimation}.
 
 \begin{table}[ht]
 	\centering
@@ -36,8 +36,8 @@ The ability of the phase model described in \autoref{sec:methods:azimuth_process
 	\caption{Result of the phase center displacement fit for six trihedral corner reflectors located at different ranges. In the first column, the estimated phase center displacements for the H antenna are shown, in the second the ones for the V unit.}
 	\label{tab:rph_fit}
 \end{table}
-The resulting model parameters fit values  are shown in \autoref{tab:rph_fit} for the H and V antenna alongside with the distance from the radar and the name of the reflector as defines in \autoref{tab:reflectors}.\\
-The result of applying the correction to the TCR "Hindere Chlapf" at 673 m is displayed in panels (c) and (f) of \autoref{fig:tcr_mph}.
+The resulting model parameters fit values for the H and V antennas are shown in \autoref{tab:rph_fit} alongside with the distance from the radar and the name of the reflector, defined in \autoref{tab:reflectors}. Owing to the lack of sufficiently bright crosspolarizing point targets, the equivalent horizontal phase center locations for HV and VH channels were not estimated from the data and are therefore not displayed in the table. In the following, their location it assumed to be at the midpoint between $L_{ph}^{H}$ and $L_{ph}^{V}$, which corresponds to the theoretical equivalent phase center for these channels.\\
+The result of applying the correction of \autoref{eq:correction} to the TCR "Hindere Chlapf" at 673 m is displayed in panels (c) and (f) of \autoref{fig:tcr_mph}.
 In \autoref{fig:phase_response_VV:corrected} the phase and amplitude response in both the HH and VV channel is plotted for all reflectors. To produce the plot, all responses were aligned in azimuth, normalized to the maximum and the phase referenced to the phase at closest approach. In this way, an easier comparison of the azimuthal phase variation is facilitated.
 
 \begin{figure*}[ht]
