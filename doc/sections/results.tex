@@ -69,7 +69,7 @@ To verify the impact of the H-V pattern pointing shift as described in \autoref{
 \end{enumerate*}
 In \autoref{fig:hv_power}, the result of the above experiment is shown as the oversampled, coregistered azimuth response in the HV channel.
 \subsection{Removal of Topographic Phase}\label{sec:results:topo_removal}
-The removal of the topographic phase contribution in the copolar phase difference, as described in \autoref{sec:methods:topo_removal}, is visualized in  \autoref{fig:topo_phase} by modulating the hue of the image with the HHVV phase difference and its intensity with the corresponding $\mathbf{C}$ matrix element magnitude. 
+The removal of the topographic phase contribution in the copolar phase difference, as described in \autoref{sec:methods:topo_removal}, is visualized in  \autoref{fig:topo_phase} by modulating the hue of the image with the HH-VV phase difference, its intensity with the corresponding $\mathbf{C}$ matrix element magnitude and by setting the saturation of the image by a nonlinear threshold function of the copolar coherence magnitude, estimated using a $\mathrm{5 \times 5}$ sample window. 
 \begin{figure*}[hb]
 	\centering
 	\begin{subfigure}[t]{0.5\textwidth}
@@ -84,7 +84,7 @@ The removal of the topographic phase contribution in the copolar phase differenc
 	\subcaption{Without topographic phase.}
 	\label{fig:topo_phase:corrected}
 	\end{subfigure}
-	\caption{HHVV phase difference in radar coordinates, (a) before and (b)  after the removal of the topographic phase term as described in \autoref{sec:methods:topo_removal}. The hue of the image is modulated by the covariance phase, the intensity by the magnitude, the saturation by the copolar coherence magnitude, as shown in the bottom colorbar and plot. The locations and names of reflectors described in \autoref{tab:reflectors} are plotted. A fringe pattern is clearly visible in (a), which is removed by the proposed correction, as plotted in (b), leaving a phase offset that will be removed by the polarimetric calibration.}
+	\caption{HH-VV phase difference in radar coordinates, (a) before and (b)  after the removal of the topographic phase term as described in \autoref{sec:methods:topo_removal}. The hue of the image is modulated by the covariance phase, the intensity by the magnitude, the saturation by the copolar coherence magnitude, as shown in the bottom colorbar and plot. The locations and names of reflectors described in \autoref{tab:reflectors} are plotted. A fringe pattern is clearly visible in (a), which is removed by the proposed correction, as plotted in (b), leaving a phase offset that will be removed by the polarimetric calibration.}
 	\label{fig:topo_phase}
 \end{figure*}
 \subsection{Polarimetric Calibration}\label{sec:results:proc_polcal}

@@ -45,6 +45,7 @@ rule all:
         'fig/figure_9.pdf',
         'fig/figure_10.pdf',
         'fig/figure_11.pdf',
+        'fig/figure_12.pdf',
         'tab/table_1.csv',
         'tab/table_2.csv',
         'tab/table_3.csv',
@@ -203,6 +204,25 @@ rule fig11:
         'fig/figure_11.pdf'
     script:
         'scripts/figure_11.py'
+
+###############################################################################
+#Plot figure 12: Squint vs azimuth for VV and HH channel
+def select_raw_for_rule_12(wildcards):
+    chan_name = 'AAAl' if int(wildcards.n) == 12 else 'BBBl'
+    chan = "raw_chan/20160914_145059_{chan}.raw".format(chan=chan_name)
+    par = "raw_chan/20160914_145059_{chan}.raw_par".format(chan=chan_name)
+    chan = new_data(chan)
+    par = new_data(par)
+    return chan, par
+rule fig12:
+    input:
+        style = 'paper_style.rc',
+        raws =  select_raw_for_rule_12
+    output:
+        'fig/figure_{n, (12)|(13)}.pdf'
+    script:
+        'scripts/figure_12.py'
+
 ###############################################################################
 #Make table 1: Location and RCS for all reflectors
 rule table1:
