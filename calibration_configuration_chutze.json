@@ -38,10 +38,10 @@
 	},
 	"phase_correction":		{
 			"integration_length":	0.6,
-			"AAA_phase_center_offset": 0.02,
-			"BBB_phase_center_offset": -0.12,
-			"ABB_phase_center_offset": -0.12,
-			"BAA_phase_center_offset": -0.12
+			"AAA_phase_center_offset": -0.04,
+			"BBB_phase_center_offset": 0.12,
+			"ABB_phase_center_offset": 0.12,
+			"BAA_phase_center_offset": 0.12
 	},
     "polarimetric_coregistration":{
 			"rlks":1,

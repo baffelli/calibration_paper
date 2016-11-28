@@ -35,7 +35,7 @@ rule all:
     input:
         new_data('geo/Chutzen.mli_gc.tif'),
         'fig/figure_1.pdf',
-        'fig/figure_2.pdf',
+        'fig/figure_3.pdf',
         'fig/figure_3.pdf',
         'fig/figure_4.pdf',
         'fig/figure_5.pdf',
