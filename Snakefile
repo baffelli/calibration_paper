@@ -297,7 +297,7 @@ rule paper:
     input:
         sections = glob.glob('doc/sections/*.tex'),
         main_paper = 'doc/calibration_paper.tex',
-        figures = expand('fig/figure_{n}.pdf', n=range(1,9)),
+        figures = glob.glob('fig/figure_*.pdf'),
         library = 'doc/library.bib'
     output:
         paper_pdf = 'doc/calibration_paper.pdf'
