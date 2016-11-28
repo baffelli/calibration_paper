@@ -23,8 +23,8 @@ def center_width_from_slice(sl):
 k = 0.3
 sf = 0.4
 mph_dict = {'k': k, 'sf': sf, 'coherence': False, 'peak': False}
-az_sl = slice(1392,3600)
-r_sl = slice(550,1850)
+
+width = (10, 200)
 
 
 
@@ -37,8 +37,21 @@ def plot_figure_11(inputs, outputs, threads, config, params, wildcards):
     gs = gridspec.GridSpec(*(2, 3), height_ratios=[1, 1])
     gs.update(hspace=0.2, wspace=0.2)
     #data to plot
-    raw = inputs['raw'][0]
-    raw_par = inputs['raw'][1]
+    print(inputs['raws'])
+    raw = inputs['raws'][0]
+    raw_par = inputs['raws'][1]
+    raw_data = gpf.rawData(raw_par, raw)
+    #Slc parameters
+    slc = gpf.par_to_dict(inputs.slc_par)
+    #Slice
+    az_slice = raw_data.azimuth_slice(params.ref['azidx'], width[1])
+    #Construct
+    raw_sl = raw_data[:, az_slice] * 1
+    #Range filter
+    raw_filt = _sig.hilbert(raw_sl.filter_range_spectrum(slc, params.ref['ridx'], 30), axis=0)
+    f = plt.figure()
+    plt.imshow(np.abs(raw_filt), aspect=1e-1)
+    plt.show()
     f.savefig(outputs[0])
     # plt.show()
     # print(inputs.HHVV_phase)

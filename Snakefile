@@ -217,7 +217,10 @@ def select_raw_for_rule_12(wildcards):
 rule fig12:
     input:
         style = 'paper_style.rc',
-        raws =  select_raw_for_rule_12
+        raws =  select_raw_for_rule_12,
+        slc_par = new_data("slc_chan/20160914_145059_BBBl.slc.par")
+    params:
+        ref = list_of_reflectors[1]
     output:
         'fig/figure_{n, (12)|(13)}.pdf'
     script:
