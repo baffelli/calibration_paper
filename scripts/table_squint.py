@@ -22,7 +22,7 @@ def center_width_from_slice(sl):
     return center, width
 
 
-def squint_vec(rawdata, z=1000):
+def squint_vec(rawdata, z=2000):
     win_slice = slice(z, rawdata.shape[0] - z)
     rawdata_sl = rawdata[win_slice,:]#window the edges
     max_idx = np.argmax(np.abs(rawdata_sl), axis=1)
@@ -30,7 +30,7 @@ def squint_vec(rawdata, z=1000):
 
 
 width = (10, 200)
-rwin = 20
+rwin = 16
 
 
 def compute_table_4(inputs, outputs, threads, config, params, wildcards):
