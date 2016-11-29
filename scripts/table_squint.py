@@ -66,6 +66,9 @@ def compute_table_4(inputs, outputs, threads, config, params, wildcards):
             out_row = list(row)
             out_row.insert(0, name)
             writer.writerow(out_row)
+        mean = list(np.mean(res, axis=0))
+        mean.insert(0, 'mean')
+        writer.writerow(mean)
     print(res)
 
 
