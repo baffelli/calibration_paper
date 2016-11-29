@@ -1,5 +1,11 @@
 \section{Results}\label{sec:results}
 \subsection{Frequency Squint Correction}\label{sec:results:squint_correction}
+\begin{figure*}[ht]
+	\centering
+	\includegraphics{figure_12}
+	\caption{Azimuth-frequency response of the "Hindere Chlapf" TCR: the raw data samples around the reflectors azimuth location were extracted, then filtered in range by Fourier transforming them along the frequency axis, appliyng an Hamming window about the range location and converting them  back into the time domain with an inverse Fourier transform. By doing so, only the portion of the range spectrum close to the reflectors location was kept. Finally, the complex envelope of the data was extracted using a discrete Hilbert transform. This is conceptually equivalent to the plot of \autoref{fig:squint_correction}. Panel (a) shows the result for the HH channel, (b) for the VV channel, (c) for the HH channel after the interpolation described in \autoref{sec:methods:squint_correction}  and (d) the same for the VV channel.}
+	\label{fig:raw_squint}
+\end{figure*}
 Panels (a) and (b) of \autoref{fig:scene_mph} show the effect of the processing described in and \autoref{sec:methods:signal_model} and \autoref{sec:methods:squint_correction} ; in (a) the raw data is directly range compressed as is, while in (b) the frequency-squint compensation is applied to the data before range focusing.\\ 
 In order to assess the processing quality and to appreciate the effect of the beam squint correction,  the oversampled impulse response of  TCR "Hindere Chlapf" at 673 m range is plotted in \autoref{fig:tcr_mph}. No azimuth averaging was applied to this data, to better visualize the effects described above. The plots on the left side (a), and (d) contain the response obtained by range compression of the acquired data without any transformation. The phase displays a cross-like pattern, centered on the maximum, presumably the effect of the frequency-dependent beam squint during the scan.\\ A visual comparison with the responses obtained enabling the squint compensation shows an improvement in range resolution, which is verified numerically by fitting a spline on the range response at the maximum and computing its $3 dB$ width. The azimuth resolution is also estimated in a similar manner.\\ The numerical results are displayed in each plot of \autoref{fig:tcr_mph}.
 \begin{figure*}[ht]

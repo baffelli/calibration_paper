@@ -10,6 +10,7 @@ import matplotlib.ticker as tick
 import string
 import scipy.signal as _sig
 
+import csv
 
 # Return the decimated azimuth position
 def az_idx(ds, idx):
@@ -43,7 +44,7 @@ def compute_table_4(inputs, outputs, threads, config, params, wildcards):
             raw = inputs[chan + proc]
             raw_par = raw + '_par'
             raw_data = gpf.rawData(raw_par, raw)
-            idx_res = np.ravel_multi_index((idx_chan, idx_proc), (2,2))
+            idx_res = np.ravel_multi_index((idx_proc, idx_chan), (2,2))
             for idx_ref, ref in enumerate(params.ref):
                 #Slice
                 az_slice = raw_data.azimuth_slice(ref['azidx'], width[1])
@@ -58,7 +59,13 @@ def compute_table_4(inputs, outputs, threads, config, params, wildcards):
                 sq_par = np.polyfit(raw_data.freqvec[win_slice], squint,1)
                 res[idx_ref, idx_res] = sq_par[0]
     names = [ref['name'] for ref in params.ref]
-    res = np.hstack((names,res))
+    with open(outputs[0], 'w+') as of:
+        writer = csv.writer(of, delimiter=',')
+        writer.writerow(header)
+        for name, row in zip(names, res):
+            out_row = list(row)
+            out_row.insert(0, name)
+            writer.writerow(out_row)
     print(res)
 
 
