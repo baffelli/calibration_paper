@@ -30,7 +30,7 @@ def squint_vec(rawdata, z=2000):
 
 
 width = (10, 200)
-rwin = 16
+rwin = 30
 
 
 def compute_table_4(inputs, outputs, threads, config, params, wildcards):
