@@ -20,99 +20,78 @@ def center_width_from_slice(sl):
     width = (sl.stop - sl.start)
     return center, width
 
-k = 0.3
-sf = 0.4
-mph_dict = {'k': k, 'sf': sf, 'coherence': False, 'peak': False}
+
+def squint_vec(rawdata, z=1000):
+    win_slice = slice(z, rawdata.shape[0] - z)
+    rawdata_sl = rawdata[win_slice,:]#window the edges
+    max_idx = np.argmax(np.abs(rawdata_sl), axis=1)
+    return max_idx, win_slice
+
 
 width = (10, 200)
+shp = (2,2)
 
+rwin = 20
 
+def format_freq(raw_par, x, pos):
+    rel_freq = (x - raw_par.RF_center_freq) / 1e6#relative frequency
+    sign = '-' if rel_freq < 0 else '+'
+    lab = r'$f_c$ {sign:^10} {rel_freq:^1.0f}'.format(sign= sign, rel_freq=np.abs(rel_freq))
+    return lab
 
-def plot_figure_11(inputs, outputs, threads, config, params, wildcards):
+def plot_figure_12(inputs, outputs, threads, config, params, wildcards):
     # Create figure
     plt.style.use(inputs['style'])
     fig_w, fig_h = plt.rcParams['figure.figsize']
     f = plt.figure(figsize=(2 * fig_w, 2 * fig_h))
     # Grid of plots for figures
-    gs = gridspec.GridSpec(*(2, 3), height_ratios=[1, 1])
-    gs.update(hspace=0.2, wspace=0.2)
+    gs = gridspec.GridSpec(*shp, height_ratios=[1, 1])
+    gs.update(hspace=0.2, wspace=0.4)
     #data to plot
-    print(inputs['raws'])
-    raw = inputs['raws'][0]
-    raw_par = inputs['raws'][1]
-    raw_data = gpf.rawData(raw_par, raw)
-    #Slc parameters
-    slc = gpf.par_to_dict(inputs.slc_par)
-    #Slice
-    az_slice = raw_data.azimuth_slice(params.ref['azidx'], width[1])
-    #Construct
-    raw_sl = raw_data[:, az_slice] * 1
-    #Range filter
-    raw_filt = _sig.hilbert(raw_sl.filter_range_spectrum(slc, params.ref['ridx'], 20), axis=0)
-    f = plt.figure()
-    plt.imshow(np.abs(raw_filt), aspect=1e-1)
+    for idx_chan, chan in enumerate(('HH', 'VV')):
+        for idx_proc, proc in enumerate(('', '_desq')):
+            raw = inputs[chan + proc]
+            raw_par = raw + '_par'
+            raw_data = gpf.rawData(raw_par, raw)
+            #Slc parameters
+            slc = gpf.par_to_dict(inputs.slc_par)
+            #Slice
+            az_slice = raw_data.azimuth_slice(params.ref['azidx'], width[1])
+            #Construct
+            raw_sl = raw_data[:, az_slice] * 1
+            #Range filter
+            raw_filt = _sig.hilbert(raw_sl.filter_range_spectrum(slc, params.ref['ridx'], rwin), axis=0)
+            ax = f.add_subplot(gs[idx_proc, idx_chan])
+            az_vec = np.arange(-raw_filt.shape[1]//2, raw_filt.shape[1]//2) * raw_data.azspacing
+            squint_idx, win_slice = squint_vec(raw_filt)
+            squint = az_vec[squint_idx[::-1]]
+            #fit squint
+            sq_par = np.polyfit(raw_data.freqvec[win_slice], squint,1)
+            squint_fit = raw_data.freqvec * sq_par[0] + sq_par[1]
+            print(sq_par)
+            ax.imshow(np.abs(raw_filt), aspect=1e-8, extent = [az_vec[0], az_vec[-1], raw_data.freqvec[0], raw_data.freqvec[-1],])
+            ax.plot(squint_fit, raw_data.freqvec)
+            #Text with fit params
+            bbox_props = dict(boxstyle="square", fc="white", ec="w", lw=2)
+            t = ax.text(0.1, 0.1, "$a=${:.2f} $\\frac{{\circ}}{{GHz}}$".format(sq_par[0]/1e-9), size=8, bbox=bbox_props, horizontalalignment='left',
+                                transform=ax.transAxes)  # set label
+            if idx_chan == idx_proc == 0:
+                ax.set_xlabel(r' $\theta_{sq}$ (Azimuth from pointing at $f_c$) $[\circ]$')
+                ax.set_ylabel(r'Frequency $f[MHz]$')
+            fm_func = lambda x, pos: format_freq(raw_data, x, pos)
+            fmt = tick.FuncFormatter(fm_func)
+            ax.yaxis.set_major_formatter(fmt)
+            #Plot index
+            current_idx = np.ravel_multi_index((idx_chan , idx_proc), shp)
+            label_name = string.ascii_lowercase[current_idx]
+            # current_ax = axarr[idx_chan, idx_proc]
+            ax.title.set_text(r"({label_name})".format(label_name=label_name))
+            f.suptitle(params.ref['name'])
+            # ax.xaxis.set_major_locator(tick.MultipleLocator(0.5))
+            f.savefig(outputs[0])
     plt.show()
-    f.savefig(outputs[0])
-    # plt.show()
-    # print(inputs.HHVV_phase)
-    # HHVV = gpf.gammaDataset(inputs.C_cal_par, inputs.HHVV_phase[0], dtype=gpf.type_mapping['FCOMPLEX'])
-    # HH = gpf.gammaDataset(inputs.C_cal_par, inputs.HHVV_phase[1], dtype=gpf.type_mapping['FCOMPLEX'])
-    # VV = gpf.gammaDataset(inputs.C_cal_par, inputs.HHVV_phase[2], dtype=gpf.type_mapping['FCOMPLEX'])
-    # win = [3, 2]  # multilooking window
-    # HHVV = _ifun.estimate_coherence(HHVV, HH, VV, win, discard=True)
-    # mli = cf.smooth(VV, win, discard=True)
-    # az_vec = HHVV.az_vec
-    # r_vec = HHVV.r_vec
-    # # Create RGB
-    # mph_dict = {'k': 0.08, 'sf': 0.9, 'coherence': True, 'peak': False, 'mli': mli, 'coherence_threshold': 0.6,
-    #             'coherence_slope': 12}
-    # mph, rgb, norm = vf.dismph(HHVV, **mph_dict)  # create rgb image
-    # pal, ext = vf.dismph_palette(HHVV, **mph_dict)
-    # print(ext)
-    #
-    # plt.style.use(inputs['style'])
-    # fig_w, fig_h = plt.rcParams['figure.figsize']
-    # f = plt.figure(figsize=(2 * fig_w, 2 * fig_h))
-    # gs = gridspec.GridSpec(*(2, 4), height_ratios=[1, 0.2])
-    # gs.update(hspace=0.3, wspace=0.0)
-    # im_ax = f.add_subplot(gs[0, ::])
-    # aspect = fig_h / fig_w
-    # im_ax.imshow(mph, extent=[az_vec[0], az_vec[-1], r_vec[-1], r_vec[1]], aspect=1 / 20 * aspect, origin='upper')
-    # im_ax.yaxis.set_label_text(r'range [m]')
-    # im_ax.xaxis.set_label_text(r'azimuth [$^\circ$]')
-    # im_ax.yaxis.set_major_locator(tick.MultipleLocator(500))
-    # im_ax.xaxis.set_major_locator(tick.MultipleLocator(20))
-    # # Plot reflectors
-    # pos_list = {'Simmleremoos 2': (-10, 15), 'Simmleremoos 1': (-10, -15)}  # position to avoid overlapping
-    # box = dict(boxstyle="round", fc="w", lw=0.2)
-    # for ref in params['ref']:
-    #     dec_pos = (int(ref['ridx']) / win[0], HHVV.azidx_dec(int(ref['azidx'])))
-    #     grid_pos = (az_vec[dec_pos[1]], r_vec[dec_pos[0]])
-    #     im_ax.plot(*grid_pos, marker='o', markeredgecolor='#43a2ca', mfc='none', mew=2, ms=10)
-    #     annotations = plt.annotate(ref['name'], xy=grid_pos, color='black', size=7,
-    #                                xytext=pos_list.get(ref['name'], (0 ,-15)), textcoords='offset points', bbox=box,
-    #                                horizontalalignment='center')
-    # # plot palette
-    # pal_ax = f.add_subplot(gs[-1, 1])
-    # pal_ax.imshow(pal, extent=ext, aspect=500)
-    # pal_ax.set_ylabel(r'Phase')
-    # pal_ax.set_xlabel(r'Intensity')
-    # pal_ax.grid(b=False)
-    # pal_ax.set_yticks([-np.pi, 0, np.pi])
-    # pal_ax.set_yticklabels([r"$-\pi$", r"$0$", r"$\pi$"])
-    # ext_list = [ext[0], (ext[0] + ext[1]) / 2, ext[1]]
-    # pal_ax.set_xticks([])
-    # # pal_ax.set_xticklabels([r"{{val:.2f}}".format(val=val) for val in ext_list])
-    # # Plot coherence
-    # coh_ax = f.add_subplot(gs[-1, 2])
-    # c = np.linspace(0, 1)
-    # c_scale = vf.scale_coherence(c, threshold=mph_dict['coherence_threshold'], slope=mph_dict['coherence_slope'])
-    # coh_ax.plot(c, c_scale)
-    # coh_ax.xaxis.set_label_text(r'Coherence')
-    # coh_ax.yaxis.set_label_text(r'Saturation')
-    # coh_ax.set_aspect(1)
-    # f.savefig(outputs[0])
 
 
-plot_figure_11(snakemake.input, snakemake.output, snakemake.threads, snakemake.config, snakemake.params,
+
+plot_figure_12(snakemake.input, snakemake.output, snakemake.threads, snakemake.config, snakemake.params,
               snakemake.wildcards)

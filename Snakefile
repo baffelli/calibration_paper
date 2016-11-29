@@ -50,6 +50,7 @@ rule all:
         'tab/table_2.csv',
         'tab/table_3.csv',
         'tab/RMS_polcal.csv',
+        'tab/table_squint.csv',
         'doc/calibration_paper.pdf'
 
 
@@ -216,26 +217,21 @@ def select_raw_for_rule_12(wildcards):
     return chan, par
 
 
-def files_for_rule_12(wildcards):
-    chan_str = "raw_{proc}/20160914_145059_{chan}.raw"
-    files = {}
-    for chan, chan_name in zip(['AAAl', 'BBBl'], ['HH', 'VV']):
-        for proc, proc_name in  zip(['chan', 'desq'], ['chan', 'desq']):
-            chan = chan_str.format(chan=chan, proc=proc)
-            files['raw_' + proc + '_' + chan_name] = chan
-    return files
 
 
+chan_string = new_data("raw_{}/20160914_145059_{}.raw")
 rule fig12:
     input:
+        HH = chan_string.format('chan', 'AAAl'),
+        VV = chan_string.format('chan', 'BBBl'),
+        HH_desq = chan_string.format('desq', 'AAAl'),
+        VV_desq = chan_string.format('desq', 'BBBl'),
         style = 'paper_style.rc',
-        raw = new_data(expand(chan_str, proc=['chan', 'desq'], chan=['AAAl', 'BBBl'])),
-        raw_par = new_data(expand(chan_str + '_par', proc=['chan', 'desq'], chan=['AAAl', 'BBBl'])),
         slc_par = new_data("slc_chan/20160914_145059_BBBl.slc.par")
     params:
         ref = list_of_reflectors[1]
     output:
-        'fig/figure_{n, (12)|(13)}.pdf'
+        'fig/figure_12.pdf'
     script:
         'scripts/figure_12.py'
 
@@ -281,6 +277,23 @@ rule table3:
         ref = list_of_reflectors
     script:
         'scripts/table_3.py'
+
+###############################################################################
+#Make table 4: Squint parameters:
+rule table4:
+    input:
+        HH = chan_string.format('chan', 'AAAl'),
+        VV = chan_string.format('chan', 'BBBl'),
+        HH_desq = chan_string.format('desq', 'AAAl'),
+        VV_desq = chan_string.format('desq', 'BBBl'),
+        slc_par = new_data("slc_chan/20160914_145059_BBBl.slc.par")
+    params:
+        ref = list_of_reflectors
+    output:
+        'tab/table_squint.csv'
+    script:
+        'scripts/table_squint.py'
+
 
 
 ###############################################################################
