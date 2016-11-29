@@ -77,7 +77,7 @@ def plot_figure_12(inputs, outputs, threads, config, params, wildcards):
                                 transform=ax.transAxes)  # set label
             if idx_chan == idx_proc == 0:
                 ax.set_xlabel(r' $\theta_{sq}$ (Azimuth from pointing at $f_c$) $[\circ]$')
-                ax.set_ylabel(r'Frequency $f[MHz]$')
+                ax.set_ylabel(r'Chirp frequency $f[MHz]$')
             fm_func = lambda x, pos: format_freq(raw_data, x, pos)
             fmt = tick.FuncFormatter(fm_func)
             ax.yaxis.set_major_formatter(fmt)
