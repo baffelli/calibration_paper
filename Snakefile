@@ -6,7 +6,7 @@ import pyrat.gpri_utils
 from types import SimpleNamespace
 import re
 import json
-
+from collections import namedtuple
 
 configfile: './calibration_configuration_chutze.json'
 
@@ -214,10 +214,23 @@ def select_raw_for_rule_12(wildcards):
     chan = new_data(chan)
     par = new_data(par)
     return chan, par
+
+
+def files_for_rule_12(wildcards):
+    chan_str = "raw_{proc}/20160914_145059_{chan}.raw"
+    files = {}
+    for chan, chan_name in zip(['AAAl', 'BBBl'], ['HH', 'VV']):
+        for proc, proc_name in  zip(['chan', 'desq'], ['chan', 'desq']):
+            chan = chan_str.format(chan=chan, proc=proc)
+            files['raw_' + proc + '_' + chan_name] = chan
+    return files
+
+
 rule fig12:
     input:
         style = 'paper_style.rc',
-        raws =  select_raw_for_rule_12,
+        raw = new_data(expand(chan_str, proc=['chan', 'desq'], chan=['AAAl', 'BBBl'])),
+        raw_par = new_data(expand(chan_str + '_par', proc=['chan', 'desq'], chan=['AAAl', 'BBBl'])),
         slc_par = new_data("slc_chan/20160914_145059_BBBl.slc.par")
     params:
         ref = list_of_reflectors[1]

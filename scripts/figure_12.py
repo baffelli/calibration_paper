@@ -48,7 +48,7 @@ def plot_figure_11(inputs, outputs, threads, config, params, wildcards):
     #Construct
     raw_sl = raw_data[:, az_slice] * 1
     #Range filter
-    raw_filt = _sig.hilbert(raw_sl.filter_range_spectrum(slc, params.ref['ridx'], 30), axis=0)
+    raw_filt = _sig.hilbert(raw_sl.filter_range_spectrum(slc, params.ref['ridx'], 20), axis=0)
     f = plt.figure()
     plt.imshow(np.abs(raw_filt), aspect=1e-1)
     plt.show()
