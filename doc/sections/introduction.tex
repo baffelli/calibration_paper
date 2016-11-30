@@ -26,14 +26,23 @@ It employs  2 meter long, vertically polarized slotted waveguide antennas, givin
 In terms of hardware, the feature distinguishing KAPRI from its predecessor is the addition of horizontally polarized antennas and switches that permit to connect transmitter and receiver to either type of antenna. Together with modifications in the control software, they enable it to acquire a full polarimetric-interferometric dataset by cycling through all the combinations of transmitted and received polarization during the acquisition.
 \begin{table}
 	\centering
-	\begin{tabular}{ll}
-		\hline
-		Center frequency $f_c$ & 17.2 GHz\\
-		Chirp Bandwidth $B$ & 200 MHz\\
-		Azimuth 3 dB beamwidth $\theta_{3dB}$ & 0.385$^\circ$\\
-		\hline
-	\end{tabular}
-	\caption{Summary of KAPRIs main parameters.}
+	\pgfplotstabletypeset[
+		col sep=&,	% specify the column separation character
+		row sep=\\,	% specify the row separation character
+		columns/Parameter/.style={string type}, % specify the type of data
+		columns/Value/.style={string type}, % specify the type of data for all columns
+		every head row/.style={before row=\toprule,after row=\midrule},
+		every last row/.style={after row=\bottomrule},
+	]{
+		Parameter & Value\\
+		Modulation & FM-CW 250 $\mu s$ to 16 $ms$\\
+		Center frequency & 17.2 GHz\\
+		Bandwidth & 200 MHz\\
+		Range resolution& 0.95 @ -26 dB peak sidelobe\\
+		Azimuth pattern beamwidth& $0.385^\circ$ 3dB beamwidth\\
+		Elevation pattern beamwidth& $35^\circ$ 3dB beamwidth\\
+	}
+	\caption{Summary of main KAPRIs parameters.}
 \end{table}
 \subsection{Contributions of This Paper}
 The following contributions are made in this paper:
