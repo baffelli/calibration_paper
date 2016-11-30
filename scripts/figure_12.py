@@ -28,7 +28,7 @@ def squint_vec(rawdata, z=1000):
     return max_idx, win_slice
 
 
-width = (10, 200)
+width = (10, 100)
 shp = (2,2)
 
 rwin = 20
