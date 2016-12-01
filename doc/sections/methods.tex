@@ -1,11 +1,11 @@
 \section{Methods and Data}\label{sec:methods}
 \subsection{KAPRI: FMCW radar signal model}\label{sec:methods:signal_model}
-A basic requirement to generate calibrated polarimetric data is the availability of properly processed SLC images for all elements of the polarimetric scattering matrix. It is therefore necessary to understand the data acquisition process and correct several effects specific to KAPRI.  
+A fundamental requirement to generate calibrated polarimetric data is the availability of properly processed SLC images for all elements of the polarimetric scattering matrix. To process them, it necessary to understand the data acquisition and correct several effects specific to KAPRI.  
 For this purpose a signal model for type II\cite{Caduff2015} radar data using FMCW signaling\cite{Stove1992} is introduced.\\
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=1]{real_aperture_signal_model_geometry}
-	\caption{Geometric description of the displaced phase center with all relevant parameters.. $R$ is the slant range from the radar to the point scatterer, $\theta_{3dB}$ is the antenna half power beamwidth, which is represented by the gray triangle. The size of the antenna aperture is $L_{wg}$, the corresponding azimuth resolution (in distance units) is $\delta_{az}$. The inset figure is used to derive the azimuth phase variation. $L_{ph}$ is the phase center displacement, $L_{arm}$ is the antenna rotation lever arm, $R_{0}$ the range of closest approach and $\alpha$ the additional angle to obtain closest approach when the phase center is not in the midpoint of the array but the rotation angle is measured assuming $L_{ph}=0$.}
+	\caption{Geometric description of the displaced phase center with all relevant parameters. $R$ is the slant range from the radar to the point scatterer, $\theta_{3dB}$ is the antenna half power beamwidth, which is represented by the gray triangle. The size of the antenna aperture is $L_{wg}$, the corresponding azimuth resolution (in distance units) is $\delta_{az}$. The inset figure is used to derive the azimuth phase variation. $L_{ph}$ is the phase center displacement, $L_{arm}$ is the antenna rotation lever arm, $R_{0}$ the range of closest approach and $\alpha$ the additional rotation angle necessary to obtain closest approach when the phase center is not in the midpoint of the array but the rotation angle is measured assuming $L_{ph}=0$.}
 	\label{fig:real_aperture_signal_model_geometry}
 \end{figure}
 Consider a coordinate system having its origin at the location of a radar, as depicted in \autoref{fig:real_aperture_signal_model_geometry}. In this system, the antenna is mounted on a lever arm of length $L_{arm}$; its mainlobe is parallel to the $x$ axis when the pointing angle $\theta$ is 0. The radar images a scene with a complex reflectivity distribution $\rho\left(x,y\right)$ by measuring range profiles $\hat{\rho}\left(R, \theta\right)$ for a number of antenna azimuths angles $\theta = \operatorname{arctan}\left(\frac{y}{x}\right)$ by rotating the antenna assembly with angular speed $\omega$. Each profile is measured by transmitting a linearly modulated signal of duration $t_{chirp}$ with bandwidth $B$ and center frequency $f_c$:
@@ -16,15 +16,15 @@ The total time that the signal needs to travel to a scatterer at range $R$ and b
 \begin{equation}
 		s_r\left(t\right) = \rho e^{j 2 \pi \left( \left(t - \frac{2 R}{c}\right) f_{c} +  \frac{B}{t_{chirp}} \left(t - \frac{2 R}{c}\right)^2 \right)}.
 \end{equation}
-In the radar, $s_r$ is mixed with the transmitted chirp $s_t$  to remove the linear modulation resulting in a deramped signal $s_d$ which is sampled and stored: 
+In the radar, $s_r$ is mixed with the transmitted chirp $s_t$  to remove the linear modulation, resulting in a deramped signal $s_d$ which is sampled and stored: 
 \begin{equation}\label{eq:deramp}
 	\begin{aligned}
 	s_{d}\left(t\right) &=s_t\left(t\right)s_r\left(t\right)^* =\\ 
 	&\sigma e^{j 4 \pi \frac{ R}{c}f_c}  e^{j 4 \pi \frac{2 R B }{c t_{chirp}} t}  e^{j 4 \pi \frac{2 R^2 B}{c^2}}.
 	\end{aligned}
 \end{equation} 
-Its frequency $f_{b} = \frac{4 R B}{c t_{chirp}}$ is proportional to the slant range $R$;
-two phase terms can be identified: $ e^{j 4 \pi \frac{R}{c}f_c}$ is the two way propagation phase, the quantity of interest for  interferometric measurements. This component needs to be compensated for SAR processing, where its variation during the aperture time causes defocussing. In the case of KAPRI, an SAR-like azimuth processing step is required to correct for a residual azimuth phase ramp, as described in \autoref{sec:methods:azimuth_processing}. Since only few azimuth samples are combined the variation of $R$ during the aperture length is minimal and the range video term can be ignored.\\
+The dechirped signal is a complex sinusoidal whose frequency $f_{b} = \frac{4 R B}{c t_{chirp}}$ is proportional to the slant range $R$;
+two phase terms can be identified: $ e^{j 4 \pi \frac{R}{c}f_c}$ is the two way propagation phase, the quantity of interest for  interferometric measurements. The second component is proportional to the squared distance; it called "range video phase" in SAR processing, where its uncompensated variation over the aperture length may causes defocussing. Although KAPRI is a real-aperture system, a SAR-like azimuth processing step is required to correct for a residual azimuth phase ramp, as described in \autoref{sec:methods:azimuth_processing}. Since few azimuth samples are combined, the variation of $R$ during the aperture length is minimal and the range video term can be ignored.\\
 From \autoref{eq:deramp}, it follows by the linearity of the Fourier transform, that the range profile $\hat{\rho}\left(R, \theta\right)$ of a collection of targets with complex reflectivities $\rho_i$ located at ranges $R_{i}$ is recovered by the transform of $s_{d}\left(t\right)$.\\
 As in pulsed radars, the range resolution using FMCW signals is inversely proportional to the bandwidth:
 \begin{equation}\label{eq:range_resolution_theoretical}
