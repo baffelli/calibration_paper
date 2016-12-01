@@ -24,7 +24,7 @@ In the radar, $s_r$ is mixed with the transmitted chirp $s_t$  to remove the lin
 	\end{aligned}
 \end{equation} 
 Its frequency $f_{b} = \frac{4 R B}{c t_{chirp}}$ is proportional to the slant range $R$;
-two phase terms can be identified: $ e^{j 4 \pi \frac{R}{c}f_c}$ is the two way propagation phase, the quantity of interest for  interferometric measurements. This component needs to be compensated for SAR processing, where its variation during the aperture time causes defocussing. In the case of KAPRI, an SAR-like azimuth processing step is required to correct for a residual phase ramp; since only few azimuth samples are combined the variation of $R$ during the aperture length is negligible and the RVP term can be dropped.\\
+two phase terms can be identified: $ e^{j 4 \pi \frac{R}{c}f_c}$ is the two way propagation phase, the quantity of interest for  interferometric measurements. This component needs to be compensated for SAR processing, where its variation during the aperture time causes defocussing. In the case of KAPRI, an SAR-like azimuth processing step is required to correct for a residual azimuth phase ramp, as described in \autoref{sec:methods:azimuth_processing}. Since only few azimuth samples are combined the variation of $R$ during the aperture length is minimal and the range video term can be ignored.\\
 From \autoref{eq:deramp}, it follows by the linearity of the Fourier transform, that the range profile $\hat{\rho}\left(R, \theta\right)$ of a collection of targets with complex reflectivities $\rho_i$ located at ranges $R_{i}$ is recovered by the transform of $s_{d}\left(t\right)$.\\
 As in pulsed radars, the range resolution using FMCW signals is inversely proportional to the bandwidth:
 \begin{equation}\label{eq:range_resolution_theoretical}
@@ -79,7 +79,7 @@ In the case of KAPRI, the azimuth decimation after the correction of frequency-d
 	, it will lead to a reduced amplitude and worse SNR after azimuth presumming. 
   \item Since each polarization displays a different ramp, the coherence magnitude of polarimetric phase differences will be reduced and the resulting coherence phase will be affected by a residual phase variation. For example, if the HH-VV phase is needed for calibration in the method described in \autoref{sec:methods:proc_polcal} and the azimuth variation is not taken into account, the additional phase will lead to the incorrect calibration parameters.\label{item:phase_variation}
 \end{enumerate}
-The azimuthal phase variation is attributed to the rotational geometry of acquisition: as the antennas are mounted with an  offset $L_{arm}$(see \autoref{fig:real_aperture_signal_model_geometry}) from their center of rotation, the distance from the phase center to a scatterer varies with the azimuth position, which in turn results in a change in propagation phase~\cite{Lee2014}. If the variation in distance is sufficiently large compared to the range resolution, the target will move through several range cells during the acquisition, an effect named \emph{range cell migration} in SAR processing, where it needs to be compensated before using the phase variation to synthesize the aperture. Fortunately, in the case of KAPRI the variation in distance is orders of magnitude smaller than the range resolution and will only visibly affect the phase of the signal, with no appreciable range cell migration.\\
+The azimuthal phase variation is attributed to the rotational geometry of acquisition: as the antennas are mounted with an  offset $L_{arm}$(see \autoref{fig:real_aperture_signal_model_geometry}) from their center of rotation, the distance from the phase center to a scatterer varies with the azimuth position, which in turn results in a change in propagation phase~\cite{Lee2014}. If the variation in distance is sufficiently large compared to the range resolution, the target will move through several range cells during the acquisition, an effect named \emph{range cell migration} in SAR processing, where it needs to be compensated before using the phase variation to synthesize the aperture. Fortunately, in the case of KAPRI the variation in distance approximatively two orders of magnitude smaller than the range resolution and will only visibly affect the phase of the signal, with no appreciable range cell migration.\\
 To model this the phase ramp, consider the radar acquisition geometry depicted in \autoref{fig:real_aperture_signal_model_geometry}:\\
 The antennas are mounted on a lever arm of length $L_{arm}$ that connects them to the azimuth scanner.
 The phase center of the antenna is allowed to be horizontally displaced from the lever arm attachment by $L_{ph}$.
@@ -226,10 +226,10 @@ A separate dataset containing a dihedral reflector was acquired at our H\"{o}ngg
 								columns={name, rsl, RCS, type},
 								columns/name/.style={column name={Name} ,string type},
 								columns/type/.style={column name={Type} ,string type},
-								columns/RCS/.style={precision=3, column name=$\sigma_0$},
-								columns/rsl/.style={precision=3, column name=$R_0$}
+								columns/RCS/.style={precision=1, column name=$\sigma_0$},
+								columns/rsl/.style={precision=1, column name=$R_0$}
 										] {../tab/table_1.csv}
-	\caption{Summary of the employed TCRs: Name of nearest map feature, Distance from the radar, expected radar crosssection, type of reflector.}
+	\caption{Summary of TCRs in the calibration dataset: Name of nearest map feature, Distance from the radar, expected radar crosssection, type of reflector.}
 	\label{tab:reflectors}
 \end{table}
 

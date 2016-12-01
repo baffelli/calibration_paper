@@ -46,7 +46,7 @@ def plot_figure_12(inputs, outputs, threads, config, params, wildcards):
     f = plt.figure(figsize=(2 * fig_w, 2 * fig_h))
     # Grid of plots for figures
     gs = gridspec.GridSpec(*shp, height_ratios=[1, 1])
-    gs.update(hspace=0.2, wspace=0.4)
+    gs.update(hspace=0.3, wspace=0.4)
     #data to plot
     for idx_chan, chan in enumerate(('HH', 'VV')):
         for idx_proc, proc in enumerate(('', '_desq')):

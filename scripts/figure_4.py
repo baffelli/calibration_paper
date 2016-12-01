@@ -11,9 +11,10 @@ def plot_figure_4(inputs, outputs, threads, config, params, wildcards):
     ridx = params.ridx
     azidx = params.azidx
     sw = (2, 30)
-    ptarg_zoom, rplot, azplot, mx_idx_zoom, res_dict, r_vec, az_vec = cf.ptarg(HV, ridx, azidx, sw=sw, azwin=30)
+    azwin = 16
+    ptarg_zoom, rplot, azplot, mx_idx_zoom, res_dict, r_vec, az_vec = cf.ptarg(HV, ridx, azidx, sw=sw, azwin=azwin)
     ptarg_zoom_corr, rplot_corr, azplot_corr, mx_idx_zoom_corr, res_dict, r_vec_corr, az_vec_corr = cf.ptarg(HV_corr, ridx, azidx, sw=sw,
-                                                                                    azwin=30)
+                                                                                    azwin=azwin)
     HV_gain = cf.dB(ptarg_zoom_corr[mx_idx_zoom_corr] / ptarg_zoom[mx_idx_zoom])
     x_shift = 50
     fig_w, fig_h = plt.rcParams['figure.figsize']
