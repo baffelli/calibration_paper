@@ -334,10 +334,11 @@ rule cleanup_bibtex:
     run:
         import re
         url_re = re.compile(r"url = .+,")
+        abstract_re = re.compile(r"abstract = .+,")
         month_re = re.compile(r"(?P<tag>month)\s=\s\{{(?P<month>\S+)\}}")
         with open(input.bib) as infile, open(output[0],'w') as outfile:
             for line in infile:
-                new_line = re.sub(url_re, "",re.sub(month_re,r"\1 = \{ \2 \},",line))
+                new_line = re.sub(abstract_re, "", re.sub(url_re, "",re.sub(month_re,r"\1 = \{ \2 \},",line)))
                 print(new_line)
                 outfile.write(new_line)
 
