@@ -9,10 +9,13 @@ import json
 from collections import namedtuple
 
 configfile: './calibration_configuration_chutze.json'
-
 #Define list of reflectors from json config file
 list_of_reflectors = config['list_of_reflectors']
 
+configfile: './calibration_configuration_20160222.json'
+print(config['list_of_reflectors'])
+#Define list of reflectors from json config file for the scene with dihedrals
+list_of_reflectors_dihedral = [ref for ref in config['list_of_reflectors'] if ref['type'] == 'dihedral'][0]
 
 subworkflow old_data:
     workdir: './processed'
@@ -118,14 +121,13 @@ rule fig2:
 #Plot figure 4: Gain in HV response after coregistration
 rule fig4:
     input:
-        C_HV_new = old_data("slc_coreg_common/20160224_130521_ABBl.mli_dec"),
-        C_HV_old = old_data("slc_coreg_common/20160224_105201_ABBl.mli_dec"),
+        C_HV_new = old_data("slc_coreg_common/20160224_130521_ABBl.slc"),
+        C_HV_old = old_data("slc_coreg_common/20160224_105201_ABBl.slc"),
         style = 'paper_style.rc'
     output:
         'fig/figure_4.pdf'
     params:#position of dihedral
-        ridx = 720,
-        azidx = 168
+        ref = list_of_reflectors_dihedral
     script:
         'scripts/figure_4.py'
 

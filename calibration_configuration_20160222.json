@@ -15,9 +15,9 @@
 						{"ridx":417, "azidx":1740, "type":"cubic", "side":0.4},
 						{"ridx":401, "azidx":1807, "type":"cubic", "side":0.4},
 						{"ridx":722, "azidx":1742, "type":"cubic", "side":0.4},
-						{"ridx":720, "azidx":1621, "type":"cubic", "side":0.4}
+						{"ridx":720, "azidx":1621, "type":"cubic", "side":0.4},
+	  					{"ridx":720, "azidx":1683, "type":"dihedral"}
 							],
-	"crosspolarizer_index": [720, 1683],
     "channel_mapping":{
               "TX_A_position": 0,
               "TX_B_position": 0.125,
