@@ -37,7 +37,8 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     gs.update(hspace=0.3, wspace=0.0)
     im_ax = f.add_subplot(gs[0, ::])
     aspect = fig_h / fig_w
-    im_ax.imshow(mph, extent=[az_vec[0], az_vec[-1], r_vec[-1], r_vec[1]], aspect=1 / 20 * aspect, origin='upper')
+    slc_ext = [az_vec[0], az_vec[-1], r_vec[-1], r_vec[1]]
+    im_ax.imshow(mph, extent=slc_ext, aspect= vf.fixed_aspect(slc_ext, aspect), origin='upper')
     im_ax.yaxis.set_label_text(r'range [m]')
     im_ax.xaxis.set_label_text(r'azimuth [$^\circ$]')
     im_ax.yaxis.set_major_locator(tick.MultipleLocator(500))

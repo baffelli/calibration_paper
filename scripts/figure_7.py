@@ -66,7 +66,7 @@ def plot_figure_7(inputs, outputs, threads, config, params, wildcards):
     ext1=geo.get_ds_extent(map_ds)
     ext2=LUT.get_extent()
     ax.imshow(map_ds.ReadAsArray().transpose((1, 2, 0)), extent=ext1)
-    ax.imshow(C_cal_rgb.transpose(1,0,2), extent=ext2,)
+    ax.imshow(C_cal_rgb.transpose(1,0,2), extent=ext2)
     marker_color = ['orange' if i == config['calibration']['reflector_index'] else '#43a2ca' for i in range(len(ref_dec))]
     ax.scatter(ref_dec_geo[:,0], ref_dec_geo[:,1], edgecolors=marker_color, s=90, facecolors='none',
                linewidths=0.5)

@@ -32,10 +32,11 @@ def plot_figure_11(inputs, outputs, threads, config, params, wildcards):
     # Create figure
     plt.style.use(inputs['style'])
     fig_w, fig_h = plt.rcParams['figure.figsize']
+    aspect = fig_h / fig_w
     f = plt.figure(figsize=(2 * fig_w, 2 * fig_h))
     # Grid of plots for figures
-    gs = gridspec.GridSpec(*(3, 3), height_ratios=[1, 1, 0.2])
-    gs.update(hspace=0.2, wspace=0.2)
+    gs = gridspec.GridSpec(*(2, 3), height_ratios=[1,0.2])
+    gs.update(hspace=0.0, wspace=0.25)
     #data to plot
     slc_names = ['slc', 'slc_desq', 'slc_corr']
     for plot_idx, slc_name in enumerate(slc_names):
@@ -44,19 +45,21 @@ def plot_figure_11(inputs, outputs, threads, config, params, wildcards):
         az_sl_dec = slice(az_sl.start//slc.GPRI_decimation_factor, az_sl.stop//slc.GPRI_decimation_factor)
         slc = slc[r_sl, az_sl_dec]
         slc_ext = [slc.az_vec[0], slc.az_vec[-1], slc.r_vec[-1], slc.r_vec[0]]
+        slc_aspect = slc_ext[1] - slc_ext[0]
         #Plot raw channel
         # raw_ax = f.add_subplot(gs[0,plot_idx])
         # raw_ax.imshow(vf.exp_im(np.abs(_sig.hilbert(raw[raw_sl],axis=0)),k,sf), extent=raw_ext, aspect=1e-5, interpolation='none', cmap='gray')
         #Plot slc
         mph, rgb, norm = vf.dismph(slc, **mph_dict)  # create rgb image
         pal, ext = vf.dismph_palette(slc, **mph_dict)
-        slc_ax = f.add_subplot(gs[0:2,plot_idx])
-        slc_ax.imshow(mph, extent=slc_ext, aspect=1/10,  origin='upper', interpolation='none', cmap='gray')
+        slc_ax = f.add_subplot(gs[::, plot_idx])
+        print(vf.fixed_aspect(slc_ext, aspect))
+        slc_ax.imshow(mph, extent=slc_ext, aspect= vf.fixed_aspect(slc_ext, aspect),  origin='upper', interpolation='none', cmap='gray')
         slc_ax.xaxis.set_major_locator(tick.MultipleLocator(10))
         tit = string.ascii_lowercase[plot_idx]
         slc_ax.title.set_text(r"({label_name})".format(label_name=tit))
         if plot_idx == 0:
-            slc_ax.set_xlabel(r"Azimuth [deg]")
+            slc_ax.set_xlabel(r"Azimuth [$^\circ$]")
             slc_ax.set_ylabel(r'Range [m]')
     pal_ax = f.add_subplot(gs[-1,1])
     pal_ax.imshow(pal, extent=ext, aspect=2)

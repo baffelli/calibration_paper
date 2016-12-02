@@ -28,7 +28,7 @@ axes.xmargin        : 0
 axes.ymargin        : 0
 axes.grid           : True
 axes.edgecolor: black
-axes.linewidth: 0.25
+axes.linewidth: 0.1
 axes.labelsize      : x-small
 axes.labelcolor     : black
 axes.titlesize      : x-small
@@ -36,9 +36,9 @@ axes.labelpad       : 0.8
 axes.spines.right : False
 axes.spines.top : False
 #Grid
-grid.color : black
-grid.linestyle : --
-grid.linewidth: 0.25
+grid.color : gray
+grid.linestyle : -
+grid.linewidth: 0.05
 #Ticks
 #xticks
 xtick.major.size     : 2
