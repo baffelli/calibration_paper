@@ -30,8 +30,8 @@ def squint_vec(rawdata, z=1000):
 
 width = (10, 100)
 shp = (2,2)
-
-rwin = 20
+#range window for filter in pizzels
+rwin = 5
 
 def format_freq(raw_par, x, pos):
     rel_freq = (x - raw_par.RF_center_freq) / 1e6#relative frequency
