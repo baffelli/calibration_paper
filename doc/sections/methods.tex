@@ -179,19 +179,19 @@ a measured covariance matrix $\mathbf{C^{\prime}}$:
 		0 & 0 & 0 & 0\\
 		0 & 0 & 0 & 0\\
 		f^2 e^{i \left(\phi_t + \phi_r\right)} & 0 & 0 & f^4
-	\end{bmatrix}
-	\end{aligned}.
+	\end{bmatrix}.
+	\end{aligned}
 \end{equation}
 Therefore, the  copolar amplitude imbalance $f$ can be estimated by the ratio of $C_{HHHH}^\prime$ and $C_{VVVV}^\prime$:
 \begin{equation}
 	f = \left(\frac{C^{\prime}_{VVVV}}{C^{\prime}_{HHHH}}\right)^{\frac{1}{4}}.
 \end{equation}
-Similarly, the copolar phase imbalance $\phi_r + \phi_t$ is determined from the phase of $C_{VVHH}^{\prime}$:
+The copolar phase imbalance $\phi_r + \phi_t$ is estimated from the phase of $C_{VVHH}^{\prime}$:
 \begin{equation}
 	\phi_r + \phi_t = \operatorname{arg}\left(C_{VVHH}^\prime\right).
 \end{equation}
 Both parameters are estimated on the oversampled response of a corner reflector. In \cite{Fore2015}, a polynomial model for the copolar calibration parameters is used, that links the imbalances to the incidence angle. In that case, the estimate are performed using a larger array of corner reflectors, which is not available in our case. Thus, a simplified calibration model is used, assuming the copolar parameters to be independent of incidence angle.\\ 
-Because of the difficulty of placing and correctly orienting a cross polarizing target such as a $45^\circ$ dihedral, the estimation of $g$ and $\phi_t - \phi_r$ is based on the assumption that most pixels in the calibration dataset represent reciprocal scatterers:
+Because of the difficulty of placing and correctly orienting a cross polarizing target such as a $45^\circ$ dihedral, the estimation of $g$ and $\phi_t - \phi_r$ is based on the assumption that most pixels in the data represent reciprocal scatterers:
 \begin{equation}
 	g = \left<\frac{C_{HVHV}^{prime}}{C_{VHVH}^{\prime}}\right>^\frac{1}{4},
 \end{equation}

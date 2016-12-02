@@ -34,7 +34,7 @@ def plot_figure_11(inputs, outputs, threads, config, params, wildcards):
     fig_w, fig_h = plt.rcParams['figure.figsize']
     f = plt.figure(figsize=(2 * fig_w, 2 * fig_h))
     # Grid of plots for figures
-    gs = gridspec.GridSpec(*(2, 3), height_ratios=[1, 1])
+    gs = gridspec.GridSpec(*(3, 3), height_ratios=[1, 1, 0.2])
     gs.update(hspace=0.2, wspace=0.2)
     #data to plot
     slc_names = ['slc', 'slc_desq', 'slc_corr']
@@ -50,7 +50,7 @@ def plot_figure_11(inputs, outputs, threads, config, params, wildcards):
         #Plot slc
         mph, rgb, norm = vf.dismph(slc, **mph_dict)  # create rgb image
         pal, ext = vf.dismph_palette(slc, **mph_dict)
-        slc_ax = f.add_subplot(gs[::,plot_idx])
+        slc_ax = f.add_subplot(gs[0:2,plot_idx])
         slc_ax.imshow(mph, extent=slc_ext, aspect=1/10,  origin='upper', interpolation='none', cmap='gray')
         slc_ax.xaxis.set_major_locator(tick.MultipleLocator(10))
         tit = string.ascii_lowercase[plot_idx]
@@ -58,6 +58,15 @@ def plot_figure_11(inputs, outputs, threads, config, params, wildcards):
         if plot_idx == 0:
             slc_ax.set_xlabel(r"Azimuth [deg]")
             slc_ax.set_ylabel(r'Range [m]')
+    pal_ax = f.add_subplot(gs[-1,1])
+    pal_ax.imshow(pal, extent=ext, aspect=2)
+    pal_ax.set_ylabel(r'Phase')
+    pal_ax.set_xlabel(r'Intensity')
+    pal_ax.grid(b=False)
+    pal_ax.set_yticks([-np.pi, 0, np.pi])
+    pal_ax.set_yticklabels([r"$-\pi$", r"$0$", r"$\pi$"])
+    ext_list = [ext[0], (ext[0] + ext[1]) / 2, ext[1]]
+    pal_ax.set_xticks(ext_list)
     f.savefig(outputs[0])
     # plt.show()
     # print(inputs.HHVV_phase)
