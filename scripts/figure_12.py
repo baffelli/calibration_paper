@@ -21,17 +21,17 @@ def center_width_from_slice(sl):
     return center, width
 
 
-def squint_vec(rawdata, z=1000):
+def squint_vec(rawdata, z=2500):
     win_slice = slice(z, rawdata.shape[0] - z)
     rawdata_sl = rawdata[win_slice,:]#window the edges
     max_idx = np.argmax(np.abs(rawdata_sl), axis=1)
     return max_idx, win_slice
 
 
-width = (10, 100)
+width = (10, 150)
 shp = (2,2)
 #range window for filter in pizzels
-rwin = 5
+rwin = 4
 
 def format_freq(raw_par, x, pos):
     rel_freq = (x - raw_par.RF_center_freq) / 1e6#relative frequency
@@ -56,11 +56,11 @@ def plot_figure_12(inputs, outputs, threads, config, params, wildcards):
             #Slc parameters
             slc = gpf.par_to_dict(inputs.slc_par)
             #Slice
-            az_slice = raw_data.azimuth_slice(params.ref['azidx'], width[1])
+            az_slice = raw_data.azimuth_slice_from_slc_idx(params.ref['azidx'], width[1])
             #Construct
             raw_sl = raw_data[:, az_slice] * 1
             #Range filter
-            raw_filt = _sig.hilbert(raw_sl.filter_range_spectrum(slc, params.ref['ridx'], rwin), axis=0)
+            raw_filt = _sig.hilbert(raw_sl.filter_range_spectrum(slc, params.ref['ridx'], rwin, k=2), axis=0)
             ax = f.add_subplot(gs[idx_proc, idx_chan])
             az_vec = np.arange(-raw_filt.shape[1]//2, raw_filt.shape[1]//2) * raw_data.azspacing
             squint_idx, win_slice = squint_vec(raw_filt)
@@ -76,7 +76,7 @@ def plot_figure_12(inputs, outputs, threads, config, params, wildcards):
             t = ax.text(0.1, 0.1, "$a=${:.2f} $\\frac{{\circ}}{{GHz}}$".format(sq_par[0]/1e-9), size=8, bbox=bbox_props, horizontalalignment='left',
                                 transform=ax.transAxes)  # set label
             if idx_chan == idx_proc == 0:
-                ax.set_xlabel(r' $\theta_{sq}$ (Azimuth from pointing at $f_c$) $[\circ]$')
+                ax.set_xlabel(r' $\theta_{sq}$ (Azimuth rel. to pointing at $f_c$) $[\circ]$')
                 ax.set_ylabel(r'Chirp frequency $f[MHz]$')
             fm_func = lambda x, pos: format_freq(raw_data, x, pos)
             fmt = tick.FuncFormatter(fm_func)

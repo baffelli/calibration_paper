@@ -30,7 +30,7 @@ def squint_vec(rawdata, z=2000):
 
 
 width = (10, 100)
-rwin = 30
+rwin = 4
 
 
 def compute_table_4(inputs, outputs, threads, config, params, wildcards):
@@ -47,11 +47,11 @@ def compute_table_4(inputs, outputs, threads, config, params, wildcards):
             idx_res = np.ravel_multi_index((idx_proc, idx_chan), (2,2))
             for idx_ref, ref in enumerate(params.ref):
                 #Slice
-                az_slice = raw_data.azimuth_slice(ref['azidx'], width[1])
+                az_slice = raw_data.azimuth_slice_from_slc_idx(ref['azidx'], width[1])
                 #Construct
                 raw_sl = raw_data[:, az_slice] * 1
                 #Range filter
-                raw_filt = _sig.hilbert(raw_sl.filter_range_spectrum(slc, ref['ridx'], rwin), axis=0)
+                raw_filt = _sig.hilbert(raw_sl.filter_range_spectrum(slc, ref['ridx'], rwin, k=2), axis=0)
                 az_vec = np.arange(-raw_filt.shape[1]//2, raw_filt.shape[1]//2) * raw_data.azspacing
                 squint_idx, win_slice = squint_vec(raw_filt)
                 squint = az_vec[squint_idx[::-1]]
