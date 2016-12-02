@@ -49,7 +49,7 @@ Due to diffraction, the radiation beam emitted by the antenna broadens linearly 
 \begin{equation}\label{eq:azimuth_ground_resolution}
 	\delta_{az} = \frac{R \lambda}{L_{wg}}.
 \end{equation}
-\subsection{Frequency Squint Correction}\label{sec:methods:squint_correction}
+\subsection{Beam Squint Correction}\label{sec:methods:squint_correction}
 Thus, to obtain the desired cross-range resolution at the distances of interest, a sufficiently narrow antenna beamwidth is required. To do so, KAPRI employs a 2 meter long traveling wave slotted waveguide antenna\cite{Hines1953a,Granet2007}. It is constructed by cutting slots resonating at the design frequency in a section of rectangular waveguide. When the slots are appropriately spaced, the fields emitted by the cuts combine in phase, producing a narrow beam in the desired direction.\\ Two types of slotted waveguide antenna exist\cite{Enjiu2013}: the resonant and the traveling wave design. The second type has been chosen because it can be operated with a larger bandwidth; achieving a finer range resolution. The main drawback of this antenna design is its frequency-dependent beam squint: when it is operated at frequency differing from the design value, the phase differences at the slots change; altering the direction of the mainlobe. If a chirped signal is transmitted, the mainlobe direction continuously changes during the pulse. This effect has been uses for several fast imaging radar, where a mechanical antenna rotation would not be possible\cite{Yang2014,Yang2012,Mayer2003,Alvarez2013}. In the case of KAPRI the beam squint is undesired: because of the large angular deviation relative to the beamwidth, the mainlobe is only centered on a scatterer during a fraction of $t_{chirp}$, decreasing the effective transmitted bandwidth and hence the range resolution. \\ 
 In oversampled data, the effect of beam squint is visible as skewed point target responses, as illustrated in~\autoref{fig:squint_correction}: during the chirp, the target is only at the center of the beamwidth when the antenna rotation angle matches the beam squint angle. 
 The availability of raw data oversampled in azimuth is key to mitigate the effect of the beam squint:\\ For each chirp frequency $f$, the data at the corresponding fast time $t_{f} = t_{chirp}\frac{f - f_c}{B}$  is shifted in slow time by $\tau_{sq}=\frac{\theta_{sq}}{\omega}$, where $\theta_{sq}$ is the squint angle:
@@ -147,7 +147,7 @@ the procedure is based on a linear distortion matrix model\cite{Saraband1990, Sa
 \begin{equation}\label{eq:distorsion_scattering}
 	\mathbf{S^\prime} = \mathbf{R} \mathbf{S} \mathbf{T}.
 \end{equation}
-or in covariance form
+The same can be restated for polarimetric covariance matrices $\mathbf{C} = \mathbf{S}^{H}\mathbf{S}$:
 \begin{equation}\label{eq:covariance_distortion}
 	\mathbf{C}^\prime = \mathbf{D} \mathbf{C} \mathbf{D}^{H}.
 \end{equation}

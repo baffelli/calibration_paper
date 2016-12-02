@@ -21,7 +21,7 @@ def plot_figure_4(inputs, outputs, threads, config, params, wildcards):
     x_shift = 200
     fig_w, fig_h = plt.rcParams['figure.figsize']
     f, ax = plt.subplots(1, 1, figsize=(2 * fig_w, 2 * fig_h))
-    bbox_props = dict(boxstyle="square", fc="w", ec="k", lw=1)
+    bbox_props = dict(boxstyle="square", fc="w", ec="k", lw=0.4)
     norm_plot = plt.plot(az_vec, cf.dB(np.abs(azplot)), label='No shift')
     corr_plot = plt.plot(az_vec_corr, cf.dB(np.abs(azplot_corr)), label='Optimal shift')
     # lines at the maximum
@@ -34,7 +34,7 @@ def plot_figure_4(inputs, outputs, threads, config, params, wildcards):
     ax.annotate('', xy=(max_az, max), xytext=(max_az, max_corr),
                 xycoords='data', textcoords='data', arrowprops=dict(arrowstyle="|-|",
                                                                     ec="k",
-                                                                    lw=1,
+                                                                    lw=0.4,
                                                                     shrinkA = 0,
                                                                     shrinkB=0,
                                                                     ))
@@ -44,7 +44,7 @@ def plot_figure_4(inputs, outputs, threads, config, params, wildcards):
     ax.yaxis.set_label_text(r'HV power [dB]')
     ax.set_ylim([-20, 35])
     ax.grid(True)
-    plt.legend(loc='lower left', frameon=True)
+    plt.legend(loc='upper left', frameon=True)
     f.subplots_adjust(bottom=0.15)
     f.savefig(outputs[0], pad_inches=0.1)
 

@@ -22,7 +22,7 @@ def plot_figure_8(inputs, outputs, threads, config, params, wildcards):
     phase_coeff, cov = np.polyfit(inc_ref, residuals['HH-VV phase imbalance'], 3, cov=True)  # thir order for phase
     plt.style.use(inputs.style)
     fig_w, fig_h = plt.rcParams['figure.figsize']
-    xlabel = r'incidence angle $\alpha [^\circ]$'
+    xlabel = r'local incidence angle $[^\circ]$'
     f, (ph_ax, amp_ax) = plt.subplots(2, 1, figsize=(fig_w * 2, 2* fig_h))
     ph_ax.scatter(inc_ref, residuals['HH-VV phase imbalance'])
     ph_ax.xaxis.set_label_text(xlabel)

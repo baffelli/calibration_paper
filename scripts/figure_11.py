@@ -20,8 +20,8 @@ def center_width_from_slice(sl):
     width = (sl.stop - sl.start)
     return center, width
 
-k = 0.3
-sf = 0.4
+k = 0.2
+sf = 0.7
 mph_dict = {'k': k, 'sf': sf, 'coherence': False, 'peak': False}
 az_sl = slice(1392,3600)
 r_sl = slice(550,1850)
