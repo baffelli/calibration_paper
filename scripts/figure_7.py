@@ -93,7 +93,7 @@ def plot_figure_7(inputs, outputs, threads, config, params, wildcards):
     # ax.imshow(C_cal_rgb.transpose([1,0,2])[::,::-1], aspect=1)
     # ax.scatter(C_cal_geo.shape[0] - np.imag(ref_gc), np.real(ref_gc), edgecolors=marker_color, s=25, facecolors='none', linewidths=0.5)
     ax.axis('off')
-    f.savefig(outputs[0],dpi=1200)
+    f.savefig(outputs[0]svn co,m)
 
 
 plot_figure_7(snakemake.input, snakemake.output, snakemake.threads, snakemake.config, snakemake.params,

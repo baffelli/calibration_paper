@@ -59,10 +59,10 @@ def plot_figure_13(inputs, outputs, threads, config, params, wildcards):
                                                                     shrinkA = 0,
                                                                     shrinkB=0,
                                                                     ))
-    ax.text(0 + shift, (H_interp(0) - gain)/2,
-            "loss: {HV:.2f} dB".format(HV=gain))
+    ax.text(0 - 0.1, (H_interp(0) - gain)/2,
+            "loss: {HV:.2f} dB".format(HV=gain), bbox=dict(boxstyle="square", fc="w", ec="k", lw=0.4))
     plt.legend()
-    plt.show()
+    f.savefig(outputs[0])
 
 
 

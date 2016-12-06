@@ -2,7 +2,7 @@
 font.family     : sans serif
 font.serif      : helvetica
 font.sans-serif : helvetica
-font.size       : 12
+font.size       : 15
 text.usetex     : True  # use latex for all text handling
 #text.latex.preamble:
 text.latex.unicode : True
@@ -63,12 +63,12 @@ ytick.direction: out
 ytick.labelsize     : x-small
 ytick.top     : False
 #Lines
-lines.linewidth     : 1.5
+lines.linewidth     : 3
 #Color cycle
 axes.prop_cycle    : cycler('color', ['66c2a5','fc8d62','8da0cb','e78ac3','a6d854','ffd92f','e5c494','b3b3b3'])
 #Dpi
 savefig.format  : png
 savefig.dpi         : 300
-savefig.transparent : True
+savefig.transparent : False
 savefig.bbox        : tight
 savefig.pad_inches  : 0.1      # Padding to be used when bbox is set to 'tight'
