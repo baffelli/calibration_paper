@@ -22,7 +22,7 @@ rwin = 4
 xlabel = r' $\theta_{sq}$ (Azimuth rel. to pointing at $f_c$) $[\circ]$'
 ylabel = r'Chirp frequency $f[MHz]$'
 
-interp_funct = lambda x,y: interp.CubicSpline(x,y)
+interp_funct = lambda x,y: interp.interp1d(x,y/2, kind='slinear')
 
 def plot_figure_13(inputs, outputs, threads, config, params, wildcards):
     # Create figure
@@ -38,15 +38,28 @@ def plot_figure_13(inputs, outputs, threads, config, params, wildcards):
     slc_par = gpf.par_to_dict(inputs['slc_par'] + '.par')
     #Compute shift in samples
     shift = coreg_par.azimuth_offset_polynomial[0] * slc_par.GPRI_az_angle_step
+    print(shift)
     #Construct interpolants
     V_interp = interp_funct(V_pat[:,0], V_pat[:,1])
     H_interp = interp_funct(H_pat[:, 0], H_pat[:, 1])
     az_vec = np.linspace(-0.5,0.5)
     # V_pat_shift = np.interp(V_pat[:,0], V_pat[:, 0] + shift,V_pat[:,1], )
     ax.plot(az_vec,H_interp(az_vec), label='H antenna')
+    ax.plot(az_vec, V_interp(az_vec), label='V antenna')
+    ax.plot(az_vec + shift, V_interp(az_vec), label='V antenna, shifted')
+    gain = H_interp(0) - V_interp(shift)
+    print(gain)
     # ax.plot(V_pat[:, 0], V_pat_shift, label='V antenna')
     ax.xaxis.set_label_text(r'Angle from maximum [$\circ$]')
-    ax.yaxis.set_label_text(r'Relative Pattern [dB]')
+    ax.yaxis.set_label_text(r'Relative One-way Pattern [dB]')
+    ax.annotate('', xy=(0, H_interp(0)), xytext=(0, V_interp(0) - gain),
+                xycoords='data', textcoords='data', arrowprops=dict(arrowstyle="|-|",
+                                                                    ec="k",
+                                                                    lw=0.4,
+                                                                    shrinkA = 0,
+                                                                    shrinkB=0,
+                                                                    ))
+    plt.legend()
     plt.show()
 
 

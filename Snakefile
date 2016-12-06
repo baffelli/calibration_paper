@@ -261,7 +261,7 @@ rule fig13:
         H_pat = './H_mainlobe_171_GHz.txt',
         V_pat = './V_mainlobe_171_GHz.txt',
         coreg_par = old_data("diff/20160224_105201_AAAl_BBBl.off_par"),
-        slc_par = old_data("slc_coreg_common/20160224_105201_ABBl.slc"),
+        slc_par = old_data("slc_coreg_common/20160224_105201_BBBl.slc"),
         style = select_style,
     output:
         'fig/figure_13.{ext}'

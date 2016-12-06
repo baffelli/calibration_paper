@@ -28,10 +28,10 @@
 	"polarimetric_coregistration":{
 			"rlks":1,
 			"azlks":5,
-            "ridx":673,
-            "azidx":899,
-			"rwin":10,
-			"azwin":30,
+            "ridx":722,
+            "azidx":1734,
+			"rwin":128,
+			"azwin":128,
 			"noff_r":20,
 			"noff_az":20
 						   },
