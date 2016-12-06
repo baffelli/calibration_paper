@@ -59,6 +59,8 @@ def plot_figure_13(inputs, outputs, threads, config, params, wildcards):
                                                                     shrinkA = 0,
                                                                     shrinkB=0,
                                                                     ))
+    ax.text(0 + shift, (H_interp(0) - gain)/2,
+            "loss: {HV:.2f} dB".format(HV=gain))
     plt.legend()
     plt.show()
 
