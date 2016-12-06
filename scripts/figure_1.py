@@ -13,6 +13,8 @@ sw = 0.8
 rwin = 20
 azwin = 128
 
+xlabel = r"Azimuth [$\circ$]"
+ylabel = r'Range [m]'
 
 def plot_figure_1(inputs, outputs, threads, config, params, wildcards):
     plt.style.use(inputs['style'])
@@ -48,7 +50,8 @@ def plot_figure_1(inputs, outputs, threads, config, params, wildcards):
             pal, ext = vf.dismph_palette(ptarg_zoom, **mph_dict)
             aspect = fig_h / fig_w
             new_aspect = rwin / azwin * aspect  # in this way the subplot has the same aspect as the figure
-            mappable = current_ax.imshow(mph, cmap=rgb, extent=[az_vec.min(), az_vec.max(), r_vec.min(), r_vec.max()],
+            ext_vec = [az_vec.min(), az_vec.max(), r_vec.min(), r_vec.max()]
+            mappable = current_ax.imshow(mph, cmap=rgb, extent=ext_vec,
                                          aspect=new_aspect)
             # add resolution analysis
             resolution_text = r"""Range resolution: {r_res:.2f} m
@@ -59,8 +62,15 @@ def plot_figure_1(inputs, outputs, threads, config, params, wildcards):
             t = current_ax.text(0.1, 0.1, resolution_text, size=8, bbox=bbox_props, horizontalalignment='left',
                                 transform=current_ax.transAxes)  # set label
             if idx_chan == 1 and idx_proc == 0:
-                current_ax.set_xlabel(r"Azimuth [deg]")
-                current_ax.set_ylabel(r'Range [m]')
+                current_ax.set_xlabel(xlabel)
+                current_ax.set_ylabel(ylabel)
+            # Second figure for subplots used in presentation
+            f1, ax1 = plt.subplots(figsize=(fig_w, fig_h))
+            ax1.imshow(mph, aspect=new_aspect, extent=ext_vec)
+            current_ax.set_xlabel(xlabel)
+            current_ax.set_ylabel(ylabel)
+            f1.savefig(outputs['pres_fig'][current_idx])
+
 
     # Make space for colorbar
     # f.subplots_adjust(hspace=0.3, wspace=0.2)
@@ -76,7 +86,7 @@ def plot_figure_1(inputs, outputs, threads, config, params, wildcards):
     cax.set_xticklabels([r"$0$", r"$0.5$",  r"$1$"])
 
     map(vf.format_axes, f.get_axes())
-    f.savefig(outputs[0])
+    f.savefig(outputs['paper_fig'])
 
 
 plot_figure_1(snakemake.input, snakemake.output, snakemake.threads, snakemake.config, snakemake.params,

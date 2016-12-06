@@ -33,6 +33,10 @@ shp = (2,2)
 #range window for filter in pizzels
 rwin = 4
 
+xlabel = r' $\theta_{sq}$ (Azimuth rel. to pointing at $f_c$) $[\circ]$'
+ylabel = r'Chirp frequency $f[MHz]$'
+
+
 def format_freq(raw_par, x, pos):
     rel_freq = (x - raw_par.RF_center_freq) / 1e6#relative frequency
     sign = '-' if rel_freq < 0 else '+'
@@ -68,16 +72,16 @@ def plot_figure_12(inputs, outputs, threads, config, params, wildcards):
             #fit squint
             sq_par = np.polyfit(raw_data.freqvec[win_slice], squint,1)
             squint_fit = raw_data.freqvec * sq_par[0] + sq_par[1]
-            print(sq_par)
-            ax.imshow(np.abs(raw_filt), aspect=1e-8, extent = [az_vec[0], az_vec[-1], raw_data.freqvec[0], raw_data.freqvec[-1],])
+            ext_vec = [az_vec[0], az_vec[-1], raw_data.freqvec[0], raw_data.freqvec[-1],]
+            ax.imshow(np.abs(raw_filt), aspect=1e-8, extent= ext_vec)
             ax.plot(squint_fit, raw_data.freqvec)
             #Text with fit params
             bbox_props = dict(boxstyle="square", fc="white", ec="w", lw=2)
             t = ax.text(0.1, 0.1, "$a=${:.2f} $\\frac{{\circ}}{{GHz}}$".format(sq_par[0]/1e-9), size=8, bbox=bbox_props, horizontalalignment='left',
                                 transform=ax.transAxes)  # set label
             if idx_chan == idx_proc == 0:
-                ax.set_xlabel(r' $\theta_{sq}$ (Azimuth rel. to pointing at $f_c$) $[\circ]$')
-                ax.set_ylabel(r'Chirp frequency $f[MHz]$')
+                ax.set_xlabel(xlabel)
+                ax.set_ylabel(ylabel)
             fm_func = lambda x, pos: format_freq(raw_data, x, pos)
             fmt = tick.FuncFormatter(fm_func)
             ax.yaxis.set_major_formatter(fmt)
@@ -88,7 +92,14 @@ def plot_figure_12(inputs, outputs, threads, config, params, wildcards):
             ax.title.set_text(r"({label_name})".format(label_name=label_name))
             f.suptitle(params.ref['name'])
             # ax.xaxis.set_major_locator(tick.MultipleLocator(0.5))
-            f.savefig(outputs[0])
+            f.savefig(outputs['paper_fig'])
+            #New figure to plot subplots
+            f1, ax1 = plt.subplots(figsize=(fig_w, fig_h))
+            ax1.imshow(np.abs(raw_filt).T, aspect=1e7, extent=ext_vec[::-1])
+            ax1.plot(raw_data.freqvec, squint_fit)
+            ax1.set_xlabel(ylabel)
+            ax1.set_ylabel(xlabel)
+            f1.savefig(outputs['pres_fig'][current_idx])
     plt.show()
 
 

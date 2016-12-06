@@ -20,9 +20,6 @@ import pyrat.fileutils.gpri_files as gpf
 
 from scipy.special import expit
 
-# Return the decimated azimuth position
-def az_idx(ds, idx):
-    return idx / ds.azimuth_looks
 
 
 def plot_figure_7(inputs, outputs, threads, config, params, wildcards):
@@ -50,8 +47,11 @@ def plot_figure_7(inputs, outputs, threads, config, params, wildcards):
     LUT = geo.GeocodingTable(inputs.dem_seg_par, inputs.LUT)
 
     #Decimate reflector location
-    ref_dec = np.array([[ref['ridx'], ref['azidx'] // C_cal.GPRI_decimation_factor] for ref in params['ref']], dtype=int)
-    ref_dec_geo = np.array([LUT.dem_coord_to_geo_coord(LUT.radar_coord_to_dem_coord(ref_pos)) for ref_pos in ref_dec])
+    for ref in params['ref']:
+        ref['azidx_dec'] = ref['azidx'] // C_cal.GPRI_decimation_factor
+        ref['geo_coord'] = LUT.dem_coord_to_geo_coord(LUT.radar_coord_to_dem_coord([ref['ridx'], ref['azidx_dec']]))
+        ref['marker_color'] = 'orange' if ref['name'] == params['ref'][config['calibration']['reflector_index']]['name'] else '#43a2ca'
+    print(params['ref'])
 
     #Geocode
     C_cal_geo = LUT.geocode_data(C_cal)
@@ -67,12 +67,14 @@ def plot_figure_7(inputs, outputs, threads, config, params, wildcards):
     ext2=LUT.get_extent()
     ax.imshow(map_ds.ReadAsArray().transpose((1, 2, 0)), extent=ext1)
     ax.imshow(C_cal_rgb.transpose(1,0,2), extent=ext2)
-    marker_color = ['orange' if i == config['calibration']['reflector_index'] else '#43a2ca' for i in range(len(ref_dec))]
-    ax.scatter(ref_dec_geo[:,0], ref_dec_geo[:,1], edgecolors=marker_color, s=90, facecolors='none',
-               linewidths=0.5)
+
+    # ax.scatter(ref_dec_geo[:,0], ref_dec_geo[:,1], edgecolors=marker_color, s=90, facecolors='none',
+    #            linewidths=0.5)
     #annotate scatter
     pos_list = {'Chutzen': (45,20), 'Hindere Chlapf':(90,-10), 'Bifang':(10,10), 'Türle':(10,-20), 'Simmleremoos 1': (55,15),'Simmleremoos 2': (95,-20)}
-    for ref, ref_pos in zip(params['ref'], ref_dec_geo):#iterate reflector and positions
+    for ref in params['ref']:#iterate reflector and positions
+        ref_pos = ref['geo_coord']
+        plt.plot(ref_pos[0], ref_pos[1], mec=ref['marker_color'], marker='o', mfc='none', ms=10)
         plt.annotate(
             ref['name'],
             xy = ref_pos, xytext = pos_list[ref['name']],
@@ -82,8 +84,6 @@ def plot_figure_7(inputs, outputs, threads, config, params, wildcards):
     ax.set_xlim(ext[0:2])
     ax.set_ylim(ext[2:])
     f.subplots_adjust(left=0,right=1)
-    plt.show()
-
     # # C_cal_geo, x_vec, y_vec, lut, direct_lut = geo.geocode_image(C_cal, 2)
     # #Decimate reflector location
     #

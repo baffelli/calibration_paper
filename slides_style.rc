@@ -1,0 +1,74 @@
+# Style for paper using the IEEtran, two columns style
+font.family     : sans serif
+font.serif      : helvetica
+font.sans-serif : helvetica
+font.size       : 12
+text.usetex     : True  # use latex for all text handling
+#text.latex.preamble:
+text.latex.unicode : True
+#Math text
+mathtext.fontset:  cm
+axes.unicode_minus  : False
+image.aspect : equal             # equal | auto | a number
+image.interpolation  : none  # see help(imshow) for options
+#Figure
+figure.figsize : 6, 4
+figure.subplot.wspace  : 0.1    # the amount of width reserved for blank space between subplots
+figure.subplot.hspace  : 0.1    # the amount of height reserved for white space between subplots
+figure.autolayout : False
+#Legend
+legend.frameon       : False
+legend.fontsize      : xx-small
+legend.labelspacing  : 0.05
+legend.handletextpad : 0.4
+legend.borderpad: 0.15
+#Axes
+axes.facecolor      : white
+axes.xmargin        : 0
+axes.ymargin        : 0
+axes.grid           : True
+axes.edgecolor: black
+axes.linewidth: 0.1
+axes.labelsize      : x-small
+axes.labelcolor     : black
+axes.titlesize      : x-small
+axes.labelpad       : 0.8
+axes.spines.right : False
+axes.spines.top : False
+#Grid
+grid.color : gray
+grid.linestyle : -
+grid.linewidth: 0.05
+#Ticks
+#xticks
+xtick.major.size     : 2
+xtick.minor.size     : 0.5
+xtick.major.width   : 0.3
+xtick.minor.width   : 0.1
+xtick.major.pad     : 0.75
+xtick.minor.pad     : 0.25
+xtick.color         : black
+xtick.direction: out
+xtick.labelsize     : x-small
+xtick.top     : False
+#yticks
+ytick.major.size     : 2
+ytick.minor.size     : 0.5
+ytick.major.width   : 0.3
+ytick.minor.width   : 0.1
+ytick.major.pad     : 0.75
+ytick.minor.pad     : 0.25
+ytick.color         : black
+ytick.direction: out
+ytick.labelsize     : x-small
+ytick.top     : False
+#Lines
+lines.linewidth     : 1.5
+#Color cycle
+axes.prop_cycle    : cycler('color', ['66c2a5','fc8d62','8da0cb','e78ac3','a6d854','ffd92f','e5c494','b3b3b3'])
+#Dpi
+savefig.format  : png
+savefig.dpi         : 300
+savefig.transparent : True
+savefig.bbox        : tight
+savefig.pad_inches  : 0.1      # Padding to be used when bbox is set to 'tight'

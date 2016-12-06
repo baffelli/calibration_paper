@@ -8,14 +8,23 @@ import re
 import json
 from collections import namedtuple
 
-configfile: './calibration_configuration_chutze.json'
-#Define list of reflectors from json config file
-list_of_reflectors = config['list_of_reflectors']
 
-configfile: './calibration_configuration_20160222.json'
-print(config['list_of_reflectors'])
+def load_config(config_file):
+    with open(config_file) as input_file:
+        return json.load(input_file)
+
+
+hongg_conf = load_config('./calibration_configuration_20160222.json')
+chutzen_conf = load_config('./calibration_configuration_chutze.json')
 #Define list of reflectors from json config file for the scene with dihedrals
-list_of_reflectors_dihedral = [ref for ref in config['list_of_reflectors'] if ref['type'] == 'dihedral'][0]
+list_of_reflectors_dihedral = hongg_conf['list_of_reflectors']
+#Define list of reflectors from json config file
+list_of_reflectors = chutzen_conf['list_of_reflectors']
+
+configfile: './calibration_configuration_chutze.json'
+
+
+
 
 subworkflow old_data:
     workdir: './processed'
@@ -27,28 +36,10 @@ subworkflow new_data:
     snakefile:  pyrat.rules['slc_to_calibrated_c']
     configfile: './calibration_configuration_chutze.json'
 
-#subworkflow geo:
-#    workdir: './processed'
-#    snakefile:  pyrat.rules['geocoding']
-#    configfile: './calibration_configuration_chutze.json'
-
-
 
 rule all:
     input:
-#        new_data('geo/Chutzen.mli_gc.tif'),
-        'fig/figure_1.pdf',
-        'fig/figure_3.pdf',
-        'fig/figure_3.pdf',
-        'fig/figure_4.pdf',
-        'fig/figure_5.pdf',
-        'fig/figure_6.pdf',
-        'fig/figure_7.pdf',
-        'fig/figure_8.pdf',
-        'fig/figure_9.pdf',
-        'fig/figure_10.pdf',
-        'fig/figure_11.pdf',
-        'fig/figure_12.pdf',
+        expand('fig/figure_{r}{ext}',r=range(1,14), ext=['.png', '.pdf']),
         'tab/table_1.csv',
         'tab/table_2.csv',
         'tab/table_3.csv',
@@ -62,18 +53,28 @@ rule all:
 
 
 
-
 ###############################################################################
 #Cleanup figure
 rule cleanup_figures:
     run:
         shell("trash ./fig/*.pdf")
 
+
+###############################################################################
+#Select stylesheet depending on figure type
+def select_style(wildcards):
+    if wildcards.ext == 'pdf':
+        return 'paper_style.rc'
+    else:
+        return 'slides_style.rc'
+
+
 ###############################################################################
 #Plot figure 1: Oversampled magnitude/phase response of a TCR
 rule fig1:
     output:
-        'fig/figure_1.pdf'
+        paper_fig = 'fig/figure_1.{ext}',
+        pres_fig = expand('fig/figure_1_{n}.{{ext}}',n=range(6))
     input:
         HH = new_data('slc_chan/20160914_145059_AAAl.slc'),
         VV = new_data('slc_chan/20160914_145059_BBBl.slc'),
@@ -81,7 +82,7 @@ rule fig1:
         VV_desq = new_data('slc_desq/20160914_145059_BBBl.slc'),
         HH_corr = new_data('slc_corr/20160914_145059_AAAl.slc'),
         VV_corr = new_data('slc_corr/20160914_145059_BBBl.slc'),
-        style = 'paper_style.rc'
+        style = select_style
     params:
         ridx = list_of_reflectors[1]['ridx'],
         azidx = list_of_reflectors[1]['azidx']
@@ -103,14 +104,14 @@ def select_slc_for_rule_2(wildcards):
 
 rule fig2:
     output:
-        'fig/figure_{n,(2|3)}.pdf'
+        'fig/figure_{n,(2|3)}.{ext}'
     input:
         VV = select_slc_for_rule_2,
         a = new_data("slc_corr/20160914_145059_AAAl.slc"),
         b = new_data("slc_coreg/20160914_145059_AAAl.slc"),
         c = new_data("slc_corr/20160914_145059_BBBl.slc"),
         d = new_data("slc_coreg/20160914_145059_BBBl.slc"),
-        style = 'paper_style.rc'
+        style = select_style
     params:
         reflectors = list_of_reflectors,
     script:
@@ -123,13 +124,16 @@ rule fig4:
     input:
         C_HV_new = old_data("slc_coreg_common/20160224_130521_ABBl.slc"),
         C_HV_old = old_data("slc_coreg_common/20160224_105201_ABBl.slc"),
-        style = 'paper_style.rc'
+        style = select_style
     output:
-        'fig/figure_4.pdf'
+        'fig/figure_4.{ext}'
     params:#position of dihedral
         ref = list_of_reflectors_dihedral
     script:
         'scripts/figure_4.py'
+
+
+
 
 ###############################################################################
 #Plot figure 5/6: Polarisation signatures for two reflectors
@@ -139,9 +143,9 @@ rule fig5:
         C_par = new_data("cov_flat/20160914_145059_l.par"),
         C_cal = new_data(expand("cov_cal/20160914_145059_l.c{i}{j}",i=range(4),j=range(4))),
         C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
-        style = 'paper_style.rc'
+        style = select_style
     output:
-        'fig/figure_{n, (5|6)}.pdf'
+        paper_fig = 'fig/figure_{n, (5|6)}.{ext}'
     params:
         ref = lambda wildcards: list_of_reflectors[1] if int(wildcards.n) == 5 else list_of_reflectors[-1]
     script:
@@ -157,13 +161,27 @@ rule fig7:
         LUT = new_data('geo/Chutzen.gpri_to_dem'),
         sh_map = new_data('geo/Chutzen.sh_map_gc'),
         dem_seg_par = new_data('geo/Chutzen.dem_seg.par'),
-        style = 'paper_style.rc'
+        style = select_style
     params:
         ref = list_of_reflectors
     output:
-        'fig/figure_7.pdf'
+        'fig/figure_7.{ext}'
     script:
         'scripts/figure_7.py'
+
+
+###############################################################################
+#Make figure 8: dependence of residuals with incidence angle
+rule fig8:
+    input:
+        res = 'tab/table_3.csv',
+        inc = new_data('geo/Chutzen.inc_fgc'),
+        C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
+        style = select_style
+    output:
+        'fig/figure_8.{ext}'
+    script:
+        'scripts/figure_8.py'
 
 ###############################################################################
 #Plot figure 9/10: HH/VV phase before and after removal of topographic contribution
@@ -180,13 +198,13 @@ def select_cov_for_rule_9(wildcards):
 
 rule fig9:
     input:
-        style = 'paper_style.rc',
+        style = select_style,
         aui = new_data("cov_normal/20160914_145059_l.par"),#dummy
         ali = new_data("cov_flat/20160914_145059_l.par"),
         C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
         HHVV_phase = select_cov_for_rule_9,
     output:
-        'fig/figure_{n, (9)|(10)}.pdf'
+        'fig/figure_{n, (9)|(10)}.{ext}'
     params:
         ref = list_of_reflectors
     script:
@@ -196,7 +214,7 @@ rule fig9:
 #Plot figure 11: Slc with and without processing of squint
 rule fig11:
     input:
-        style = 'paper_style.rc',
+        style = select_style,
         slc = new_data("slc_chan/20160914_145059_BBBl.slc_dec"),
         slc_par = new_data("slc_chan/20160914_145059_BBBl.slc_dec.par"),
         slc_desq = new_data("slc_desq/20160914_145059_BBBl.slc_dec"),
@@ -204,7 +222,7 @@ rule fig11:
         slc_corr = new_data("slc_corr/20160914_145059_BBBl.slc_dec"),
         slc_corr_par = new_data("slc_corr/20160914_145059_BBBl.slc_dec.par"),
     output:
-        'fig/figure_11.pdf'
+        'fig/figure_11.{ext}'
     script:
         'scripts/figure_11.py'
 
@@ -218,9 +236,6 @@ def select_raw_for_rule_12(wildcards):
     par = new_data(par)
     return chan, par
 
-
-
-
 chan_string = new_data("raw_{}/20160914_145059_{}.raw")
 rule fig12:
     input:
@@ -228,15 +243,30 @@ rule fig12:
         VV = chan_string.format('chan', 'BBBl'),
         HH_desq = chan_string.format('desq', 'AAAl'),
         VV_desq = chan_string.format('desq', 'BBBl'),
-        style = 'paper_style.rc',
+        style = select_style,
         slc_par = new_data("slc_chan/20160914_145059_BBBl.slc.par")
     params:
         ref = list_of_reflectors[1]
     output:
-        'fig/figure_12.pdf'
+        paper_fig = 'fig/figure_12.{ext}',
+        pres_fig = expand('fig/figure_12_{n}.{{ext}}',n=range(4))
     script:
         'scripts/figure_12.py'
 
+
+###############################################################################
+#Plot figure 13: H and V patterns
+rule fig13:
+    input:
+        H_pat = './H_mainlobe_171_GHz.txt',
+        V_pat = './V_mainlobe_171_GHz.txt',
+        coreg_par = old_data("diff/20160224_105201_AAAl_BBBl.off_par"),
+        slc_par = old_data("slc_coreg_common/20160224_105201_ABBl.slc"),
+        style = select_style,
+    output:
+        'fig/figure_13.{ext}'
+    script:
+        'scripts/figure_13.py'
 ###############################################################################
 #Make table 1: Location and RCS for all reflectors
 rule table1:
@@ -308,18 +338,6 @@ rule RMS_residual:
     script:
         'scripts/RMS_polcal.py'
 
-###############################################################################
-#Make figure 8: dependence of residuals with incidence angle
-rule fig8:
-    input:
-        res = 'tab/table_3.csv',
-        inc = new_data('geo/Chutzen.inc_fgc'),
-        C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
-        style = 'paper_style.rc'
-    output:
-        'fig/figure_8.pdf'
-    script:
-        'scripts/figure_8.py'
 
 
 
