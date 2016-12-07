@@ -17,7 +17,7 @@ def load_config(config_file):
 hongg_conf = load_config('./calibration_configuration_20160222.json')
 chutzen_conf = load_config('./calibration_configuration_chutze.json')
 #Define list of reflectors from json config file for the scene with dihedrals
-list_of_reflectors_dihedral = hongg_conf['list_of_reflectors']
+list_of_reflectors_dihedral = [ref for ref in hongg_conf['list_of_reflectors'] if ref['type'] == 'dihedral'][0]
 #Define list of reflectors from json config file
 list_of_reflectors = chutzen_conf['list_of_reflectors']
 
@@ -39,7 +39,7 @@ subworkflow new_data:
 
 rule all:
     input:
-        expand('fig/figure_{r}{ext}',r=range(1,14), ext=['.png', '.pdf']),
+        expand('fig/figure_{r}.{ext}',r=range(1,14), ext=['png', 'pdf']),
         'tab/table_1.csv',
         'tab/table_2.csv',
         'tab/table_3.csv',
@@ -165,7 +165,8 @@ rule fig7:
     params:
         ref = list_of_reflectors
     output:
-        'fig/figure_7.{ext}'
+        paper_fig = 'fig/figure_7.{ext}',
+        pres_fig = 'fig/figure_7_full.{ext}'
     script:
         'scripts/figure_7.py'
 

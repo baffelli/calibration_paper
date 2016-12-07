@@ -33,7 +33,7 @@ shp = (2,2)
 #range window for filter in pizzels
 rwin = 4
 
-xlabel = r' $\theta_{sq}$ (Azimuth rel. to pointing at $f_c$) $[\circ]$'
+xlabel = r' $\theta_{sq}$ (Azimuth rel. to pointing at $f_c$) $[^\circ]$'
 ylabel = r'Chirp frequency $f[MHz]$'
 
 
@@ -91,6 +91,7 @@ def plot_figure_12(inputs, outputs, threads, config, params, wildcards):
             # current_ax = axarr[idx_chan, idx_proc]
             ax.title.set_text(r"({label_name})".format(label_name=label_name))
             f.suptitle(params.ref['name'])
+            f.subplots_adjust(hspace=0.15, wspace=0.05)
             # ax.xaxis.set_major_locator(tick.MultipleLocator(0.5))
             f.savefig(outputs['paper_fig'])
             #New figure to plot subplots
@@ -98,7 +99,7 @@ def plot_figure_12(inputs, outputs, threads, config, params, wildcards):
             ax1.imshow(np.abs(raw_filt).T, aspect=1e7, extent=ext_vec[::-1])
             ax1.plot(raw_data.freqvec, squint_fit)
             ax1.set_xlabel(ylabel)
-            ax1.set_ylabel(xlabel)
+            ax1.set_ylabel(r'$\theta_{sq}$ [$^\circ$]')
             f1.savefig(outputs['pres_fig'][current_idx])
     plt.show()
 

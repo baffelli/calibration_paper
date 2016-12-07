@@ -8,6 +8,7 @@ def plot_figure_4(inputs, outputs, threads, config, params, wildcards):
     plt.style.use(inputs['style'])
     HV = gpf.gammaDataset(inputs.C_HV_old + '.par', inputs.C_HV_old)
     HV_corr = gpf.gammaDataset(inputs.C_HV_new + '.par', inputs.C_HV_new)
+    print(params.ref)
     ridx = params.ref['ridx']
     azidx = params.ref['azidx']
     sw = (2, 200)

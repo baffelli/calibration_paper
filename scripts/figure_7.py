@@ -20,6 +20,16 @@ import pyrat.fileutils.gpri_files as gpf
 
 from scipy.special import expit
 
+def annotate_axis(ax, params):
+    pos_list = {'Chutzen': (45,20), 'Hindere Chlapf':(90,-10), 'Bifang':(10,10), 'Türle':(10,-20), 'Simmleremoos 1': (55,15),'Simmleremoos 2': (95,-20)}
+    for ref in params['ref']:#iterate reflector and positions
+        ref_pos = ref['geo_coord']
+        ax.plot(ref_pos[0], ref_pos[1], mec=ref['marker_color'], marker='o', mfc='none', ms=10)
+        ax.annotate(
+            ref['name'],
+            xy = ref_pos, xytext = pos_list[ref['name']],
+            textcoords = 'offset points', ha = 'right', va = 'bottom',
+            arrowprops = dict(arrowstyle = '->', connectionstyle = 'arc3,rad=0', color='grey'), color='white')
 
 
 def plot_figure_7(inputs, outputs, threads, config, params, wildcards):
@@ -67,33 +77,23 @@ def plot_figure_7(inputs, outputs, threads, config, params, wildcards):
     ext2=LUT.get_extent()
     ax.imshow(map_ds.ReadAsArray().transpose((1, 2, 0)), extent=ext1)
     ax.imshow(C_cal_rgb.transpose(1,0,2), extent=ext2)
-
-    # ax.scatter(ref_dec_geo[:,0], ref_dec_geo[:,1], edgecolors=marker_color, s=90, facecolors='none',
-    #            linewidths=0.5)
-    #annotate scatter
-    pos_list = {'Chutzen': (45,20), 'Hindere Chlapf':(90,-10), 'Bifang':(10,10), 'Türle':(10,-20), 'Simmleremoos 1': (55,15),'Simmleremoos 2': (95,-20)}
-    for ref in params['ref']:#iterate reflector and positions
-        ref_pos = ref['geo_coord']
-        plt.plot(ref_pos[0], ref_pos[1], mec=ref['marker_color'], marker='o', mfc='none', ms=10)
-        plt.annotate(
-            ref['name'],
-            xy = ref_pos, xytext = pos_list[ref['name']],
-            textcoords = 'offset points', ha = 'right', va = 'bottom',
-            arrowprops = dict(arrowstyle = '->', connectionstyle = 'arc3,rad=0', color='grey'), color='white')
+    #annotate scatters
+    annotate_axis(ax, params)
     ext = [606630,610072,188060,192957]
     ax.set_xlim(ext[0:2])
     ax.set_ylim(ext[2:])
     f.subplots_adjust(left=0,right=1)
-    # # C_cal_geo, x_vec, y_vec, lut, direct_lut = geo.geocode_image(C_cal, 2)
-    # #Decimate reflector location
-    #
-    # #Compute locations in radar coordinates
-    # ref_gc = vf.bilinear_interpolate(direct_lut.T, ref_dec[:,0],ref_dec[:,1])
-    #
-    # ax.imshow(C_cal_rgb.transpose([1,0,2])[::,::-1], aspect=1)
-    # ax.scatter(C_cal_geo.shape[0] - np.imag(ref_gc), np.real(ref_gc), edgecolors=marker_color, s=25, facecolors='none', linewidths=0.5)
     ax.axis('off')
-    f.savefig(outputs[0]svn co,m)
+    f.savefig(outputs['paper_fig'])
+    #Add axis
+    f1, ax1 =  plt.subplots(figsize=(2 * fig_w,  2 * fig_w))
+    ax1.imshow(C_cal_rgb.transpose(1, 0, 2), extent=ext2, aspect=1)
+    ax1.axis('off')
+    # annotate scatters
+    annotate_axis(ax1, params)
+    f1.subplots_adjust(left=0, right=1)
+    f1.savefig(outputs['pres_fig'])
+
 
 
 plot_figure_7(snakemake.input, snakemake.output, snakemake.threads, snakemake.config, snakemake.params,
