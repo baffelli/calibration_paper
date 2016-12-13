@@ -75,8 +75,8 @@ def plot_figure_7(inputs, outputs, threads, config, params, wildcards):
     #Plot map
     ext1=geo.get_ds_extent(map_ds)
     ext2=LUT.get_extent()
-    ax.imshow(map_ds.ReadAsArray().transpose((1, 2, 0)), extent=ext1)
-    ax.imshow(C_cal_rgb.transpose(1,0,2), extent=ext2)
+    ax.imshow(map_ds.ReadAsArray().transpose((1, 2, 0)), extent=ext1, aspect=1)
+    ax.imshow(C_cal_rgb.transpose(1,0,2), extent=ext2, aspect=1)
     #annotate scatters
     annotate_axis(ax, params)
     ext = [606630,610072,188060,192957]

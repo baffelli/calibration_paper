@@ -39,7 +39,8 @@ subworkflow new_data:
 
 rule all:
     input:
-        expand('fig/figure_{r}.{ext}',r=range(1,14), ext=['png', 'pdf']),
+        expand('fig/figure_{r}.{ext}',r=range(1,16), ext=['png', 'pdf']),
+        expand('fig/figure_signature_{r}.{ext}',r=range(0,6), ext=['png']),
         'tab/table_1.csv',
         'tab/table_2.csv',
         'tab/table_3.csv',
@@ -268,6 +269,51 @@ rule fig13:
         'fig/figure_13.{ext}'
     script:
         'scripts/figure_13.py'
+
+###############################################################################
+#Plot figure 14: H and alpha before and after calibration
+#this serves to select the proper channel
+def select_c_for_rule_14(wildcards):
+    proc_type = 'flat' if int(wildcards.n) == 14 else 'cal'
+    C_cal = new_data(expand("cov_{type}/20160914_145059_l.c{{i}}{{j}}".format(type=proc_type),i=range(4),j=range(4))),
+    return C_cal[0]
+rule fig14:
+    input:
+        C = select_c_for_rule_14,
+        map = 'processed/geo/pk25krel_latest_Clip.tif',
+        C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
+        LUT = new_data('geo/Chutzen.gpri_to_dem'),
+        sh_map = new_data('geo/Chutzen.sh_map_gc'),
+        dem_seg_par = new_data('geo/Chutzen.dem_seg.par'),
+        style = select_style
+    params:
+        ref = list_of_reflectors
+    wildcard_constraints:
+        n = '(14)|(15)'
+    output:
+        alpha_fig = 'fig/figure_{n}.{ext}',
+    script:
+        'scripts/figure_14.py'
+
+
+###############################################################################
+#Plot figure: Polarisation signatures for all reflectors
+rule fig_ref_n:
+    input:
+        C = new_data(expand("cov_flat/20160914_145059_l.c{i}{j}",i=range(4),j=range(4))),
+        C_par = new_data("cov_flat/20160914_145059_l.par"),
+        C_cal = new_data(expand("cov_cal/20160914_145059_l.c{i}{j}",i=range(4),j=range(4))),
+        C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
+        style = select_style
+    output:
+        paper_fig = 'fig/figure_signature_{n}.{ext}'
+    params:
+        ref = lambda wildcards: list_of_reflectors[int(wildcards.n)]
+    script:
+        'scripts/figure_5.py'
+
+
+
 ###############################################################################
 #Make table 1: Location and RCS for all reflectors
 rule table1:
@@ -282,6 +328,9 @@ rule table1:
         ref = list_of_reflectors
     script:
         'scripts/table_1.py'
+
+
+
 
 ###############################################################################
 #Make table 2: Phase center estimate for all reflectors:
