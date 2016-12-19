@@ -39,7 +39,7 @@ subworkflow new_data:
 
 rule all:
     input:
-        expand('fig/figure_{r}.{ext}',r=range(1,16), ext=['png', 'pdf']),
+        expand('fig/figure_{r}.{ext}',r=range(1,17), ext=['png', 'pdf']),
         expand('fig/figure_signature_{r}.{ext}',r=range(0,6), ext=['png']),
         'tab/table_1.csv',
         'tab/table_2.csv',
@@ -312,6 +312,21 @@ rule fig_ref_n:
     script:
         'scripts/figure_5.py'
 
+
+
+###############################################################################
+#Plot figure: polarisation isolation at the calibration reflector
+rule fig16:
+    input:
+        C = new_data(expand("cov_flat/20160914_145059_l.c{i}{j}",i=range(4),j=range(4))),
+        C_par = new_data("cov_flat/20160914_145059_l.par"),
+        style = select_style
+    output:
+        paper_fig = 'fig/figure_16.{ext}'
+    params:
+        ref = lambda wildcards: list_of_reflectors[int(config['calibration']['reflector_index'])]
+    script:
+        'scripts/figure_16.py'
 
 
 ###############################################################################

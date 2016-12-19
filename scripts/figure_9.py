@@ -10,7 +10,7 @@ from matplotlib import gridspec
 
 # Return the decimated azimuth position
 def az_idx(ds, idx):
-    return idx / ds.azimuth_looks
+    return idx / ds.GPRI_decimation_factor
 
 
 def plot_figure_9(inputs, outputs, threads, config, params, wildcards):

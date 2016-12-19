@@ -17,7 +17,7 @@ def plot_figure_8(inputs, outputs, threads, config, params, wildcards):
     phase_mean = np.mean(residuals['HH-VV phase imbalance'])
     amp_rms = np.std(residuals['HH-VV amplitude imbalance'])
     amp_mean = np.mean(residuals['HH-VV amplitude imbalance'])
-    inc_ref = np.rad2deg(inc[residuals['range_index'], residuals['azimuth_index'] / C_par['GPRI_decimation_factor']])
+    inc_ref = np.rad2deg(inc[residuals['range_index'], residuals['azimuth_index'] // C_par['GPRI_decimation_factor']])
     # perform fit
     phase_coeff, cov = np.polyfit(inc_ref, residuals['HH-VV phase imbalance'], 3, cov=True)  # thir order for phase
     plt.style.use(inputs.style)
