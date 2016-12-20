@@ -13,6 +13,7 @@ color_cycle = cycler('color', ['b', 'g', 'r'])
 
 def plot_figure_16(inputs, outputs, threads, config, params, wildcards):
     # load data
+    print(params.ref)
     C_par = inputs["C_par"]
     C_root, ext = path.splitext(inputs['C'][0])
     C = mat.coherencyMatrix(C_root, C_par, gamma=True, bistatic=True,
@@ -36,7 +37,10 @@ def plot_figure_16(inputs, outputs, threads, config, params, wildcards):
     vv_az_plot = ( max_VV, az_max)
     vv_r_plot = (r_max, max_VV)
 
-    arrow_prop = dict(arrowstyle="<->", )
+    arrow_prop = dict(arrowstyle="<->", color='indigo', lw=plt.rcParams['lines.linewidth'])
+    purity = max_VV - max_HV
+    purity_text = r"""$\frac{{\vert VV\vert}}{{\vert HV\vert}}$ = {p:2.2f} dB""".format(p=purity)
+
 
     plt.style.use(inputs['style'])
     fig_w, fig_h = plt.rcParams['figure.figsize']
@@ -60,6 +64,7 @@ def plot_figure_16(inputs, outputs, threads, config, params, wildcards):
     ax_r.yaxis.set_label_text('Intensity [dB]')
     # add arrow for berebbere
     ax_r.annotate("", xy=hv_r_plot, xytext=vv_r_plot, xycoords='data', arrowprops=arrow_prop, textcoords='data')
+    ax_r.annotate(purity_text, xy=hv_r_plot, xytext=(13,0.1), xycoords='data',  textcoords='offset points', bbox=dict(fc="white", ec="k", lw=2))
     lim = [-25, 40]
     ax_r.set_ylim(lim)
     ax_r.grid()

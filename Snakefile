@@ -291,7 +291,9 @@ rule fig14:
     wildcard_constraints:
         n = '(14)|(15)'
     output:
-        alpha_fig = 'fig/figure_{n}.{ext}',
+        rgb_fig = 'fig/figure_{n}.{ext}',
+        H_fig = 'fig/figure_{n}_H.{ext}',
+        alpha_fig = 'fig/figure_{n}_alpha.{ext}',
     script:
         'scripts/figure_14.py'
 
