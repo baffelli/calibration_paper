@@ -60,19 +60,25 @@ def plot_figure_14(inputs, outputs, threads, config, params, wildcards):
     ext2=LUT.get_geocoded_extent(alpha_geo)
     ext2 = [ext2[-2], ext2[-1], ext2[0], ext2[1]]
     asp = vf.fixed_aspect(ext2, 1)
+    print(asp)
+    #Size of colorbar
+    cmap_prop = dict(shrink = 0.2, orientation='vertical', pad=0.01)
     #Add axis for H
-    f_H = plt.figure(figsize=(2 * fig_w, 2 * fig_w))
-    ax_H = f_H.add_subplot(111)
+    f_H , ax_H = plt.subplots(figsize=(2 * fig_w, 2 * fig_w))
+    # ax_H
     ax_H.axis('off')
     map_H = ax_H.imshow(H_geo.T, cmap='gray')
-    plt.colorbar(map_H)
+    ax_H.set_aspect('equal')
+    # bar_h = plt.colorbar(map_H, **cmap_prop)
+    # bar_h.set_label(r'Entropy')
     f_H.savefig(outputs['H_fig'])
     #Axis for alpha
-    f_alpha = plt.figure(figsize=(2 * fig_w, 2 * fig_w))
-    ax_alpha = f_alpha.add_subplot(111)
+    f_alpha, ax_alpha = plt.subplots(figsize=(2 * fig_w, 2 * fig_w))
+    map_alpha = ax_alpha.imshow(np.rad2deg(alpha_geo.T), vmin=0, vmax=90)
+    ax_alpha.set_aspect('equal')
     ax_alpha.axis('off')
-    map_alpha = ax_alpha.imshow(alpha_geo.T, extent=ext2, aspect=asp)
-    plt.colorbar(map_alpha)
+    bar_alpha = plt.colorbar(map_alpha,  **cmap_prop)
+    bar_alpha.set_label(r'$\alpha$ [$\circ$]')
     f_alpha.savefig(outputs['alpha_fig'])
     #composite
     f1 =  plt.figure(figsize
@@ -80,7 +86,7 @@ def plot_figure_14(inputs, outputs, threads, config, params, wildcards):
     gs = gridspec.GridSpec(*(2, 3), height_ratios=[0.95, 0.05])
     ax1 = f1.add_subplot(gs[0, ::])
     cax = f1.add_subplot(gs[1,1])
-    ax1.imshow(rgb.transpose(1, 0, 2), extent=ext2, aspect=asp)
+    ax1.imshow(rgb.transpose(1, 0, 2), extent=ext2)
     ax1.axis('off')
     cax.imshow(pal, extent=pal_ext, aspect=asp)
     cax.set_ylabel(r'$\alpha$')
