@@ -22,7 +22,7 @@ list_of_reflectors_dihedral = [ref for ref in hongg_conf['list_of_reflectors'] i
 list_of_reflectors = chutzen_conf['list_of_reflectors']
 
 
-
+workdir: '.'
 configfile: './calibration_configuration_chutze.json'
 
 
@@ -31,13 +31,13 @@ configfile: './calibration_configuration_chutze.json'
 subworkflow old_data:
     workdir: './data'
     snakefile:  pyrat.rules['slc_to_calibrated_c']
-    configfile: './calibration_configuration_20160222.json'
+    configfile: 'calibration_configuration_20160222.json'
 
 
 subworkflow new_data:
     workdir: './data'
     snakefile:  pyrat.rules['slc_to_calibrated_c']
-    configfile: './calibration_configuration_chutze.json'
+    configfile: 'calibration_configuration_chutze.json'
 
 
 rule all:
