@@ -14,12 +14,14 @@ def load_config(config_file):
         return json.load(input_file)
 
 
-hongg_conf = load_config('./calibration_configuration_20160222.json')
-chutzen_conf = load_config('./calibration_configuration_chutze.json')
+hongg_conf = load_config('calibration_configuration_20160222.json')
+chutzen_conf = load_config('calibration_configuration_chutze.json')
 #Define list of reflectors from json config file for the scene with dihedrals
 list_of_reflectors_dihedral = [ref for ref in hongg_conf['list_of_reflectors'] if ref['type'] == 'dihedral'][0]
 #Define list of reflectors from json config file
 list_of_reflectors = chutzen_conf['list_of_reflectors']
+
+
 
 configfile: './calibration_configuration_chutze.json'
 
@@ -27,12 +29,13 @@ configfile: './calibration_configuration_chutze.json'
 
 
 subworkflow old_data:
-    workdir: './processed'
+    workdir: './data'
     snakefile:  pyrat.rules['slc_to_calibrated_c']
     configfile: './calibration_configuration_20160222.json'
 
+
 subworkflow new_data:
-    workdir: './processed'
+    workdir: './data'
     snakefile:  pyrat.rules['slc_to_calibrated_c']
     configfile: './calibration_configuration_chutze.json'
 
@@ -157,7 +160,7 @@ rule fig5:
 rule fig7:
     input:
         C_cal = new_data(expand("cov_cal/20160914_145059_l.c{i}{j}",i=range(4),j=range(4))),
-        map = 'processed/geo/pk25krel_latest_Clip.tif',
+        map = 'data/geo/pk25krel_latest_Clip.tif',
         C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
         LUT = new_data('geo/Chutzen.gpri_to_dem'),
         sh_map = new_data('geo/Chutzen.sh_map_gc'),
@@ -260,8 +263,8 @@ rule fig12:
 #Plot figure 13: H and V patterns
 rule fig13:
     input:
-        H_pat = './H_mainlobe_171_GHz.txt',
-        V_pat = './V_mainlobe_171_GHz.txt',
+        H_pat = 'H_mainlobe_171_GHz.txt',
+        V_pat = 'V_mainlobe_171_GHz.txt',
         coreg_par = old_data("diff/20160224_105201_AAAl_BBBl.off_par"),
         slc_par = old_data("slc_coreg_common/20160224_105201_BBBl.slc"),
         style = select_style,
@@ -280,7 +283,7 @@ def select_c_for_rule_14(wildcards):
 rule fig14:
     input:
         C = select_c_for_rule_14,
-        map = 'processed/geo/pk25krel_latest_Clip.tif',
+        map = 'data/geo/pk25krel_latest_Clip.tif',
         C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
         LUT = new_data('geo/Chutzen.gpri_to_dem'),
         sh_map = new_data('geo/Chutzen.sh_map_gc'),
@@ -408,24 +411,24 @@ rule RMS_residual:
 
 
 
-###############################################################################
-### Whenever the library is synchronized, cleanup all the {online} tags and
-#the other unecessary things
-rule cleanup_bibtex:
-    input:
-        bib = '../Texts/library.bib'
-    output:
-        'doc/library.bib'
-    run:
-        import re
-        url_re = re.compile(r"url = .+,")
-        abstract_re = re.compile(r"abstract = .+,")
-        month_re = re.compile(r"(?P<tag>month)\s=\s\{{(?P<month>\S+)\}}")
-        with open(input.bib) as infile, open(output[0],'w') as outfile:
-            for line in infile:
-                new_line = re.sub(abstract_re, "", re.sub(url_re, "",re.sub(month_re,r"\1 = \{ \2 \},",line)))
-                print(new_line)
-                outfile.write(new_line)
+################################################################################
+#### Whenever the library is synchronized, cleanup all the {online} tags and
+##the other unecessary things
+#rule cleanup_bibtex:
+#    input:
+#        bib = '../Texts/library.bib'
+#    output:
+#        'doc/library.bib'
+#    run:
+#        import re
+#        url_re = re.compile(r"url = .+,")
+#        abstract_re = re.compile(r"abstract = .+,")
+#        month_re = re.compile(r"(?P<tag>month)\s=\s\{{(?P<month>\S+)\}}")
+#        with open(input.bib) as infile, open(output[0],'w') as outfile:
+#            for line in infile:
+#                new_line = re.sub(abstract_re, "", re.sub(url_re, "",re.sub(month_re,r"\1 = \{ \2 \},",line)))
+#                print(new_line)
+#                outfile.write(new_line)
 
 
 ###############################################################################
@@ -435,7 +438,7 @@ rule paper:
         sections = glob.glob('doc/sections/*.tex'),
         main_paper = 'doc/calibration_paper.tex',
         figures = expand('fig/figure_{n}.pdf', n=range(1,12)),
-        library = 'doc/library.bib'
+        library = 'doc/biblography/library.bib'
     output:
         paper_pdf = 'doc/calibration_paper.pdf'
     shell:

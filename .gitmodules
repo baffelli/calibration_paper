@@ -1,0 +1,9 @@
+[submodule "biblography"]
+	path = biblography
+	url = https://github.com/baffelli/biblography
+[submodule "doc/biblography"]
+	path = doc/biblography
+	url = https://github.com/baffelli/biblography
+[submodule "doc/drawings"]
+	path = doc/drawings
+	url = https://github.com/baffelli/drawings
