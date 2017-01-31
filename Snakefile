@@ -27,30 +27,40 @@ configfile: './calibration_configuration_chutze.json'
 
 
 
-
+#Process data of antenna shift experiment
 subworkflow old_data:
     workdir: './data'
     snakefile:  pyrat.rules['slc_to_calibrated_c']
     configfile: 'calibration_configuration_20160222.json'
 
-
+#Process data of Chutzen calibration campaign
 subworkflow new_data:
     workdir: './data'
     snakefile:  pyrat.rules['slc_to_calibrated_c']
     configfile: 'calibration_configuration_chutze.json'
 
+#Recreate pdf illustrations
+subworkflow illustrations:
+    workdir: './drawings'
+    snakefile: './drawings/Snakefile'
 
 rule all:
     input:
-        expand('fig/figure_{r}.{ext}',r=range(1,17), ext=['png', 'pdf']),
-        expand('fig/figure_signature_{r}.{ext}',r=range(0,6), ext=['png']),
+        #figures from data
+        expand('fig/{ext}/figure_{r}.{ext}',r=range(1,17), ext=['png', 'pdf']),
+        expand('fig/{ext}/figure_signature_{r}.{ext}',r=range(0,6), ext=['png']),
+        #tables
         'tab/table_1.csv',
         'tab/table_2.csv',
         'tab/table_3.csv',
         'tab/RMS_polcal.csv',
         'tab/table_squint.csv',
-        'doc/calibration_paper.pdf'
-
+        'doc/calibration_paper.pdf',
+        #figures
+        illustrations('pdf/squint_correction.pdf'),
+        illustrations('pdf/real_aperture_signal_model_geometry.pdf'),
+        illustrations('pdf/antenna_offset_2.pdf'),
+        illustrations('pdf/kapri_antenna_arrangement.pdf')
 
 
 
@@ -77,8 +87,8 @@ def select_style(wildcards):
 #Plot figure 1: Oversampled magnitude/phase response of a TCR
 rule fig1:
     output:
-        paper_fig = 'fig/figure_1.{ext}',
-        pres_fig = expand('fig/figure_1_{n}.{{ext}}',n=range(6))
+        paper_fig = 'fig/{ext}/figure_1.{ext}',
+        pres_fig = expand('fig/{ext}/figure_1_{n}.{{ext}}',n=range(6))
     input:
         HH = new_data('slc_chan/20160914_145059_AAAl.slc'),
         VV = new_data('slc_chan/20160914_145059_BBBl.slc'),
@@ -108,7 +118,7 @@ def select_slc_for_rule_2(wildcards):
 
 rule fig2:
     output:
-        'fig/figure_{n,(2|3)}.{ext}'
+        'fig/{ext}/figure_{n,(2|3)}.{ext}'
     input:
         VV = select_slc_for_rule_2,
         a = new_data("slc_corr/20160914_145059_AAAl.slc"),
@@ -130,7 +140,7 @@ rule fig4:
         C_HV_old = old_data("slc_coreg_common/20160224_105201_ABBl.slc"),
         style = select_style
     output:
-        'fig/figure_4.{ext}'
+        'fig/{ext}/figure_4.{ext}'
     params:#position of dihedral
         ref = list_of_reflectors_dihedral
     script:
@@ -149,7 +159,7 @@ rule fig5:
         C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
         style = select_style
     output:
-        paper_fig = 'fig/figure_{n, (5|6)}.{ext}'
+        paper_fig = 'fig/{ext}/figure_{n, (5|6)}.{ext}'
     params:
         ref = lambda wildcards: list_of_reflectors[1] if int(wildcards.n) == 5 else list_of_reflectors[-1]
     script:
@@ -169,8 +179,8 @@ rule fig7:
     params:
         ref = list_of_reflectors
     output:
-        paper_fig = 'fig/figure_7.{ext}',
-        pres_fig = 'fig/figure_7_full.{ext}'
+        paper_fig = 'fig/{ext}/figure_7.{ext}',
+        pres_fig = 'fig/{ext}/figure_7_full.{ext}'
     script:
         'scripts/figure_7.py'
 
@@ -209,7 +219,7 @@ rule fig9:
         C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
         HHVV_phase = select_cov_for_rule_9,
     output:
-        'fig/figure_{n, (9)|(10)}.{ext}'
+        'fig/{ext}/figure_{n, (9)|(10)}.{ext}'
     params:
         ref = list_of_reflectors
     script:
@@ -227,7 +237,7 @@ rule fig11:
         slc_corr = new_data("slc_corr/20160914_145059_BBBl.slc_dec"),
         slc_corr_par = new_data("slc_corr/20160914_145059_BBBl.slc_dec.par"),
     output:
-        'fig/figure_11.{ext}'
+        'fig/{ext}/figure_11.{ext}'
     script:
         'scripts/figure_11.py'
 
@@ -253,8 +263,8 @@ rule fig12:
     params:
         ref = list_of_reflectors[1]
     output:
-        paper_fig = 'fig/figure_12.{ext}',
-        pres_fig = expand('fig/figure_12_{n}.{{ext}}',n=range(4))
+        paper_fig = 'fig/{ext}/figure_12.{ext}',
+        pres_fig = expand('fig/{ext}/figure_12_{n}.{{ext}}',n=range(4))
     script:
         'scripts/figure_12.py'
 
@@ -269,7 +279,7 @@ rule fig13:
         slc_par = old_data("slc_coreg_common/20160224_105201_BBBl.slc"),
         style = select_style,
     output:
-        'fig/figure_13.{ext}'
+        'fig/{ext}/figure_13.{ext}'
     script:
         'scripts/figure_13.py'
 
@@ -294,9 +304,9 @@ rule fig14:
     wildcard_constraints:
         n = '(14)|(15)'
     output:
-        rgb_fig = 'fig/figure_{n}.{ext}',
-        H_fig = 'fig/figure_{n}_H.{ext}',
-        alpha_fig = 'fig/figure_{n}_alpha.{ext}',
+        rgb_fig = 'fig/{ext}/figure_{n}.{ext}',
+        H_fig = 'fig/{ext}/figure_{n}_H.{ext}',
+        alpha_fig = 'fig/{ext}/figure_{n}_alpha.{ext}',
     script:
         'scripts/figure_14.py'
 
@@ -311,7 +321,7 @@ rule fig_ref_n:
         C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
         style = select_style
     output:
-        paper_fig = 'fig/figure_signature_{n}.{ext}'
+        paper_fig = 'fig/{ext}/figure_signature_{n}.{ext}'
     params:
         ref = lambda wildcards: list_of_reflectors[int(wildcards.n)]
     script:
@@ -327,7 +337,7 @@ rule fig16:
         C_par = new_data("cov_flat/20160914_145059_l.par"),
         style = select_style
     output:
-        paper_fig = 'fig/figure_16.{ext}'
+        paper_fig = 'fig/{ext}/figure_16.{ext}'
     params:
         ref = lambda wildcards: list_of_reflectors[int(config['calibration']['reflector_index'])]
     script:
@@ -409,26 +419,29 @@ rule RMS_residual:
         'scripts/RMS_polcal.py'
 
 
+rule clean_bib:
+    shell:
+        "cd doc/"
 
 
 ################################################################################
 #### Whenever the library is synchronized, cleanup all the {online} tags and
 ##the other unecessary things
-#rule cleanup_bibtex:
-#    input:
-#        bib = '../Texts/library.bib'
-#    output:
-#        'doc/library.bib'
-#    run:
-#        import re
-#        url_re = re.compile(r"url = .+,")
-#        abstract_re = re.compile(r"abstract = .+,")
-#        month_re = re.compile(r"(?P<tag>month)\s=\s\{{(?P<month>\S+)\}}")
-#        with open(input.bib) as infile, open(output[0],'w') as outfile:
-#            for line in infile:
-#                new_line = re.sub(abstract_re, "", re.sub(url_re, "",re.sub(month_re,r"\1 = \{ \2 \},",line)))
-#                print(new_line)
-#                outfile.write(new_line)
+rule cleanup_bibtex:
+    input:
+        bib = 'doc/biblography/library.bib'
+    output:
+        'doc/library.bib'
+    run:
+        import re
+        url_re = re.compile(r"url = .+,")
+        abstract_re = re.compile(r"abstract = .+,")
+        month_re = re.compile(r"(?P<tag>month)\s=\s\{{(?P<month>\S+)\}}")
+        with open(input.bib) as infile, open(output[0],'w') as outfile:
+            for line in infile:
+                new_line = re.sub(abstract_re, "", re.sub(url_re, "",re.sub(month_re,r"\1 = \{ \2 \},",line)))
+                print(new_line)
+                outfile.write(new_line)
 
 
 ###############################################################################
@@ -437,8 +450,8 @@ rule paper:
     input:
         sections = glob.glob('doc/sections/*.tex'),
         main_paper = 'doc/calibration_paper.tex',
-        figures = expand('fig/figure_{n}.pdf', n=range(1,12)),
-        library = 'doc/biblography/library.bib'
+        figures = expand('fig/pdf/figure_{n}.pdf', n=range(1,12)),
+        library = 'doc/library.bib'
     output:
         paper_pdf = 'doc/calibration_paper.pdf'
     shell:

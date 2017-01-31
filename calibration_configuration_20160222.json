@@ -39,11 +39,11 @@
 	{
 			"master_slc": "20160224_105201",
 			"rlks":1,
-			"azlks":1,
+			"azlks":5,
             "ridx":720,
             "azidx":1621,
 			"rwin":128,
-			"azwin":512,
+			"azwin":128,
 			"noff_r":10,
 			"noff_az":2
 	},

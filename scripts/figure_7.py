@@ -58,7 +58,7 @@ def plot_figure_7(inputs, outputs, threads, config, params, wildcards):
 
     #Decimate reflector location
     for ref in params['ref']:
-        ref['azidx_dec'] = C_cal.azidx_dex(ref['azidx'])
+        ref['azidx_dec'] = C_cal.azidx_dec(ref['azidx'])
         ref['geo_coord'] = LUT.dem_coord_to_geo_coord(LUT.radar_coord_to_dem_coord([ref['ridx'], ref['azidx_dec']]))
         ref['marker_color'] = 'orange' if ref['name'] == params['ref'][config['calibration']['reflector_index']]['name'] else '#43a2ca'
     print(params['ref'])

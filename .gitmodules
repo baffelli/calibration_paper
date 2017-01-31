@@ -7,3 +7,6 @@
 [submodule "doc/drawings"]
 	path = doc/drawings
 	url = https://github.com/baffelli/drawings
+[submodule "drawings"]
+	path = drawings
+	url = https://github.com/baffelli/drawings
