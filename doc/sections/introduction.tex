@@ -9,11 +9,18 @@ Several ground based radar systems were developed for these situations, operatin
 An alternative to aperture synthesis is to rotationally scan an electrically large fan beam antenna, resolving  scatterers by using its narrow azimuth beam\cite{Werner2008,werner_gpri_2012}. This imaging method has been called type II in \cite{Caduff2015}. 
 This configuration has some advantages over ground-based synthetic aperture systems\cite{Monserrat2014} of comparable rail length: \begin{enumerate}
   \item Azimuth samples are acquired independently and do not require focusing, eliminating defocusing and loss of coherence caused by moving targets and atmospheric phase screens during aperture time. 
-These changes destroy the coherence of the scene over the aperture length and will spread these scatterer in azimuth, with a severe impact on image quality, especially regarding the stability of coherent targets.\\
+These changes may adversely affect the coherence of the scene over the aperture length and will worsen the azimuth resolution. This is especially problematic for the analysis of coherent targets.\\
  \item A large 
-angular section can be imaged in a single pass, potentially up to 360$^{\circ}$. This is more difficult to obtain using a rail-based synthetic aperture radar.\\
-\item An electrically large antenna provides an higher gain and hence a better SNR; this is not the case for  aperture synthesis  where the antenna has to be electrically small to provide a sufficiently wide beam.\\
+angular section of up to 270$^{\circ}$ can be imaged in a single pass. This is more difficult to obtain using a rail-based synthetic aperture radar.\\
 \end{enumerate}
+The main advantage of the rail based SAR system over the real aperture solution is the better azimuth resolution: a SAR system using a rail of length $L$ will have an angular resolution of: 
+\begin{equation}
+ 	\theta_{3dB}^{SAR} = \frac{\lambda}{2L},
+\end{equation}
+while an antenna with physical aperture size $L$ has an azimuth 3dB resolution of:
+\begin{equation}
+ 	\theta_{3dB}^{RAR} = \frac{\lambda}{L}.
+\end{equation}
 The majority of polarimetric ground-based radar system is based on the aperture synthesis principle. An indoor system is presented in \cite{Bennett1996} followed by a portable outdoors version \cite{Bennett2000}. A broadband polarimetric SAR system with two dimensional aperture synthesis is introduced in \cite{Zhou2004}, with measurement results presented in \cite{Hamasaki2005}.
 Another example  of a synthetic aperture system is is UPCs RiskSAR \cite{Iglesias2014, Aguasca2004,Pipia2007a,Pipia2009, Pipia2013,Iglesias2014}. Example of ground-based polarimetric SAR data at X and C band are shown in \cite{Kang2009, Kang2010}.\\ A dual polarization, multiband GB-SAR system is used in \cite{Yitayew2014} to produce tomograms of snow covered sea ice. A similar concept is used in\cite{Frey2015,Frey2016} to produce full polarimetric tomographic profiles of a snow pack by synthesizing an aperture in the elevation direction.\\
 Less research is available on real aperture polarimetric systems, excluding non-imaging devices such as ground based scatterometers. One of the few examples is a C-Band version of the GPRI\cite{Cherukumilli2012}.
@@ -33,12 +40,12 @@ In terms of hardware, the feature distinguishing KAPRI and GPRI is the addition 
 		every last row/.style={after row=\bottomrule},
 	]{
 		Parameter & Value\\
-		Modulation & FM-CW 250 $\mathrm{\mu} s$ to 16 ms chirp duration\\
+		Modulation & FM-CW (250 $\mathrm{\mu} s$ to 16 ms chirp duration)\\
 		Center frequency & 17.2 GHz\\
 		Bandwidth & 200 MHz\\
-		Range resolution& 0.95 m 3dB resolution @ -26 dB peak sidelobe\\
-		Azimuth pattern beamwidth& $\mathrm{0.385^\circ}$ 3dB beamwidth\\
-		Elevation pattern beamwidth& $\mathrm{35^\circ}$ 3dB beamwidth\\
+		Range resolution& 0.95 m 3dB resolution @ -26 dB peak sidelobe ratio (PSLR)\\
+		Azimuth 3dB beamwidth& $\mathrm{0.385^\circ}$ \\
+		Elevation 3dB beamwidth& $\mathrm{35^\circ}$ \\
 		Polarization & fully polarimetric, selectable TX and RX polarization\\
 	}
 	\caption{Summary of main KAPRIs parameters.}
@@ -48,8 +55,8 @@ In terms of hardware, the feature distinguishing KAPRI and GPRI is the addition 
 The following contributions are made in this paper:
 \begin{enumerate}
 	\item Preprocessing methods adapted to KAPRIs hardware are presented, that can be used to generate correct SLC images from the acquired raw data.
-	\item A polarimetric calibration model suitable to the systems design is presented, that includes the correction of effects due to differences in polarized antenna design and the presence of spatial baselines between the polarimeteric phase centers.
-	\item The validity and quality of the proposed solutions is  quantified by analyzing the response of trihedral corner reflectors in a specifically acquired dataset.
+	\item A polarimetric calibration model adapted to the system design of KAPRI is presented. It includes the correction of effects due to differences in polarized antenna design and the presence of spatial baselines between the polarimeteric phase centers.
+	\item The proposed processing and calibration approaches are validated by analyzing the response of trihedral corner reflectors in a specifically acquired dataset.
 \end{enumerate}
 \subsection{Outline}
 Part \ref{sec:methods:signal_model} presents  the methods employed to process the raw data into range compressed SLC. This part includes a derivation of the FMCW signal model and of the acquisition geometry, that will be used throughout the rest of this paper. \autoref{sec:methods:squint_correction} deals with the correction of frequency-dependent beam squint due to the slotted waveguide antenna design. These two sections describe the parts of the processing that are common to both KAPRI and GPRI. The quality of the processing is evaluated in \autoref{sec:results:squint_correction} by plotting the oversampled phase and amplitude response of trihedral corner reflectors, where significant range resolution improvements are observed by applying the described squint compensation procedure.\\
