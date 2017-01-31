@@ -28,19 +28,17 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
                 'coherence_slope': 12}
     mph, rgb, norm = vf.dismph(HHVV, **mph_dict)  # create rgb image
     pal, ext = vf.dismph_palette(HHVV, **mph_dict)
-    print(ext)
-
     plt.style.use(inputs['style'])
     fig_w, fig_h = plt.rcParams['figure.figsize']
     f = plt.figure(figsize=(2 * fig_w, 2 * fig_h))
     gs = gridspec.GridSpec(*(2, 4), height_ratios=[1, 0.2])
-    gs.update(hspace=0.3, wspace=0.0)
+    gs.update(hspace=0.45, wspace=0.0)
     im_ax = f.add_subplot(gs[0, ::])
     aspect = fig_h / fig_w
     slc_ext = [az_vec[0], az_vec[-1], r_vec[-1], r_vec[1]]
     im_ax.imshow(mph, extent=slc_ext, aspect= vf.fixed_aspect(slc_ext, aspect), origin='upper')
-    im_ax.yaxis.set_label_text(r'range [m]')
-    im_ax.xaxis.set_label_text(r'azimuth [$^\circ$]')
+    im_ax.yaxis.set_label_text(r'Range [m]')
+    im_ax.xaxis.set_label_text(r'Azimuth angle [$^\circ$]')
     im_ax.yaxis.set_major_locator(tick.MultipleLocator(500))
     im_ax.xaxis.set_major_locator(tick.MultipleLocator(20))
     # Plot reflectors
@@ -55,7 +53,8 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
                                    horizontalalignment='center')
     # plot palette
     pal_ax = f.add_subplot(gs[-1, 1])
-    pal_ax.imshow(pal, extent=ext, aspect=500)
+    print(ext)
+    pal_ax.imshow(pal, aspect=1/30.0, extent=[ 0, 1, -np.pi, np.pi,])
     pal_ax.set_ylabel(r'Phase')
     pal_ax.set_xlabel(r'Intensity')
     pal_ax.grid(b=False)

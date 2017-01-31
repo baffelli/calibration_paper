@@ -41,7 +41,7 @@ def plot_figure_4(inputs, outputs, threads, config, params, wildcards):
                                                                     ))
     ax.text(az_vec[mx_idx_zoom[1] + x_shift + 80], (max_corr + max)/2,
             "gain: {HV:.2f} dB".format(HV=HV_gain), bbox=bbox_props)
-    ax.xaxis.set_label_text(r'azimuth [$\circ$]')
+    ax.xaxis.set_label_text(r'Azimuth angle from maximum [$\circ$]')
     ax.yaxis.set_label_text(r'HV power [dB]')
     ax.set_ylim([-20, 35])
     ax.grid(True)

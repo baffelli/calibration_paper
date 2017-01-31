@@ -56,7 +56,7 @@ def plot_figure_16(inputs, outputs, threads, config, params, wildcards):
     # plot pauli rgb
     ax_pauli.imshow(pauli.transpose([1, 0, 2]), extent=ext, aspect=1)
     ax_pauli.xaxis.set_label_text(r'Range [$m$]')
-    ax_pauli.yaxis.set_label_text(r'Azimuth [$^\circ$]')
+    ax_pauli.yaxis.set_label_text(r'Azimuth angle [$\circ$]')
     # plot range response
     ax_r.set_prop_cycle(color_cycle)
     ax_r.plot(r_vec, cf.dB(np.abs(rplot.diagonal(axis1=-2, axis2=-1))))

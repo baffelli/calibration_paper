@@ -13,7 +13,7 @@ sw = 0.8
 rwin = 20
 azwin = 128
 
-xlabel = r"Azimuth [$\circ$]"
+xlabel = r"Azimuth angle from maximum [$\circ$]"
 ylabel = r'Range [m]'
 
 def plot_figure_1(inputs, outputs, threads, config, params, wildcards):
@@ -21,20 +21,20 @@ def plot_figure_1(inputs, outputs, threads, config, params, wildcards):
     # This is a full page figure, so we create a figure twice as wide as usual
     # create figure
     fig_w, fig_h = plt.rcParams['figure.figsize']
+    f = plt.figure(figsize=(fig_w*3, fig_h*2))
     rs = 2
-    shp = (2 * rs + 1, 3)#shape of gridspec
-    f = plt.figure(figsize=(fig_w * 3, fig_h * 2))
+    shp = (5, 3)#shape of gridspec
     gs = gridspec.GridSpec(*shp)
-    gs.update(wspace=0.0, hspace=0.7)
+    gs.update(wspace=0.4, hspace=0.9)
     # f, ax_arr = plt.subplots(nrows=3, ncols=3, figsize=(fig_w * 3, fig_h * 2), gridspec_kw={'height_ratios':[1,1,0.5]})
     for idx_chan, chan_str in enumerate(['HH', 'VV']):
         for idx_proc, proc_str in enumerate(['', '_desq', '_corr']):
             # current label
             start_idx = idx_chan + (idx_chan%rs)
-            current_ax = plt.subplot(gs[start_idx:start_idx+rs, idx_proc])
+            current_ax = f.add_subplot(gs[start_idx:start_idx+rs, idx_proc])
             current_idx = np.ravel_multi_index((idx_chan , idx_proc), shp)
             label_name = string.ascii_lowercase[current_idx]
-            # current_ax = axarr[idx_chan, idx_proc]
+            # current_ax = ax_arr[idx_chan, idx_proc]
             current_ax.title.set_text(r"({label_name})".format(label_name=label_name))
             file_name = inputs[chan_str + proc_str]
             current_slc = gpf.gammaDataset(file_name + '.par', file_name)  # load slc
@@ -67,15 +67,15 @@ def plot_figure_1(inputs, outputs, threads, config, params, wildcards):
             # Second figure for subplots used in presentation
             f1, ax1 = plt.subplots(figsize=(fig_w, fig_h))
             ax1.imshow(mph, aspect=new_aspect, extent=ext_vec)
-            current_ax.set_xlabel(xlabel)
-            current_ax.set_ylabel(ylabel)
+            ax1.set_xlabel(xlabel)
+            ax1.set_ylabel(ylabel)
             f1.savefig(outputs['pres_fig'][current_idx])
 
 
     # Make space for colorbar
     # f.subplots_adjust(hspace=0.3, wspace=0.2)
     # cax = f.add_axes([0.5, 0, 0.5, 0.07], anchor=(0.5,0.5))
-    cax = plt.subplot(gs[-1,:])
+    cax = f.add_subplot(gs[-1,:])
     cax.imshow(pal, aspect=1/30.0, extent=[ 0, 1, -np.pi, np.pi,])
     cax.set_ylabel(r'Phase')
     cax.set_xlabel(r'Intensity relative to peak')

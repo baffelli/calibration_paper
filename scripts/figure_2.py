@@ -59,7 +59,7 @@ def plot_figure_2(inputs, outputs, threads, config, params, wildcards):
         amp_ax.axvline(0.2, color=lc, ls='-', lw=lw)
         amp_ax.axvline(-0.2, color=lc, ls='-', lw=lw)
         amp_ax.yaxis.set_label_text(r'Intensity')
-        amp_ax.xaxis.set_label_text(r'azimuth angle from maximum [deg]')
+        amp_ax.xaxis.set_label_text(r'Azimuth angle from maximum [$\circ$]')
         # Format axes
         map(vf.format_axes, f.get_axes())
     leg = amp_ax.legend(loc='lower center', ncol=len(ranges) // 2, fancybox=True, frameon=True, shadow=False, framealpha=None, handlelength=0.3, numpoints=4)

@@ -59,7 +59,7 @@ def plot_figure_11(inputs, outputs, threads, config, params, wildcards):
         tit = string.ascii_lowercase[plot_idx]
         slc_ax.title.set_text(r"({label_name})".format(label_name=tit))
         if plot_idx == 0:
-            slc_ax.set_xlabel(r"Azimuth [$^\circ$]")
+            slc_ax.set_xlabel(r"Azimuth angle [$\circ$]")
             slc_ax.set_ylabel(r'Range [m]')
     pal_ax = f.add_subplot(gs[-1,1])
     pal_ax.imshow(pal, extent=ext, aspect=2)

@@ -88,7 +88,7 @@ def select_style(wildcards):
 rule fig1:
     output:
         paper_fig = 'fig/{ext}/figure_1.{ext}',
-        pres_fig = expand('fig/{ext}/figure_1_{n}.{{ext}}',n=range(6))
+        pres_fig = expand('fig/{{ext}}/figure_1_{n}.{{ext}}',n=range(6))
     input:
         HH = new_data('slc_chan/20160914_145059_AAAl.slc'),
         VV = new_data('slc_chan/20160914_145059_BBBl.slc'),
@@ -264,7 +264,7 @@ rule fig12:
         ref = list_of_reflectors[1]
     output:
         paper_fig = 'fig/{ext}/figure_12.{ext}',
-        pres_fig = expand('fig/{ext}/figure_12_{n}.{{ext}}',n=range(4))
+        pres_fig = expand('fig/{{ext}}/figure_12_{n}.{{ext}}',n=range(4))
     script:
         'scripts/figure_12.py'
 
@@ -419,10 +419,23 @@ rule RMS_residual:
         'scripts/RMS_polcal.py'
 
 
+###############################################################################
+#Cleanup biblography
 rule clean_bib:
     shell:
-        "cd doc/"
+        """
+        cd doc
+        rm  *.bbl
+        rm *.aux
+        rm *.blg
+        """
 
+rule pull_bib:
+    shell:
+        """
+        cd doc/biblography
+        git pull
+        """
 
 ################################################################################
 #### Whenever the library is synchronized, cleanup all the {online} tags and
