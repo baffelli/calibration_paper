@@ -85,7 +85,7 @@ In \autoref{fig:phase_response_VV:corrected} the phase and amplitude response in
 \begin{figure*}[ht!]
 	\centering
 	\includegraphics{figure_4}
-	\caption{Oversampled azimuth power response of a dihedral corner reflector, before (green) and after the correction of antenna pattern mispointing (orange). The observed gain is in line with the expected power loss due to the H and V patterns not perfectly overlapping.}
+	\caption{Oversampled azimuth power response of a dihedral corner reflector, before (green) and after the correction of antenna pattern mispointing (orange). The observed gain fits the power loss expected due to the H and V patterns not perfectly overlapping. This figure was computed using manufactured-supplied antenna patterns for the horizontally and vertically polarized unit.}
 	\label{fig:hv_power}
 \end{figure*}
 To verify the impact of the H-V pattern pointing shift as described in \autoref{sec:methods:misalingment} on the performance of crosspolar measurements, the response of a dihedral reflector with an high crosspolar contribution is analyzed for two configurations:\\ \begin{enumerate*}\item the case where the antennas are not mechanically moved \item the case where the optimal shift of 1.8 mm, as described in \autoref{sec:methods:misalingment} is applied to the movable antenna hinge to bring the patterns into alignment.\\ 
@@ -98,13 +98,13 @@ The removal of the topographic phase contribution in the copolar phase differenc
 	\begin{subfigure}[t]{0.5\textwidth}
 	\centering
 	\includegraphics{figure_9}
-	\subcaption{With topographic phase.}
+	\subcaption{HHVV phase difference with topographic phase.}
 	\label{fig:topo_phase:uncorrected}
 	\end{subfigure}\\
 	\begin{subfigure}[t]{0.5\textwidth}
 	\centering
 	\includegraphics{figure_10}
-	\subcaption{Without topographic phase.}
+	\subcaption{HHVV phase difference with topographic phase removed by the proposed method.}
 	\label{fig:topo_phase:corrected}
 	\end{subfigure}
 	\caption{HH-VV phase difference in radar coordinates, (a) before and (b)  after the removal of the topographic phase term as described in \autoref{sec:methods:topo_removal}. The hue of the image is modulated by the covariance phase, the intensity by the magnitude, the saturation by the copolar coherence magnitude, as shown in the bottom colorbar and plot. The locations and names of reflectors described in \autoref{tab:reflectors} are plotted. The interferometric fringe pattern visible in (a) is removed by the proposed correction, as plotted in (b), leaving a phase offset that will be removed by the polarimetric calibration.}

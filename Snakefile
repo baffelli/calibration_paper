@@ -58,6 +58,8 @@ rule all:
         'doc/calibration_paper.pdf',
         #figures
         illustrations('pdf/squint_correction.pdf'),
+        illustrations('pdf/squint_correction_interpolation.pdf'),
+        illustrations('pdf/antenna_squint.pdf'),
         illustrations('pdf/real_aperture_signal_model_geometry.pdf'),
         illustrations('pdf/antenna_offset_2.pdf'),
         illustrations('pdf/kapri_antenna_arrangement.pdf')
@@ -194,7 +196,7 @@ rule fig8:
         C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
         style = select_style
     output:
-        'fig/figure_8.{ext}'
+        'fig/{ext}/figure_8.{ext}'
     script:
         'scripts/figure_8.py'
 
@@ -464,6 +466,7 @@ rule paper:
         sections = glob.glob('doc/sections/*.tex'),
         main_paper = 'doc/calibration_paper.tex',
         figures = expand('fig/pdf/figure_{n}.pdf', n=range(1,12)),
+        drawings = glob.glob('drawings/pdf/*.pdf'),
         library = 'doc/library.bib'
     output:
         paper_pdf = 'doc/calibration_paper.pdf'

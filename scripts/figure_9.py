@@ -32,7 +32,7 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     fig_w, fig_h = plt.rcParams['figure.figsize']
     f = plt.figure(figsize=(2 * fig_w, 2 * fig_h))
     gs = gridspec.GridSpec(*(2, 4), height_ratios=[1, 0.2])
-    gs.update(hspace=0.45, wspace=0.0)
+    gs.update(hspace=0.3, wspace=0.5)
     im_ax = f.add_subplot(gs[0, ::])
     aspect = fig_h / fig_w
     slc_ext = [az_vec[0], az_vec[-1], r_vec[-1], r_vec[1]]
