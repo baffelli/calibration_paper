@@ -22,18 +22,18 @@ def plot_figure_8(inputs, outputs, threads, config, params, wildcards):
     phase_coeff, cov = np.polyfit(inc_ref, residuals['HH-VV phase imbalance'], 3, cov=True)  # thir order for phase
     plt.style.use(inputs.style)
     fig_w, fig_h = plt.rcParams['figure.figsize']
-    xlabel = r'local incidence angle $[^\circ]$'
+    xlabel = r'Local incidence angle $[^\circ]$'
     f, (ph_ax, amp_ax) = plt.subplots(2, 1, figsize=(fig_w * 2, 2* fig_h))
     ph_ax.scatter(inc_ref, residuals['HH-VV phase imbalance'])
     ph_ax.xaxis.set_label_text(xlabel)
-    ph_ax.yaxis.set_label_text(r'residual $\phi_r + \phi_t [^\circ]$')
-    bbox_props = dict(boxstyle="square", fc="white", ec="w", lw=2)
+    ph_ax.yaxis.set_label_text(r'Calibrated $\phi_r + \phi_t [^\circ]$')
+    bbox_props = dict(boxstyle="square", fc="white", ec="black", lw=0.5)
     ph_ax.text(0.2, 0.2, r"RMS {:.2f}$^\circ$, Mean {:.2f}$^\circ$".format(phase_rms, phase_mean),
                transform=ph_ax.transAxes, bbox=bbox_props)
     ph_ax.set_ylim([-20, 20])
     amp_ax.scatter(inc_ref, residuals['HH-VV amplitude imbalance'])
     amp_ax.xaxis.set_label_text(xlabel)
-    amp_ax.yaxis.set_label_text(r'residual $f$')
+    amp_ax.yaxis.set_label_text(r'Calibrated $f$')
     amp_ax.text(0.2, 0.2, r"RMS {:.2f}, Mean {:.2f}".format(amp_rms, amp_mean),
                transform=amp_ax.transAxes, bbox=bbox_props)
     f.subplots_adjust(hspace=0.2)

@@ -61,7 +61,7 @@ rule all:
         illustrations('pdf/squint_correction_interpolation.pdf'),
         illustrations('pdf/antenna_squint.pdf'),
         illustrations('pdf/real_aperture_signal_model_geometry.pdf'),
-        illustrations('pdf/antenna_offset_2.pdf'),
+        illustrations('pdf/antenna_offset.pdf'),
         illustrations('pdf/kapri_antenna_arrangement.pdf')
 
 
