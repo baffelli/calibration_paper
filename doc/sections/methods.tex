@@ -203,7 +203,7 @@ The copolar phase imbalance $\phi_r + \phi_t$ is estimated from the phase of $C_
 Both parameters are estimated on the oversampled response of a corner reflector. In \cite{Fore2015}, a polynomial model for the copolar calibration parameters is used, that links the imbalances to the incidence angle. In that case, the estimate are performed using a larger array of corner reflectors, which is not available in our case. Thus, a simplified calibration model is used, assuming the copolar parameters to be independent of incidence angle.\\ 
 Because of the difficulty of placing and correctly orienting a cross polarizing target such as a $45^\circ$ dihedral, the estimation of $g$ and $\phi_t - \phi_r$ is based on the assumption that most pixels in the data represent reciprocal scatterers:
 \begin{equation}
-	g = \left<\frac{C_{HVHV}^{prime}}{C_{VHVH}^{\prime}}\right>^\frac{1}{4}
+	g = \left<\frac{C_{HVHV}^{\prime}}{C_{VHVH}^{\prime}}\right>^\frac{1}{4}
 \end{equation}
 and:
 \begin{equation}
@@ -216,16 +216,16 @@ If radiometric calibration is desired, the value of $A$ can be determined after 
 \end{equation}
 Where $R_{tri}$ is the slant range to the trihedral corner reflector. This is necessary to remove the range spread loss compensation as performed in \autoref{sec:methods}.
 \subsection{Experimental Data}\label{sec:methods:data}
-A calibration dataset was acquired in September 2016 at an urban-agricultural area near M\"{u}nsingen, Switzerland to test the methods described in the preceding sections. The data was acquired from the top of the "Chutzen" hill approximately 800 m a.s.l, looking down towards a mixture of fields and forests, with the town in the far range region. 6 Trihedral Corner Reflectors were placed in the area for the determination of calibration parameters and to assess imaging quality. Three of these reflectors have triangular faces with a length of 40 cm, corresponding to a RCS of $\sigma=\frac{4}{3}\pi \frac{a^4}{\lambda^2}=25.5 dB$, while the remaining two are cubic corner reflector with $\sigma= 35 dB$, at the nominal central frequency of 17.2 GHz.
-	\begin{figure*}
+A calibration dataset was acquired in September 2016 at an urban-agricultural area near M\"{u}nsingen, Switzerland. The purpose of the acquisitions was to test the methods described in the preceding sections. The data was acquired from the top of the "Chutzen" hill approximately 800 m a.s.l, looking down towards a mixture of fields and forests, with the town in the far range region. 6 Trihedral Corner Reflectors were placed in the area for the determination of calibration parameters and to assess imaging quality. Three of these reflectors have triangular faces with a length of 40 cm, corresponding to a RCS of $\frac{4}{3}\pi \frac{a^4}{\lambda^2}=25.5 dB$, while the remaining two are cubic corner reflector with a RCS of $35 dB$, at the nominal central frequency of 17.2 GHz.
+	\begin{figure}
 		\centering
-		\includegraphics{figure_7}
-		\caption{Pauli RGB composite ($R=\abs{HH-VV},G=\abs{HV},B=\abs{HH+VV}$) of the imaged scene, geocoded using a DEM with 2m pixel spacing. Each channel is scaled according to its own dynamic range. The location of corner reflectors is marked by cyan circles, the reflector used the determination of polarimetric calibration parameters in orange. The image is overlaid on a 1:25000 scale Swiss topographic map (Reproduced with the authorization of swisstopo  JD100042).}
+		\includegraphics[width=\columnwidth]{figure_7}
+		\caption{Pauli RGB composite ($R=\abs{HH-VV},G=\abs{HV},B=\abs{HH+VV}$) of the imaged scene, geocoded using a digital elevation model with 2 m pixel spacing. Each channel is scaled according to its own dynamic range. The location of corner reflectors is marked by cyan circles, the reflector used the determination of polarimetric calibration parameters in orange. The image is overlaid on a 1:25000 scale Swiss topographic map (Reproduced with the authorization of swisstopo  JD100042).}
 		\label{fig:pauli_rgb}
-	\end{figure*}
+	\end{figure}
 \autoref{fig:pauli_rgb} shows the calibrated Pauli RGB composite of the scene, resampled in Cartesian coordinates with the location of the reflectors marked using blue circles; their location and RCS is summarized in \autoref{tab:reflectors}.\\
 The dataset was acquired with the horizontally polarized antenna group shifted towards the V group by 1.8 mm to compensate for the pattern misalignment as described in \autoref{sec:methods:misalingment}.\\
-A separate dataset containing a dihedral reflector was acquired at our H\"{o}nggerberg campus in order to investigate the effect of antenna pattern misalignment on crosspolar acquisitions and to test the suitability of the computed adjustment value as discussed in \autoref{sec:methods:misalingment}. This measurement was held separately because of the logistical problems associated with the transportation and the setup of large dihedral calibration targets.
+A second dataset containing a dihedral reflector was acquired at our H\"{o}nggerberg campus in order to investigate the effect of antenna pattern misalignment on crosspolar acquisitions and to test the suitability of the computed adjustment value as discussed in \autoref{sec:methods:misalingment}. This measurement was held separately because of the logistical problems associated with the transportation and the setup of large dihedral calibration targets.
 
 \begin{table}[ht]
 	\centering

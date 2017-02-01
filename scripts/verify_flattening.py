@@ -14,14 +14,19 @@ def az_idx(ds, idx):
 
 
 def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
-    #Load images
+    print(inputs.HHVV_phase)
     HHVV = gpf.gammaDataset(inputs.C_cal_par, inputs.HHVV_phase[0], dtype=gpf.type_mapping['FCOMPLEX'])
     HH = gpf.gammaDataset(inputs.C_cal_par, inputs.HHVV_phase[1], dtype=gpf.type_mapping['FCOMPLEX'])
     VV = gpf.gammaDataset(inputs.C_cal_par, inputs.HHVV_phase[2], dtype=gpf.type_mapping['FCOMPLEX'])
+    #Height
+    height = gpf.load_binary(inputs.height, VV.shape[0], dtype=gpf.type_mapping['FLOAT*4'])
+    #Topographic phase
+    topo_phase = gpf.gammaDataset(inputs.topo_phase_par, inputs.topo_phase)
+    print(topo_phase.shape)
     #Copolar span
     copol_span = np.abs(HH)**2 +  np.abs(VV)**2
     #Normalize
-    copol_span = copol_span / np.nanmnax(copol_span)
+    copol_span = copol_span / np.nanmax(copol_span)
     #Take the brightest 10%
     bright_percentile = np.percentile(copol_span,10)
     #Find the indices of that percentile
