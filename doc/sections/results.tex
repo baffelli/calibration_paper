@@ -52,8 +52,8 @@ The ability of the phase model described in \autoref{sec:methods:azimuth_process
 										every last row/.style={after row=\bottomrule},
 										columns/name/.style={column name={Name} ,string type},
 										columns/rsl/.style={precision=1, column name={$R_0 [m]$}},
-										columns/LphHH/.style={precision=2, column name={$L_{ph}^{H} [m]$}},
-										columns/LphVV/.style={precision=2, column name={$L_{ph}^{V} [m]$}},
+										columns/LphHH/.style={precision=2, fixed, column name={$L_{ph}^{H} [m]$}},
+										columns/LphVV/.style={precision=2, fixed, column name={$L_{ph}^{V} [m]$}},
 										%columns/res/.style={precision=3, column name={residual}},
 										]{../tab/table_2.csv}
 	\caption{Result of the phase center displacement fit for six trihedral corner reflectors located at different ranges. In the first column, the estimated phase center displacements for the H antenna are shown, in the second the ones for the V unit.}
@@ -88,8 +88,11 @@ In \autoref{fig:phase_response_VV:corrected} the phase and amplitude response in
 	\caption{Oversampled azimuth power response of a dihedral corner reflector, before (green) and after the correction of antenna pattern mispointing (orange). The observed gain fits the power loss expected due to the H and V patterns not perfectly overlapping. This figure was computed using manufactured-supplied antenna patterns for the horizontally and vertically polarized unit.}
 	\label{fig:hv_power}
 \end{figure*}
-To verify the impact of the H-V pattern pointing shift as described in \autoref{sec:methods:misalingment} on the performance of crosspolar measurements, the response of a dihedral reflector with an high crosspolar contribution is analyzed for two configurations:\\ \begin{enumerate*}\item the case where the antennas are not mechanically moved \item the case where the optimal shift of 1.8 mm, as described in \autoref{sec:methods:misalingment} is applied to the movable antenna hinge to bring the patterns into alignment.\\ 
-\end{enumerate*}
+To verify the impact of the H-V pattern pointing shift as described in \autoref{sec:methods:misalingment} on the performance of crosspolar measurements, the response of a dihedral reflector with an high crosspolar contribution is analyzed for two configurations:\\ 
+\begin{enumerate}
+	\item the antennas are not mechanically moved; the H and V pattern are not aligned in azimuth.
+	\item the optimal shift of 1.8 mm, as described in \autoref{sec:methods:misalingment} is applied to the movable antenna hinge to bring the patterns into alignment.\\ 
+\end{enumerate}
 In \autoref{fig:hv_power}, the result of the above experiment is shown as the oversampled, coregistered azimuth response in the HV channel.
 \subsection{Removal of Topographic Phase}\label{sec:results:topo_removal}
 The removal of the topographic phase contribution in the copolar phase difference, as described in \autoref{sec:methods:topo_removal}, is visualized in  \autoref{fig:topo_phase} by modulating the hue of the image with the HH-VV phase difference, its intensity with the corresponding $\mathbf{C}$ matrix element magnitude and by setting the saturation of the image by a nonlinear threshold function of the copolar coherence magnitude, estimated using a $\mathrm{5 \times 5}$ sample window. 
