@@ -51,7 +51,7 @@ def plot_figure_7(inputs, outputs, threads, config, params, wildcards):
     #create figure
     plt.style.use(inputs['style'])
     fig_w, fig_h = plt.rcParams['figure.figsize']
-    f, ax = plt.subplots(figsize=(fig_h, fig_w))
+    f, ax = plt.subplots(figsize=(fig_h*2, fig_w*2))
 
     #Geocode
     LUT = geo.GeocodingTable(inputs.dem_seg_par, inputs.LUT)

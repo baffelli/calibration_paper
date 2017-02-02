@@ -21,11 +21,11 @@ def plot_figure_1(inputs, outputs, threads, config, params, wildcards):
     # This is a full page figure, so we create a figure twice as wide as usual
     # create figure
     fig_w, fig_h = plt.rcParams['figure.figsize']
-    f = plt.figure(figsize=(fig_w, fig_h))
+    f = plt.figure(figsize=(fig_w*2, fig_h*2))
     rs = 2
     shp = (5, 3)#shape of gridspec
     gs = gridspec.GridSpec(*shp)
-    gs.update(wspace=0.4, hspace=0.9)
+    gs.update(wspace=0.2, hspace=0.9)
     # f, ax_arr = plt.subplots(nrows=3, ncols=3, figsize=(fig_w * 3, fig_h * 2), gridspec_kw={'height_ratios':[1,1,0.5]})
     for idx_chan, chan_str in enumerate(['HH', 'VV']):
         for idx_proc, proc_str in enumerate(['', '_desq', '_corr']):

@@ -47,7 +47,7 @@ def plot_figure_12(inputs, outputs, threads, config, params, wildcards):
     # Create figure
     plt.style.use(inputs['style'])
     fig_w, fig_h = plt.rcParams['figure.figsize']
-    f = plt.figure(figsize=(fig_w, fig_h))
+    f = plt.figure(figsize=(fig_w*2, fig_h*2))
     # Grid of plots for figures
     gs = gridspec.GridSpec(*shp, height_ratios=[1, 1])
     gs.update(hspace=0.3, wspace=0.4)

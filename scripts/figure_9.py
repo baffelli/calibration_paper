@@ -63,7 +63,7 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     # Set style and create figure
     plt.style.use(inputs['style'])
     fig_w, fig_h = plt.rcParams['figure.figsize']
-    f = plt.figure(figsize=(fig_w, fig_h))
+    f = plt.figure(figsize=(fig_w*2, fig_h*2))
     # Create grid of plots
     gs = gridspec.GridSpec(*(3, 4), height_ratios=[1, 1, 0.2])
     gs.update(hspace=0.5, wspace=0.5)
@@ -105,6 +105,7 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     c = np.linspace(0, 1)
     c_scale = vf.scale_coherence(c, threshold=mph_dict['coherence_threshold'], slope=mph_dict['coherence_slope'])
     coh_ax.plot(c, c_scale)
+    coh_ax.set_yticks([0, 0.5, 1])
     coh_ax.xaxis.set_label_text(r'Coherence')
     coh_ax.yaxis.set_label_text(r'Saturation')
     coh_ax.set_aspect(1)
