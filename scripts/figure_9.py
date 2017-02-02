@@ -7,63 +7,69 @@ import pyrat.fileutils.gpri_files as gpf
 import pyrat.visualization.visfun as vf
 from matplotlib import gridspec
 
-import scipy.stats as stats
+from matplotlib.patches import Ellipse
 
 # Percentile
 perc = 20
 # Coherence threshold
 coh_thresh = 0.6
 
-win = [3, 2]  # multilooking window
+win = [5, 2]  # multilooking window
+
 
 # Return the decimated azimuth position
 def az_idx(ds, idx):
     return idx / ds.GPRI_decimation_factor
 
 
+# Confidence for the error ellipse
+conf = 5.991
+
+# SLice for image
+sl_image = (slice(500 // win[0], 1900 // win[0]), slice(None, None))
+
+
 def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
-    print(inputs.HHVV_phase)
     HHVV = gpf.gammaDataset(inputs.C_cal_par, inputs.HHVV_phase[0], dtype=gpf.type_mapping['FCOMPLEX'])
     HH = gpf.gammaDataset(inputs.C_cal_par, inputs.HHVV_phase[1], dtype=gpf.type_mapping['FCOMPLEX'])
     VV = gpf.gammaDataset(inputs.C_cal_par, inputs.HHVV_phase[2], dtype=gpf.type_mapping['FCOMPLEX'])
-    #height
-    theta = np.pi/2 + gpf.load_binary(inputs.theta, VV.shape[0], dtype=gpf.type_mapping['FLOAT'])
-    # u = gpf.load_binary(inputs.u, VV.shape[0], dtype=gpf.type_mapping['FLOAT'])
-    # theta = theta - u
-    #Topographic phase
+    # height
+    theta = gpf.load_binary(inputs.theta, VV.shape[0], dtype=gpf.type_mapping['FLOAT'])
+    hgt = gpf.load_binary(inputs.hgt, VV.shape[0], dtype=gpf.type_mapping['FLOAT'])
+    # Topographic phase
     topo_phase = gpf.gammaDataset(inputs.topo_phase_par, inputs.topo_phase, dtype=gpf.type_mapping['FCOMPLEX'])
     topo_phase = cf.smooth(topo_phase, win, discard=True)
+    # Height
+    hght = cf.smooth(hgt, win, discard=True)
     # EStimate coherence
     HHVV = _ifun.estimate_coherence(HHVV, HH, VV, win, discard=True)
     mli = cf.smooth(VV, win, discard=True)
     theta = cf.smooth(theta, win, discard=True)
-    print(HHVV.shape)
-    print(topo_phase.shape)
-    az_vec = HHVV.az_vec
-    r_vec = HHVV.r_vec
     # Copolar span
     copol_span = mli
     # Take the brightest 10%
     bright_percentile = np.percentile(copol_span, perc)
     # Find the indices of that percentile
-    perc_r, perc_az = np.nonzero((copol_span > bright_percentile) * (np.abs(HHVV) > coh_thresh))
-    # perc_subs = np.unravel_index(perc_indices, copol_span.shape)
-
+    perc_r, perc_az = np.nonzero((copol_span > bright_percentile) * (np.abs(HHVV) > coh_thresh) * (theta != 0))
     # Create RGB
-    mph_dict = {'k': 0.08, 'sf': 0.9, 'coherence': True, 'peak': False, 'mli': mli, 'coherence_threshold': 0.6,
+    # Property of the mph image
+    mph_dict = {'k': 0.08, 'sf': 0.9, 'coherence': True, 'peak': False, 'mli': mli[sl_image], 'coherence_threshold': 0.6,
                 'coherence_slope': 12}
-    mph, rgb, norm = vf.dismph(HHVV, **mph_dict)  # create rgb image
-    pal, ext = vf.dismph_palette(HHVV, **mph_dict)
+    HHVV_im = HHVV[sl_image]
+    az_vec = HHVV_im.az_vec
+    r_vec = HHVV_im.r_vec
+    mph, rgb, norm = vf.dismph(HHVV_im, **mph_dict)  # create rgb image
+    pal, ext = vf.dismph_palette(HHVV_im, **mph_dict)
+    # Set style and create figure
     plt.style.use(inputs['style'])
     fig_w, fig_h = plt.rcParams['figure.figsize']
-    f = plt.figure(figsize=(2 * fig_w, 2 * fig_h))
-    gs = gridspec.GridSpec(*(2, 4), height_ratios=[1, 0.2])
-    gs.update(hspace=0.3, wspace=0.5)
-    im_ax = f.add_subplot(gs[0, 2::])
+    f = plt.figure(figsize=(fig_w, fig_h))
+    # Create grid of plots
+    gs = gridspec.GridSpec(*(3, 4), height_ratios=[1, 1, 0.2])
+    gs.update(hspace=0.5, wspace=0.5)
+    im_ax = f.add_subplot(gs[0:2, ::])
     aspect = fig_h / fig_w
     slc_ext = [az_vec[0], az_vec[-1], r_vec[-1], r_vec[1]]
-    # Azimuth range grid
-    aa, rr = np.meshgrid(az_vec, r_vec, indexing='xy')
     # Show the phase
     im_ax.imshow(mph, extent=slc_ext, aspect=vf.fixed_aspect(slc_ext, aspect), origin='upper')
     # Show the indices of bright targets
@@ -73,19 +79,18 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     im_ax.yaxis.set_major_locator(tick.MultipleLocator(500))
     im_ax.xaxis.set_major_locator(tick.MultipleLocator(20))
     im_ax.set_title('HH-VV Phase')
-    # Plot reflectors
-    pos_list = {'Simmleremoos 2': (-20, 15), 'Simmleremoos 1': (-15, -15)}  # position to avoid overlapping
+    # # Plot reflectors
+    # pos_list = {'Simmleremoos 2': (-20, 15), 'Simmleremoos 1': (-15, -15)}  # position to avoid overlapping
     box = dict(boxstyle="round", fc="w", lw=0.2)
-    for ref in params['ref']:
-        dec_pos = (int(ref['ridx']) / win[0], HHVV.azidx_dec(int(ref['azidx'])))
-        grid_pos = (az_vec[dec_pos[1]], r_vec[dec_pos[0]])
-        im_ax.plot(*grid_pos, marker='o', markeredgecolor='#feb24c', mfc='none', mew=1, ms=10)
-        annotations = plt.annotate(ref['name'], xy=grid_pos, color='black', size=7,
-                                   xytext=pos_list.get(ref['name'], (0, -15)), textcoords='offset points', bbox=box,
-                                   horizontalalignment='center')
+    # for ref in params['ref']:
+    #     dec_pos = (int(ref['ridx']) / win[0], HHVV.azidx_dec(int(ref['azidx'])))
+    #     grid_pos = (az_vec[dec_pos[1]], r_vec[dec_pos[0]])
+    #     im_ax.plot(*grid_pos, marker='o', markeredgecolor='#feb24c', mfc='none', mew=1, ms=10)
+    #     annotations = plt.annotate(ref['name'], xy=grid_pos, color='black', size=7,
+    #                                xytext=pos_list.get(ref['name'], (0, -15)), textcoords='offset points', bbox=box,
+    #                                horizontalalignment='center')
     # plot palette
-    pal_ax = f.add_subplot(gs[-1, 2])
-    print(ext)
+    pal_ax = f.add_subplot(gs[-1, 0:2])
     pal_ax.imshow(pal, aspect=1 / 30.0, extent=[0, 1, -np.pi, np.pi, ])
     pal_ax.set_ylabel(r'Phase')
     pal_ax.set_xlabel(r'Intensity')
@@ -96,50 +101,45 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     pal_ax.set_xticks([])
     # pal_ax.set_xticklabels([r"{{val:.2f}}".format(val=val) for val in ext_list])
     # Plot coherence
-    coh_ax = f.add_subplot(gs[-1, 3])
+    coh_ax = f.add_subplot(gs[-1, 2::])
     c = np.linspace(0, 1)
     c_scale = vf.scale_coherence(c, threshold=mph_dict['coherence_threshold'], slope=mph_dict['coherence_slope'])
     coh_ax.plot(c, c_scale)
     coh_ax.xaxis.set_label_text(r'Coherence')
     coh_ax.yaxis.set_label_text(r'Saturation')
     coh_ax.set_aspect(1)
-    #Plot correlation of height with copol phase
-    hist_ax = f.add_subplot(gs[0, 1])
+    # Plot correlation of height with copol phase
+    hist_fig, hist_ax = plt.subplots(figsize=(fig_w, fig_h))
     HHVV_bright = np.angle(HHVV[perc_r, perc_az])
     topo_bright = np.angle(topo_phase[perc_r, perc_az])
+    hgt_bright = hgt[perc_r, perc_az]
     theta_bright = theta[perc_r, perc_az].real
     coherence_bright = np.abs(HHVV[perc_r, perc_az])
-    hist_ax.hist2d(theta_bright,HHVV_bright, bins=100)
-    hist_ax.set_xlabel(r'Elevation angle')
-    hist_ax.set_ylabel(r'HH-VV Phase')
-    #Fit
-    slope, intercept, r,p, err = stats.linregress(theta_bright.flatten(),y=HHVV_bright.flatten())
-    print(r)
-    hist_ax.plot(theta_bright, slope*theta_bright+intercept,np.pi)
-    plt.show()
-
-    # # Plot Histogram of Copol Phase
-    # hist_ax = f.add_subplot(gs[0, 1])
-    # HHVV_bright = np.angle(HHVV[perc_r, perc_az])
-    # HHVV_mean = np.mean(HHVV_bright)
-    # #PLot histogram
-    # hist_ax.hist(HHVV_bright, 100, range=(-np.pi, np.pi), stacked=True, normed=True)
-    # #Plot average
-    # hist_ax.axvline(x=HHVV_mean,color='g')
-    # hist_ax.set_ylim([0, 1.5])
-    # ticks = [-np.pi, -np.pi / 2, 0, np.pi / 2, np.pi]
-    # hist_ax.set_xticks(ticks)
-    # hist_ax.set_xticklabels([r"$-\pi$", r"$-\frac{\pi}{2}$", r"$0$", r"$\frac{\pi}{2}$", r"$\pi$"])
-    # hist_ext = [-np.pi, np.pi, 0, 1.5]
-    # hist_ax.set_aspect(vf.fixed_aspect(hist_ext, aspect))
-    # # hist_ax.set_yticks([])
-    # # hist_ax.set_yticklabels([])
-    # hist_ax.set_xlabel(r'$arg\left(\gamma_{HHVV}\right)$')
-    # hist_ax.set_ylabel(r'Normalized frequency')
-    # title_str = r'HH-VV phase on brightest {perc:1.1f}\%  pixels with $\vert\gamma_{{HHVV}}\vert $\ge$ {coh_thresh}'.format(
-    #     perc=100 - perc, coh_thresh=coh_thresh)
-    # hist_ax.set_title(title_str)
-    f.savefig(outputs[0])
+    # Compute covariance
+    x_cov = np.cov(theta_bright, y=HHVV_bright)
+    # Ellispe parameters
+    if wildcards.n == '10':
+        l, w = np.linalg.eigh(x_cov)
+        slope = w[0, 1] / w[0, 0]
+        orientation = np.arctan(slope)
+        ell = Ellipse(xy=(np.median(topo_bright), np.median(HHVV_bright)), width=2 * conf ** 0.5 * l[0] ** 0.5,
+                      height=2 * conf ** 0.5 * l[1] ** 0.5, angle=np.rad2deg(orientation))
+        ell.set_facecolor('none')
+        ell.set_edgecolor('#66c2a5')
+        ell.set_linewidth(plt.rcParams['lines.linewidth'])
+        hist_ax.add_artist(ell)
+        hist_ax.plot(topo_bright, slope * topo_bright + np.median(HHVV_bright))
+        pos = [0.4, 0.6]
+        hist_ax.annotate("Ellipsis angle: {:1.1f} [rad]".format(orientation), xy=pos, bbox=box, xytext=pos,
+                         textcoords='axes fraction', xycoords='axes fraction')
+    hist_ax.hist2d(theta_bright, HHVV_bright, bins=200)
+    hist_ax.set_xlabel(r'Elevation angle from DEM [rad]')
+    hist_ax.set_ylabel(r'HH-VV phase [rad]')
+    ticks = [-np.pi, -np.pi / 2, 0, np.pi / 2, np.pi]
+    hist_ax.set_yticks(ticks)
+    hist_ax.set_yticklabels([r"$-\pi$", r"$-\frac{\pi}{2}$", r"$0$", r"$\frac{\pi}{2}$", r"$\pi$"])
+    f.savefig(outputs['fig_a'])
+    hist_fig.savefig(outputs['fig_b'])
 
 
 plot_figure_9(snakemake.input, snakemake.output, snakemake.threads, snakemake.config, snakemake.params,

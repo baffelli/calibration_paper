@@ -33,7 +33,7 @@ def plot_figure_11(inputs, outputs, threads, config, params, wildcards):
     plt.style.use(inputs['style'])
     fig_w, fig_h = plt.rcParams['figure.figsize']
     aspect = fig_h / fig_w
-    f = plt.figure(figsize=(2 * fig_w, 2 * fig_h))
+    f = plt.figure(figsize=(fig_w, fig_h))
     # Grid of plots for figures
     gs = gridspec.GridSpec(*(2, 3), height_ratios=[1,0.2])
     gs.update(hspace=0.0, wspace=0.25)

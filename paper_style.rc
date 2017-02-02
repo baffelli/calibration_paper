@@ -12,7 +12,7 @@ axes.unicode_minus  : False
 image.aspect : equal             # equal | auto | a number
 image.interpolation  : none  # see help(imshow) for options
 #Figure
-figure.figsize : 3, 2
+figure.figsize : 6, 4
 figure.subplot.wspace  : 0.1    # the amount of width reserved for blank space between subplots
 figure.subplot.hspace  : 0.1    # the amount of height reserved for white space between subplots
 figure.autolayout : False

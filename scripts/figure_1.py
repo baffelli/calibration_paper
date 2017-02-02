@@ -21,7 +21,7 @@ def plot_figure_1(inputs, outputs, threads, config, params, wildcards):
     # This is a full page figure, so we create a figure twice as wide as usual
     # create figure
     fig_w, fig_h = plt.rcParams['figure.figsize']
-    f = plt.figure(figsize=(fig_w*3, fig_h*2))
+    f = plt.figure(figsize=(fig_w, fig_h))
     rs = 2
     shp = (5, 3)#shape of gridspec
     gs = gridspec.GridSpec(*shp)

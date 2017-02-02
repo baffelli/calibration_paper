@@ -44,11 +44,13 @@ subworkflow illustrations:
     workdir: './drawings'
     snakefile: './drawings/Snakefile'
 
+
+
+
 rule all:
     input:
         #figures from data
-        expand('fig/{ext}/figure_{r}.{ext}',r=range(1,17), ext=['png', 'pdf']),
-        expand('fig/{ext}/figure_signature_{r}.{ext}',r=range(0,6), ext=['png']),
+        expand('fig/{ext}/figure_{r}.{ext}',r=range(1,13), ext=[ 'pdf']),
         #tables
         'tab/table_1.csv',
         'tab/table_2.csv',
@@ -64,8 +66,11 @@ rule all:
         illustrations('pdf/antenna_offset.pdf'),
         illustrations('pdf/kapri_antenna_arrangement.pdf')
 
-
-
+#Figures for presentation
+rule presentation:
+    input:
+        expand('fig/{ext}/figure_{r}.{ext}',r=range(1,17), ext=['png']),
+        expand('fig/{ext}/figure_signature_{r}.{ext}',r=range(0,6), ext=['png']),
 
 
 
@@ -220,16 +225,18 @@ rule fig9:
         ali = new_data("cov_cal/20160914_145059_l.par"),
         C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
         theta = new_data('geo/Chutzen.lv_theta_fgc'),
-        u = new_data('geo/Chutzen.u_fgc'),
+        hgt = new_data('geo/Chutzen.dem_seg_fgc'),
         topo_phase = new_data('diff_corr/20160914_145059_AAAl_AAAu.int'),
         topo_phase_par = new_data('diff_corr/20160914_145059_AAAl_AAAu.int_par'),
         HHVV_phase = select_cov_for_rule_9,
     output:
-        'fig/{ext}/figure_{n, (9)|(10)}.{ext}'
+        fig_a ='fig/{ext}/figure_{n, (9)|(10)}.{ext}' ,
+        fig_b = 'fig/{ext}/figure_{n, (9)|(10)}_b.{ext}'
     params:
         ref = list_of_reflectors
     script:
         'scripts/figure_9.py'
+
 
 ###############################################################################
 #Plot figure 11: Slc with and without processing of squint

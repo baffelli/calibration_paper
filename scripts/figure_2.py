@@ -15,7 +15,7 @@ def plot_figure_2(inputs, outputs, threads, config, params, wildcards):
     slc_HH = gpf.gammaDataset(inputs['VV'][0] + '.par', inputs['VV'][0])
     slc_VV = gpf.gammaDataset(inputs['VV'][1] + '.par', inputs['VV'][1])
     fig_w, fig_h = plt.rcParams['figure.figsize']
-    f, (phase_ax, amp_ax) = plt.subplots(2, sharex=True, figsize=(fig_w * 2, fig_h * 2))
+    f, (phase_ax, amp_ax) = plt.subplots(2, sharex=True, figsize=(fig_w, fig_h))
     sorted_by_range = sorted(params['reflectors'], key=lambda tup: tup['ridx'])
     # sorted_by_range = [ref for ref in sorted_by_range if ref[] == "t"]
     cm = mpl.cm.get_cmap('inferno', len(sorted_by_range))  # colormap for sorting

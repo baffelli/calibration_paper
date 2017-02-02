@@ -51,7 +51,7 @@ def plot_figure_7(inputs, outputs, threads, config, params, wildcards):
     #create figure
     plt.style.use(inputs['style'])
     fig_w, fig_h = plt.rcParams['figure.figsize']
-    f, ax = plt.subplots(figsize=(2 * fig_w,  2 * fig_w))
+    f, ax = plt.subplots(figsize=(fig_h, fig_w))
 
     #Geocode
     LUT = geo.GeocodingTable(inputs.dem_seg_par, inputs.LUT)
@@ -75,16 +75,17 @@ def plot_figure_7(inputs, outputs, threads, config, params, wildcards):
     #Plot map
     ext1=geo.get_ds_extent(map_ds)
     ext2=LUT.get_extent()
-    ax.imshow(map_ds.ReadAsArray().transpose((1, 2, 0)), extent=ext1, aspect=1)
-    ax.imshow(C_cal_rgb.transpose(1,0,2), extent=ext2, aspect=1)
+    ax.imshow(map_ds.ReadAsArray().transpose((1, 2, 0)), extent=ext1)
+    ax.imshow(C_cal_rgb.transpose(1,0,2), extent=ext2)
     #annotate scatters
     annotate_axis(ax, params)
-    ext = [606630,610072,188060,192957]
-    ax.set_xlim(ext[0:2])
+    ext = LUT.get_geocoded_extent(C_cal)
+    ax.set_xlim([606637,609660])
     ax.set_ylim(ext[2:])
-    f.subplots_adjust(left=0,right=1)
+    ax.set_aspect(1)
+    # f.subplots_adjust(left=0,right=1)
     ax.axis('off')
-    f.savefig(outputs['paper_fig'])
+    f.savefig(outputs['paper_fig'], bbox_inches='tight', pad_inches=0)
     #Add axis
     f1, ax1 =  plt.subplots(figsize=(2 * fig_w,  2 * fig_w))
     ax1.imshow(C_cal_rgb.transpose(1, 0, 2), extent=ext2, aspect=1)

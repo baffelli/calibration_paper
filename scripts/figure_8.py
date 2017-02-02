@@ -23,7 +23,7 @@ def plot_figure_8(inputs, outputs, threads, config, params, wildcards):
     plt.style.use(inputs.style)
     fig_w, fig_h = plt.rcParams['figure.figsize']
     xlabel = r'Local incidence angle $[^\circ]$'
-    f, (ph_ax, amp_ax) = plt.subplots(2, 1, figsize=(fig_w * 2, 2* fig_h))
+    f, (ph_ax, amp_ax) = plt.subplots(2, 1, figsize=(fig_w, fig_h))
     ph_ax.scatter(inc_ref, residuals['HH-VV phase imbalance'])
     ph_ax.xaxis.set_label_text(xlabel)
     ph_ax.yaxis.set_label_text(r'Calibrated $\phi_r + \phi_t [^\circ]$')
@@ -36,7 +36,7 @@ def plot_figure_8(inputs, outputs, threads, config, params, wildcards):
     amp_ax.yaxis.set_label_text(r'Calibrated $f$')
     amp_ax.text(0.2, 0.2, r"RMS {:.2f}, Mean {:.2f}".format(amp_rms, amp_mean),
                transform=amp_ax.transAxes, bbox=bbox_props)
-    f.subplots_adjust(hspace=0.2)
+    f.subplots_adjust(hspace=0.35)
     f.savefig(outputs[0])
 
 
