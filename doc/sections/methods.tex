@@ -140,7 +140,7 @@ To understand why, consider an image acquired by transmitting at antenna located
 	\phi_{ij} = \phi_{ij}^{pol} + \phi_{ij}^{prop}
 \end{equation}
 This term appears as topographic fringes when visualizing the polarimetric phase difference and will complicate calibration by adding an additional phase contribution unrelated to the polarimetric properties of the scatterers.\\
-To obtain correct polarimetric phase differences, it is necessary to estimate and subtract the interferometric contribution. This can be done  by considering two additional channel $k$ and $l$  acquired with  a non-zero baseline $\mathbf{b_{ij}^{eq}}$ and with the same polarization, where $\phi_{kl}^{pol} \approx 0$. Generally, for any two channels $m$ and $n$,  the propagation phase difference can be approximated as a function of the local incidence angle and of the perpendicular baseline separating the phase centers:
+To obtain correct polarimetric phase differences, it is necessary to estimate and subtract the interferometric contribution. This can be done  by considering two additional channel $k$ and $l$  acquired with  a non-zero baseline $\mathbf{b_{ij}^{eq}}$ and with the same polarization, where $\phi_{kl}^{pol} \approx 0$.\\ Recalling that for any combination of channels $m$ and $n$ the propagation phase difference can be approximated as a function of the local incidence angle and of the perpendicular baseline separating the phase centers:
 \begin{equation}\label{eq:prop_approximation}
 		\phi_{mn}^{prop} = \frac{4\pi}{\lambda} b_{mn}^{eq} \sin(\theta - \alpha_{bl}),
 \end{equation}

@@ -130,13 +130,13 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
         slope = w[0, 1] / w[0, 0]
         ratio = l[0] / l[1]
         print(ratio)
-        orientation = np.arctan(slope)
-        ell = Ellipse(xy=(np.mean(topo_bright), np.mean(HHVV_bright)), width=2 * conf ** 0.5 * l[0] ** 0.5,
-                      height=2 * conf ** 0.5 * l[1] ** 0.5, angle=np.rad2deg(orientation))
-        ell.set_facecolor('none')
-        ell.set_edgecolor('#66c2a5')
-        ell.set_linewidth(plt.rcParams['lines.linewidth'])
-        hist_ax.add_artist(ell)
+        # orientation = np.arctan(slope)
+        # ell = Ellipse(xy=(np.mean(topo_bright), np.mean(HHVV_bright)), width=2 * conf ** 0.5 * l[0] ** 0.5,
+        #               height=2 * conf ** 0.5 * l[1] ** 0.5, angle=np.rad2deg(orientation))
+        # ell.set_facecolor('none')
+        # ell.set_edgecolor('#66c2a5')
+        # ell.set_linewidth(plt.rcParams['lines.linewidth'])
+        # hist_ax.add_artist(ell)
         # hist_ax.plot(topo_bright, slope * topo_bright + np.mean(HHVV_bright))
         pos = [0.4, 0.6]
         hist_ax.annotate("Correlation coefficent: {:1.1f} [rad]".format(1 - ratio), xy=pos, bbox=box, xytext=pos,
