@@ -177,7 +177,7 @@ In this case, the distortion matrices simplify to:
 	\end{aligned}
 \end{equation}
 where $f$ is the one-way copolar amplitude imbalance with respect to the H polarization, and $g$ the amplitude imbalance of the crosspolarized channels. $\phi_t = \phi_{t,h} -\phi_{t,v}$ is the phase offset between the polarizations when transmitting and $\phi_{r} = \phi_{r,h} -\phi_{r,v}$ is the phase offset in reception and $A$ is the absolute amplitude calibration parameter (RCS)\cite{Ainsworth2006a, Fore2015}.\\
-The four unknown complex parameters in $\mathbf{D}$ can be determined using a trihedral corner reflector and a reciprocal scatterer with a significant cross polarized contribution\cite{Sarabandi1989,Pipia2009}.\\
+The four unknown complex parameters in $\mathbf{D}$ can be determined using a trihedral corner reflector and a reciprocal scatterer with a significant cross polarized contribution\cite{Sarabandi1990,Pipia2009}.\\
 Thus, observing an ideal trihedral reflector with RCS $\sigma_{tri}$, would give 
 a measured covariance matrix $\mathbf{C^{\prime}}$:
 \begin{equation}
@@ -200,7 +200,7 @@ The copolar phase imbalance $\phi_r + \phi_t$ is estimated from the phase of $C_
 \begin{equation}
 	\phi_r + \phi_t = \operatorname{arg}\left(C_{VVHH}^\prime\right).
 \end{equation}
-Both parameters are estimated on the oversampled response of a corner reflector. In \cite{Fore2015}, a polynomial model for the copolar calibration parameters is used, that links the imbalances to the incidence angle. In that case, the estimate are performed using a larger array of corner reflectors, which is not available in our case. Thus, a simplified calibration model is used, assuming the copolar parameters to be independent of incidence angle.\\ 
+Both parameters are estimated on the oversampled response of a corner reflector. In~\cite{Fore2015}, a polynomial model for the copolar calibration parameters is used, that links the imbalances to the incidence angle. In that case, the estimate are performed using a larger array of corner reflectors, which is not available in our case. Thus, a simplified calibration model is used, assuming the copolar parameters to be independent of incidence angle.\\ 
 Because of the difficulty of placing and correctly orienting a cross polarizing target such as a $45^\circ$ dihedral, the estimation of $g$ and $\phi_t - \phi_r$ is based on the assumption that most pixels in the data represent reciprocal scatterers:
 \begin{equation}
 	g = \left<\frac{C_{HVHV}^{\prime}}{C_{VHVH}^{\prime}}\right>^\frac{1}{4}
