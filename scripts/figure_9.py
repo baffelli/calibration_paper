@@ -65,8 +65,8 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     fig_w, fig_h = plt.rcParams['figure.figsize']
     f = plt.figure(figsize=(fig_w*2, fig_h*2))
     # Create grid of plots
-    gs = gridspec.GridSpec(*(3, 4), height_ratios=[1, 1, 0.2])
-    gs.update(hspace=0.5, wspace=0.5)
+    gs = gridspec.GridSpec(*(3, 2), height_ratios=[1, 1, 0.2])
+    gs.update(hspace=0.3, wspace=0.1)
     im_ax = f.add_subplot(gs[0:2, ::])
     aspect = fig_h / fig_w
     slc_ext = [az_vec[0], az_vec[-1], r_vec[-1], r_vec[1]]
@@ -90,7 +90,7 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     #                                xytext=pos_list.get(ref['name'], (0, -15)), textcoords='offset points', bbox=box,
     #                                horizontalalignment='center')
     # plot palette
-    pal_ax = f.add_subplot(gs[-1, 0:2])
+    pal_ax = f.add_subplot(gs[-1, 0])
     pal_ax.imshow(pal, aspect=1 / 30.0, extent=[0, 1, -np.pi, np.pi, ])
     pal_ax.set_ylabel(r'Phase')
     pal_ax.set_xlabel(r'Intensity')
@@ -101,7 +101,7 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     pal_ax.set_xticks([])
     # pal_ax.set_xticklabels([r"{{val:.2f}}".format(val=val) for val in ext_list])
     # Plot coherence
-    coh_ax = f.add_subplot(gs[-1, 2::])
+    coh_ax = f.add_subplot(gs[-1,1])
     c = np.linspace(0, 1)
     c_scale = vf.scale_coherence(c, threshold=mph_dict['coherence_threshold'], slope=mph_dict['coherence_slope'])
     coh_ax.plot(c, c_scale)
@@ -109,6 +109,8 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     coh_ax.xaxis.set_label_text(r'Coherence')
     coh_ax.yaxis.set_label_text(r'Saturation')
     coh_ax.set_aspect(1)
+
+
     # Plot correlation of height with copol phase
     hist_fig, hist_ax = plt.subplots(figsize=(fig_w, fig_h))
     HHVV_bright = np.angle(HHVV[perc_r, perc_az])
@@ -132,7 +134,7 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
         hist_ax.plot(topo_bright, slope * topo_bright + np.median(HHVV_bright))
         pos = [0.4, 0.6]
         hist_ax.annotate("Ellipsis angle: {:1.1f} [rad]".format(orientation), xy=pos, bbox=box, xytext=pos,
-                         textcoords='axes fraction', xycoords='axes fraction')
+                         textcoords='axes fraction', xycoords='axes fraction', fontsize=plt.rcParams['axes.labelsize'])
     hist_ax.hist2d(theta_bright, HHVV_bright, bins=200)
     hist_ax.set_xlabel(r'Elevation angle from DEM [rad]')
     hist_ax.set_ylabel(r'HH-VV phase [rad]')

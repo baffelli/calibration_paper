@@ -209,7 +209,7 @@ rule fig8:
 #Plot figure 9/10: HH/VV phase before and after removal of topographic contribution
 #this serves to select the proper channel
 def select_cov_for_rule_9(wildcards):
-    proc_type = 'normal' if int(wildcards.n) == 9 else 'cal'
+    proc_type = 'normal' if int(wildcards.n) == 9 else 'flat'
     HHVV = "cov_{name}/20160914_145059_l.c03".format(name=proc_type)
     HH = "cov_{name}/20160914_145059_l.c00".format(name=proc_type)
     VV = "cov_{name}/20160914_145059_l.c33".format(name=proc_type)
