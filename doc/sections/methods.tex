@@ -135,12 +135,12 @@ In addition to the difference in frequency-dependent squint rate and of differin
 	\label{fig:antenna_arrangement}
 \end{figure}
  The next step on the way to calibrated polarimetric data requires a brief review of KAPRIs antenna configuration, depicted in \autoref{fig:antenna_arrangement}:\\ Six antennas are mounted on a supporting structure connected to the rotary scanner. Of these, 2 are transmitting antennas, one for each polarization. The remaining 4 are connected in pairs through switches to the receivers; each pair composed of an horizontally and a vertically polarized unit. This configuration permits to acquire full polarimetric dataset by selecting the desired antennas for the transmitter and for each receiver separately. This arrangement ensures a low level of polarimetric crosstalk because only one combination is acquired at each time and the antennas are physically separated. Additionally, the separation of transmitting and receiving antennas increases the transmit-receive isolation, a fundamental requirement for FMCW performance\cite{Beasley1990,Stove1992, Strozzi2011}.  However, this configuration complicates the phase calibration of polarimetric data by introducing additional phase terms unrelated to scattering properties.\\
-To understand why, consider an image acquired by transmitting at antenna located at $\mathbf{x_t^i}$ and receiving at $\mathbf{x_r^i}$. These antennas can be replaced by an equivalent antenna located at $\mathbf{x_{eq}^i}$, the midpoint between transmitter and receiver \cite{Pipia2009}. Thus, for polarimetric observations using  KAPRI the equivalent antenna phase center $\mathbf{x_{eq}^i}$ location will change depending on the chosen polarization. Therefore, there exist certain combinations of channels $i$ and $j$ where the equivalent phase centers are separated by a baseline $\mathbf{b_{ij}^{eq}}$. Consequently, the polarimetric phase difference   will contain an interferometric contribution:
+To understand why, consider an image acquired by transmitting at antenna located at $\mathbf{x}_t^i$ and receiving at $\mathbf{x}_r^i$. These antennas can be replaced by an equivalent antenna located at $\mathbf{x}_{eq}^i$, the midpoint between transmitter and receiver \cite{Pipia2009}. Thus, for polarimetric observations using  KAPRI the equivalent antenna phase center $\mathbf{x}_{eq}^i$ location will change depending on the chosen polarization. Therefore, there exist certain combinations of channels $i$ and $j$ where the equivalent phase centers are separated by a baseline $\mathbf{b}_{ij}^{eq}$. Consequently, the polarimetric phase difference   will contain an interferometric contribution:
 \begin{equation}
 	\phi_{ij} = \phi_{ij}^{pol} + \phi_{ij}^{prop}
 \end{equation}
 This term appears as topographic fringes when visualizing the polarimetric phase difference and will complicate calibration by adding an additional phase contribution unrelated to the polarimetric properties of the scatterers.\\
-To obtain correct polarimetric phase differences, it is necessary to estimate and subtract the interferometric contribution. This can be done  by considering two additional channel $k$ and $l$  acquired with  a non-zero baseline $\mathbf{b_{kl}^{eq}}$ and with the same polarization, where $\phi_{kl}^{pol} \approx 0$.\\ Recalling that for any combination of channels $m$ and $n$ the propagation phase difference can be approximated as a function of the local incidence angle and of the perpendicular baseline separating the phase centers:
+To obtain correct polarimetric phase differences, it is necessary to estimate and subtract the interferometric contribution. This can be done  by considering two additional channel $k$ and $l$  acquired with  a non-zero baseline $\mathbf{b}_{kl}^{eq}$ and with the same polarization, where $\phi_{kl}^{pol} \approx 0$.\\ Recalling that for any combination of channels $m$ and $n$ the propagation phase difference can be approximated as a function of the local incidence angle and of the perpendicular baseline separating the phase centers:
 \begin{equation}\label{eq:prop_approximation}
 		\phi_{mn}^{prop} = \frac{4\pi}{\lambda} b_{mn}^{eq} \sin(\theta - \alpha_{bl}),
 \end{equation}
@@ -150,7 +150,7 @@ Thus from \autoref{eq:prop_approximation}, $\phi_{ij}^{prop}$ can be estimated f
 	\hat{\phi}_{ij}^{prop} = \frac{b_{eq}^{ij}}{b_{eq}^{kl}} \phi_{kl}.
 \end{equation}
 This formula is only valid if $\frac{b_{eq}^{ij}}{b_{eq}^{kl}}$ is integer\cite{Massonnet1996}, otherwise phase unwrapping of $\phi_{kl}^{prop}$ is necessary before rescaling.\\
-In order to correct for all the possible combinations that have a non-zero baseline, the measured scattering matrix $\mathbf{S}$ is converted into a polarimetric covariance matrix $\mathbf{C}$;  $\hat{\phi}_{ij}^{prop}$ it then subtracted from the phase of every non-diagonal element $ij$. The result is a flattened covariance matrix $\mathbf{C_{flat}}$ where the sole phase contribution is the polarimetric phase difference, possibly affected by an offset that needs compensation in the polarimetric calibration.\\
+In order to correct for all the possible combinations that have a non-zero baseline, the measured scattering matrix $\mathbf{S}$ is converted into a polarimetric covariance matrix $\mathbf{C}$;  $\hat{\phi}_{ij}^{prop}$ it then subtracted from the phase of every non-diagonal element $ij$. The result is a flattened covariance matrix $\mathbf{C}_{flat}$ where the sole phase contribution is the polarimetric phase difference, possibly affected by an offset that needs compensation in the polarimetric calibration.\\
 \subsection{Polarimetric Calibration}\label{sec:methods:proc_polcal}
 This matrix is the starting point for the polarimetric calibration proper;
 the procedure is based on a linear distortion matrix model\cite{Saraband1990, Sarabandi1992a} that relates the observed scattering matrix $\mathbf{S^\prime}$ with the theoretical one $\mathbf{S}$:
@@ -179,10 +179,10 @@ In this case, the distortion matrices simplify to:
 where $f$ is the one-way copolar amplitude imbalance with respect to the H polarization, and $g$ the amplitude imbalance of the crosspolarized channels. $\phi_t = \phi_{t,h} -\phi_{t,v}$ is the phase offset between the polarizations when transmitting and $\phi_{r} = \phi_{r,h} -\phi_{r,v}$ is the phase offset in reception and $A$ is the absolute amplitude calibration parameter (RCS)\cite{Ainsworth2006a, Fore2015}.\\
 The four unknown complex parameters in $\mathbf{D}$ can be determined using a trihedral corner reflector and a reciprocal scatterer with a significant cross polarized contribution\cite{Sarabandi1990,Pipia2009}.\\
 Thus, observing an ideal trihedral reflector with RCS $\sigma_{tri}$, would give 
-a measured covariance matrix $\mathbf{C^{\prime}}$:
+a measured covariance matrix $\mathbf{C}^{\prime}$:
 \begin{equation}
 	\begin{aligned}
-	&\mathbf{C^{\prime}} =\\
+	&\mathbf{C}^{\prime} =\\
 	&= A^2 \sigma_{tri}\\
 	&\begin{bmatrix}
 		1 & 0 & 0 & f^2 e^{-i \left(\phi_t + \phi_r\right)}\\
