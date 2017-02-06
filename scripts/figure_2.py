@@ -76,7 +76,7 @@ def plot_figure_2(inputs, outputs, threads, config, params, wildcards):
     # phase_ax.add_artist(leg_pol)
     phase_ax.legend([line['HH'][0], line['VV'][0]] + lines_leg,
                     ['HH', 'VV'] + [ref['name'] for ref in sorted_by_range], ncol=2, fancybox=True, frameon=True, shadow=False,
-                          framealpha=None, numpoints=6)
+                          framealpha=None, numpoints=2)
     # leg = phase_ax.legend(loc='lower center', ncol=len(ranges) // 2,
     # leg.get_title().set_fontsize(plt.rcParams['legend.fontsize'])
     # cbar_ax = f.add_axes([0.95, 0.15, 0.03, 0.7])

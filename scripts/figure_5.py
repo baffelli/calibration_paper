@@ -21,7 +21,7 @@ def az_idx(ds, idx):
 def plot_figure_5(inputs, outputs, threads, config, params, wildcards):
     plt.style.use(inputs['style'])
     fig_w, fig_h = plt.rcParams['figure.figsize']
-    f, fig_arr = plt.subplots(2, 2, subplot_kw=dict(projection='3d'), figsize=(fig_w*2, fig_h*2))#two column figure
+    f, fig_arr = plt.subplots(2, 2, subplot_kw=dict(projection='3d'), figsize=(2*fig_w, 2*fig_h))#two column figure
 
     C_par = inputs["C_par"]
     C_root, ext = path.splitext(C_par)
@@ -57,6 +57,9 @@ def plot_figure_5(inputs, outputs, threads, config, params, wildcards):
     for row in fig_arr:
         for ax in row:
             ax.view_init(elev=45, azim=45)
+            ax.xaxis._axinfo['label']['space_factor'] = 2.0
+            ax.yaxis._axinfo['label']['space_factor'] = 2.0
+            ax.zaxis._axinfo['label']['space_factor'] = 2.0
             ax.xaxis.set_major_locator(MultipleLocator(45))
             ax.yaxis.set_major_locator(MultipleLocator(45))
             ax.zaxis.set_major_locator(MultipleLocator(0.5))
@@ -65,8 +68,8 @@ def plot_figure_5(inputs, outputs, threads, config, params, wildcards):
             ax.set_zlabel(r'Power',  labelpad=0)
             ax.dist = 12.5
             ax.auto_scale_xyz([-90, 90], [-45, 45], [0, 1])
-    f.subplots_adjust(wspace=0.1, hspace=0.1, bottom=0.25, top=1, left=0, right=1)
-    f.suptitle(u"{name}".format(name=params.ref['name']))
+    f.subplots_adjust(wspace=0.25, hspace=0.25, bottom=0.3, top=1, left=0.2, right=1)
+    f.suptitle(u"{name}".format(name=params.ref['name']), x=0.5)
     f.savefig(outputs[0])
 
 
