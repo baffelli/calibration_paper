@@ -118,18 +118,15 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     theta_bright = np.sin(theta[perc_r, perc_az].real)
     coherence_bright = np.abs(HHVV[perc_r, perc_az])
     # Compute covariance
-    #Normalie
+    # #Normalie
     theta_var = np.std(theta_bright)
     HHVV_var = np.std(HHVV_bright)
-    theta_bright = (theta_bright - np.mean(theta_bright)) / theta_var
-    HHVV_bright = (HHVV_bright - np.mean(HHVV_bright)) / HHVV_var
-    x_cov = np.cov(theta_bright, y=HHVV_bright)
+    theta_bright_norm = (theta_bright - np.mean(theta_bright)) / theta_var
+    HHVV_bright_norm = (HHVV_bright - np.mean(HHVV_bright)) / HHVV_var
+    x_cov = np.cov(theta_bright_norm, y=HHVV_bright_norm)
     # Ellispe parameters
     if wildcards.n == '10':
         l, w = np.linalg.eigh(x_cov)
-        slope = w[0, 1] / w[0, 0]
-        ratio = l[0] / l[1]
-        print(ratio)
         # orientation = np.arctan(slope)
         # ell = Ellipse(xy=(np.mean(topo_bright), np.mean(HHVV_bright)), width=2 * conf ** 0.5 * l[0] ** 0.5,
         #               height=2 * conf ** 0.5 * l[1] ** 0.5, angle=np.rad2deg(orientation))
@@ -139,14 +136,12 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
         # hist_ax.add_artist(ell)
         # hist_ax.plot(topo_bright, slope * topo_bright + np.mean(HHVV_bright))
         pos = [0.4, 0.6]
-        hist_ax.annotate("Correlation coefficent: {:1.1f} [rad]".format(1 - ratio), xy=pos, bbox=box, xytext=pos,
+        hist_ax.annotate("correlation: {:1.1f}".format(x_cov[1,0]), xy=pos, bbox=box, xytext=pos,
                          textcoords='axes fraction', xycoords='axes fraction', fontsize=plt.rcParams['axes.labelsize'])
-    hist_ax.hist2d(theta_bright, HHVV_bright, bins=200, range=((-3,3),(-3,3)))
-    hist_ax.set_xlabel(r'Elevation angle from DEM [normalized score]')
-    hist_ax.set_ylabel(r'HH-VV phase [normalized score]')
-    hist_ax.set_xlim([-3,3])
-    hist_ax.set_ylim([-3, 3])
-    hist_ax.set_aspect(1)
+    hist_ax.hist2d(theta_bright, HHVV_bright, bins=200)
+    hist_ax.set_xlabel(r' $\sin\left(\theta_l\right)$')
+    hist_ax.set_ylabel(r'HH-VV phase [rad]')
+    # hist_ax.set_aspect(1)
     # hist_ax.set_aspect('square')
     # ticks = [-np.pi, -np.pi / 2, 0, np.pi / 2, np.pi]
     # hist_ax.set_yticks(ticks)
