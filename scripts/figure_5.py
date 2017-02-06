@@ -69,7 +69,7 @@ def plot_figure_5(inputs, outputs, threads, config, params, wildcards):
             ax.dist = 12.5
             ax.auto_scale_xyz([-90, 90], [-45, 45], [0, 1])
     f.subplots_adjust(wspace=0.25, hspace=0.25, bottom=0.3, top=1, left=0.2, right=1)
-    f.suptitle(u"{name}".format(name=params.ref['name']), x=0.5)
+    f.suptitle(u"{name}".format(name=params.ref['name']), x=0.6, y=1.05)
     f.savefig(outputs[0])
 
 

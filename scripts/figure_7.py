@@ -24,7 +24,7 @@ from scipy.special import expit
 def annotate_axis(ax, params):
     # box = dict(boxstyle='round', fc='white', alpha=1)
     pos_list = collections.defaultdict(lambda:(30,0))
-    pos_list.update( {'CR1': (20, 10), 'CR3':(10,10), 'CR4':(30,-10),'CR6': (10,-20)})
+    pos_list.update( {'CR1': (30, 10), 'CR3':(20,0), 'CR4':(30,-10),'CR6': (10,-20)})
     for ref in params['ref']:#iterate reflector and positions
         ref_pos = ref['geo_coord']
         ax.plot(ref_pos[0], ref_pos[1], mec=ref['marker_color'], marker='o', mfc='none', ms=10)
