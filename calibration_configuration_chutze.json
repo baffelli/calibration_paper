@@ -11,12 +11,12 @@
 			"decimated_sample_spacing":		0.1
 	},
 	"list_of_reflectors": [
-		{"ridx":32, "azidx":5192,"type":"cubic", "side":0.4, "name":"Chutzen"},
-		{"ridx":830, "azidx":3484,"type":"triangular", "side":0.4, "name":"Hindere Chlapf"},
-		{"ridx":1032, "azidx":5703,"type":"cubic", "side":0.4, "name":"Simmleremoos 1"},
-		{"ridx":1051, "azidx":5617,"type":"triangular", "side":0.4, "name":"Simmleremoos 2"},
-		{"ridx":1331, "azidx":1466,"type":"cubic", "side":0.4, "name":"Bifang"},
-		{"ridx":3518, "azidx":3522,"type":"triangular", "side":0.4, "name":"Türle"}
+		{"ridx":32, "azidx":5192,"type":"cubic", "side":0.4, "name":"CR1"},
+		{"ridx":830, "azidx":3484,"type":"triangular", "side":0.4, "name":"CR2"},
+		{"ridx":1032, "azidx":5703,"type":"cubic", "side":0.4, "name":"CR3"},
+		{"ridx":1051, "azidx":5617,"type":"triangular", "side":0.4, "name":"CR4"},
+		{"ridx":1331, "azidx":1466,"type":"cubic", "side":0.4, "name":"CR5"},
+		{"ridx":3518, "azidx":3522,"type":"triangular", "side":0.4, "name":"CR6"}
 							],
 	"crosspolarizer_index": [3409, 2790, "o"],
     "channel_mapping":{
