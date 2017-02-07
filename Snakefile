@@ -209,33 +209,50 @@ rule fig8:
 #Plot figure 9/10: HH/VV phase before and after removal of topographic contribution
 #this serves to select the proper channel
 def select_cov_for_rule_9(wildcards):
-    proc_type = 'normal' if int(wildcards.n) == 9 else 'flat'
+    proc_type = 'normal' if int(wildcards.n) == 9 else 'normal'
     HHVV = "cov_{name}/20160914_145059_l.c03".format(name=proc_type)
     HH = "cov_{name}/20160914_145059_l.c00".format(name=proc_type)
     VV = "cov_{name}/20160914_145059_l.c33".format(name=proc_type)
-    HHVV = new_data(HHVV)
-    HH = new_data(HH)
-    VV = new_data(VV)
-    return HHVV, HH, VV,
+    data = {'HHVV':HHVV, 'HH':HH, 'VV':VV}
+    return data
+
+HH = "cov_{name}/20160914_145059_l.c00"
+VV = "cov_{name}/20160914_145059_l.c33"
+HHVV = "cov_{name}/20160914_145059_l.c03"
+
 
 rule fig9:
     input:
+        HH = new_data(HH.format(name='normal')),
+        VV = new_data(VV.format(name='normal')),
+        HHVV = new_data(HHVV.format(name='normal')),
         style = select_style,
-        aui = new_data("cov_normal/20160914_145059_l.par"),#dummy
-        ali = new_data("cov_cal/20160914_145059_l.par"),
         C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
         theta = new_data('geo/Chutzen.lv_theta_fgc'),
-        hgt = new_data('geo/Chutzen.dem_seg_fgc'),
-        topo_phase = new_data('diff_corr/20160914_145059_AAAl_AAAu.int'),
-        topo_phase_par = new_data('diff_corr/20160914_145059_AAAl_AAAu.int_par'),
-        HHVV_phase = select_cov_for_rule_9,
     output:
-        fig_a ='fig/{ext}/figure_{n, (9)|(10)}.{ext}' ,
-        fig_b = 'fig/{ext}/figure_{n, (9)|(10)}_b.{ext}'
+        fig_a ='fig/{ext}/figure_9.{ext}',
+        fig_b = 'fig/{ext}/figure_9_b.{ext}'
     params:
         ref = list_of_reflectors
     script:
         'scripts/figure_9.py'
+
+rule fig10:
+    input:
+        HH = new_data(HH.format(name='flat')),
+        VV = new_data(VV.format(name='flat')),
+        HHVV = new_data(HHVV.format(name='flat')),
+        style = select_style,
+        C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
+        theta = new_data('geo/Chutzen.lv_theta_fgc'),
+    output:
+        fig_a ='fig/{ext}/figure_10.{ext}',
+        fig_b = 'fig/{ext}/figure_10_b.{ext}'
+    params:
+        ref = list_of_reflectors
+    script:
+        'scripts/figure_9.py'
+
 
 
 ###############################################################################
@@ -260,6 +277,7 @@ def select_raw_for_rule_12(wildcards):
     chan_name = 'AAAl' if int(wildcards.n) == 12 else 'BBBl'
     chan = "raw_chan/20160914_145059_{chan}.raw".format(chan=chan_name)
     par = "raw_chan/20160914_145059_{chan}.raw_par".format(chan=chan_name)
+    data = {'raw':chan,'raw_par':par}
     chan = new_data(chan)
     par = new_data(par)
     return chan, par
@@ -267,10 +285,10 @@ def select_raw_for_rule_12(wildcards):
 chan_string = new_data("raw_{}/20160914_145059_{}.raw")
 rule fig12:
     input:
-        HH = chan_string.format('chan', 'AAAl'),
-        VV = chan_string.format('chan', 'BBBl'),
-        HH_desq = chan_string.format('desq', 'AAAl'),
-        VV_desq = chan_string.format('desq', 'BBBl'),
+        HH = new_data("raw_chan/20160914_145059_AAAl.raw"),
+        VV = new_data("raw_chan/20160914_145059_BBBl.raw"),
+        HH_desq = new_data("raw_desq/20160914_145059_AAAl.raw"),
+        VV_desq = new_data("raw_desq/20160914_145059_BBBl.raw"),
         style = select_style,
         slc_par = new_data("slc_chan/20160914_145059_BBBl.slc.par")
     params:
@@ -477,6 +495,7 @@ rule paper:
         sections = glob.glob('doc/sections/*.tex'),
         main_paper = 'doc/calibration_paper.tex',
         figures = expand('fig/pdf/figure_{n}.pdf', n=range(1,12)),
+        tables = glob.glob('tab/*.csv'),
         drawings = glob.glob('drawings/pdf/*.pdf'),
         library = 'doc/library.bib'
     output:
