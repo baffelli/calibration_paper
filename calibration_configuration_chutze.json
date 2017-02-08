@@ -62,8 +62,9 @@
 			"azwin":	250
 	},
 	"calibration":			{
-			"reflector_index":		3,
-			"correct_HV":           "False"
+			"reflector_index":		4,
+			"correct_HV":           "False",
+			"search_window":		[2,10]
 	},
 	"geocoding":			{
 			"scan_heading":	"58",
