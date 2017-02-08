@@ -17,8 +17,8 @@ def center_width_from_slice(sl):
     return center, width
 
 
-width = (10, 100)
-z = 1000
+width = (4, 100)
+z = 2500
 
 
 def compute_table_4(inputs, outputs, threads, config, params, wildcards):
@@ -34,8 +34,8 @@ def compute_table_4(inputs, outputs, threads, config, params, wildcards):
             raw_data = gpf.rawData(raw_par, raw)
             idx_res = np.ravel_multi_index((idx_proc, idx_chan), (2, 2))
             for idx_ref, ref in enumerate(params.ref):
-                squint_idx, squint, sq_par, raw_filt = cal.fit_squint(raw_data, slc, params.ref['azidx'],
-                                                                  params.ref['ridx'], win=width, z=z)
+                squint_idx, squint, sq_par, raw_filt = cal.fit_squint(raw_data, slc, ref['azidx'],
+                                                                  ref['ridx'], win=width, z=z)
                 # #Slice
                 # az_slice = raw_data.azimuth_slice_from_slc_idx(ref['azidx'], width[1])
                 # #Construct

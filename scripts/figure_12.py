@@ -19,11 +19,11 @@ def center_width_from_slice(sl):
     return center, width
 
 
-width = (6, 150)
+width = (4, 150)
 shp = (2, 2)
 # range window for filter in pizzels
 # Pixels to discard at beginning and end of chirp
-z = 2000
+z = 2500
 xlabel = r' $\theta_{sq}$ (Azimuth rel. to pointing at $f_c$) $[^\circ]$'
 ylabel = r'Chirp frequency $f[MHz]$'
 
@@ -82,7 +82,6 @@ def plot_figure_12(inputs, outputs, threads, config, params, wildcards):
             f.suptitle(params.ref['name'])
             f.subplots_adjust(hspace=0.15, wspace=0.05)
             # ax.xaxis.set_major_locator(tick.MultipleLocator(0.5))
-            plt.show()
             # New figure to plot subplots
             f1, ax1 = plt.subplots(figsize=(fig_w, fig_h))
             ax1.imshow(np.abs(raw_filt).T, aspect=1e7, extent=ext_vec[::-1])

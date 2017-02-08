@@ -30,17 +30,11 @@ sl_image = (slice(500 // win[0], 1900 // win[0]), slice(None, None))
 
 
 def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
-    HHVV = gpf.gammaDataset(inputs.C_cal_par, inputs.HHVV_phase[0], dtype=gpf.type_mapping['FCOMPLEX'])
-    HH = gpf.gammaDataset(inputs.C_cal_par, inputs.HHVV_phase[1], dtype=gpf.type_mapping['FCOMPLEX'])
-    VV = gpf.gammaDataset(inputs.C_cal_par, inputs.HHVV_phase[2], dtype=gpf.type_mapping['FCOMPLEX'])
+    HHVV = gpf.gammaDataset(inputs.C_cal_par, inputs.HHVV, dtype=gpf.type_mapping['FCOMPLEX'])
+    HH = gpf.gammaDataset(inputs.C_cal_par, inputs.HH, dtype=gpf.type_mapping['FCOMPLEX'])
+    VV = gpf.gammaDataset(inputs.C_cal_par, inputs.VV, dtype=gpf.type_mapping['FCOMPLEX'])
     # height
     theta = gpf.load_binary(inputs.theta, VV.shape[0], dtype=gpf.type_mapping['FLOAT'])
-    hgt = gpf.load_binary(inputs.hgt, VV.shape[0], dtype=gpf.type_mapping['FLOAT'])
-    # Topographic phase
-    topo_phase = gpf.gammaDataset(inputs.topo_phase_par, inputs.topo_phase, dtype=gpf.type_mapping['FCOMPLEX'])
-    topo_phase = cf.smooth(topo_phase, win, discard=True)
-    # Height
-    hght = cf.smooth(hgt, win, discard=True)
     # EStimate coherence
     HHVV = _ifun.estimate_coherence(HHVV, HH, VV, win, discard=True)
     mli = cf.smooth(VV, win, discard=True)
@@ -114,7 +108,6 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     # Plot correlation of height with copol phase
     hist_fig, hist_ax = plt.subplots(figsize=(fig_w, fig_h))
     HHVV_bright = np.angle(HHVV[perc_r, perc_az])
-    topo_bright = np.angle(topo_phase[perc_r, perc_az])
     theta_bright = np.sin(theta[perc_r, perc_az].real)
     coherence_bright = np.abs(HHVV[perc_r, perc_az])
     # Compute covariance
@@ -124,20 +117,12 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     theta_bright_norm = (theta_bright - np.mean(theta_bright)) / theta_var
     HHVV_bright_norm = (HHVV_bright - np.mean(HHVV_bright)) / HHVV_var
     x_cov = np.cov(theta_bright_norm, y=HHVV_bright_norm)
-    # Ellispe parameters
-    if wildcards.n == '10':
-        l, w = np.linalg.eigh(x_cov)
-        # orientation = np.arctan(slope)
-        # ell = Ellipse(xy=(np.mean(topo_bright), np.mean(HHVV_bright)), width=2 * conf ** 0.5 * l[0] ** 0.5,
-        #               height=2 * conf ** 0.5 * l[1] ** 0.5, angle=np.rad2deg(orientation))
-        # ell.set_facecolor('none')
-        # ell.set_edgecolor('#66c2a5')
-        # ell.set_linewidth(plt.rcParams['lines.linewidth'])
-        # hist_ax.add_artist(ell)
-        # hist_ax.plot(topo_bright, slope * topo_bright + np.mean(HHVV_bright))
-        pos = [0.4, 0.6]
-        hist_ax.annotate("correlation: {:1.1f}".format(x_cov[1,0]), xy=pos, bbox=box, xytext=pos,
-                         textcoords='axes fraction', xycoords='axes fraction', fontsize=plt.rcParams['axes.labelsize'])
+    # # Ellispe parameters
+    # if wildcards.n == '10':
+    #     l, w = np.linalg.eigh(x_cov)
+    #     pos = [0.4, 0.6]
+    #     hist_ax.annotate("correlation: {:1.1f}".format(x_cov[1,0]), xy=pos, bbox=box, xytext=pos,
+    #                      textcoords='axes fraction', xycoords='axes fraction', fontsize=plt.rcParams['axes.labelsize'])
     hist_ax.hist2d(theta_bright, HHVV_bright, bins=200)
     hist_ax.set_xlabel(r' $\sin\left(\theta_l\right)$')
     hist_ax.set_ylabel(r'HH-VV phase [rad]')
