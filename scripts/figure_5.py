@@ -28,14 +28,13 @@ def plot_figure_5(inputs, outputs, threads, config, params, wildcards):
     C_cal_par = inputs["C_cal_par"]
     C_cal_root, ext = path.splitext(C_cal_par)
     C = mat.coherencyMatrix(C_root, C_par, gamma=True, bistatic=True,
-                            basis='lexicographic').to_monostatic().boxcar_filter([3, 3])
+                            basis='lexicographic').to_monostatic().boxcar_filter(params.aw)
     C_cal = mat.coherencyMatrix(C_cal_root, C_cal_par, gamma=True, bistatic=True,
-                                basis='lexicographic').to_monostatic().boxcar_filter([3, 3])
+                                basis='lexicographic').to_monostatic().boxcar_filter(params.aw)
     #find the maxmium
     ridx = params.ref['ridx']
     azidx = az_idx(C, params.ref['azidx'])
-    mx_idx = cf.maximum_around(np.abs(C), [ridx,azidx, 0,0], [2,4,1,1])
-    print(C_cal[mx_idx[0],mx_idx[1]].shape)
+    mx_idx = cf.maximum_around(np.abs(C), [ridx,azidx, 0,0], params.sw + [1,1])
     #compute signature
     co_sig_cal, x_sig_cal, psi, chi = pf.pol_signature(C_cal[mx_idx[0],mx_idx[1]], n_points=300)
     co_sig, x_sig, psi, chi = pf.pol_signature(C[mx_idx[0], mx_idx[1]],

@@ -168,7 +168,9 @@ rule fig5:
     output:
         paper_fig = 'fig/{ext}/figure_{n, (5|6)}.{ext}'
     params:
-        ref = lambda wildcards: list_of_reflectors[1] if int(wildcards.n) == 5 else list_of_reflectors[-1]
+        ref = lambda wildcards: list_of_reflectors[1] if int(wildcards.n) == 5 else list_of_reflectors[-1],
+        sw = config['calibration']['search_window'],
+        aw = config['calibration']['averaging_window']
     script:
         'scripts/figure_5.py'
 
@@ -404,7 +406,7 @@ rule table2:
     output:
         'tab/table_2.csv'
     params:
-        ref = list_of_reflectors
+        ref = list_of_reflectors,
     script:
         'scripts/table_2.py'
 
@@ -417,7 +419,9 @@ rule table3:
     output:
         'tab/table_3.csv'
     params:
-        ref = list_of_reflectors
+        ref = list_of_reflectors,
+        sw = config['calibration']['search_window'],
+        aw = config['calibration']['averaging_window']
     script:
         'scripts/table_3.py'
 
