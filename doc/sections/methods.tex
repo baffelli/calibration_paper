@@ -78,8 +78,7 @@ Instead of using the above expresison, a linear approximation for the squint rel
 	\theta_{sq} - \theta_{sq}^{f_{c}}  =  a f.
 \end{equation}
 This is necessary because manufacturer-provided antenna pattern measurements at different frequencies suggest that the vertically and the horizontally polarized units have different squint characteristics. Because the design information necessary to use the above exact expression for the squint is not available, a data-driven method has to be used for the correction of the beam squint.\\ To estimate the linearized squint rate $a$, the response of a strong point-like target is extracted from the data by windowing it in range and converting it back in the fast time domain with a Fourier transform; its envelope is then extracted with a discrete Hilbert transform. The peak location at each frequency is localized, a fit using \autoref{eq:squint_linearised} is performed to obtain an estimate of $a$.\\
-To correct the frequency-dependent beam squint the azimuth sample spacing must be smaller than the antenna beamwidth: this permits to reconstruct the full bandwidth illumination of each scatterer with by combining chirp samples acquired at subsequent azimuth positions.
-
+To correct the frequency-dependent beam squint the azimuth sample spacing must be smaller than the antenna beamwidth: this permits to reconstruct the full bandwidth illumination of each scatterer with by combining chirp samples acquired at subsequent azimuth positions.\\
 After correcting the beam squint, azimuth presumming can be applied if desired to reduce the data size and increase SNR. Then, an Hann window is applied to the first and last $z$ samples of the raw data $s_{d}$ to mitigate the transient signal caused by the abrupt change in frequency due to the repetition of the chirp and the end of each pulse. A Kaiser Window is then applied to reduce range processing sidelobes that are caused by the finite bandwidth. Finally, a fast time Fourier transform performs the range compression to obtain the SLC image $\hat{\rho}\left(R, \theta\right)$.
 \\ Each range line of the SLC thus compressed is then multiplied by $\sqrt{R^3}$ to compensate for the power spreading loss. In this manner, the intensity of the SLC data is directly proportional to the radar brightness $\beta_{0}$\cite{Raney1994}. 
 \subsection{Azimuth Processing}\label{sec:methods:azimuth_processing}
@@ -93,18 +92,18 @@ The azimuthal phase variation is suspected to be caused by the rotational geomet
 To model the change in phase, consider the radar acquisition geometry depicted in \autoref{fig:real_aperture_signal_model_geometry}:\\
 The antennas are mounted on a lever arm offset by $L_{arm}$ from the center of rotation.
 Their phase centers have an horizontal displacement $L_{ph}$ from the lever arm attachment.
-A point target is considered, located at the  range of closest approach $R_0$, obtained when the phase center, the target and the lever arm are aligned.  T he propagation phase variation relative to the phase at closest approach, $\phi_{scan}$  for a incremental rotation  $\theta_r$  is:
+A point target is considered, located at the  range of closest approach $R_0$, obtained when the phase center, the target and the lever arm are aligned. For a incremental rotation  $\theta_r$ from the angle of closest approach, the relative phase variation, is:
 \begin{equation}\label{eq:range_phase}
-	\phi_{scan} = \frac{4 \pi}{\lambda}\left(R\left(\theta_r\right) - R_0\right),
+	\phi_{scan} = \frac{4 \pi}{\lambda}\left(R_0- R\left(\theta_r\right) \right).
 \end{equation}
-here $R$ is the effective distance between the point target and the phase center.
-It is computed using the law of cosines on the green triangle of \autoref{fig:real_aperture_signal_model_geometry} with the included angle $\theta_r$, one  side $L_{ant} = \sqrt{L_{arm}^2 + L_{ph}^2}$ and the other $c = L_{ant} + R_0$.
+Where $R$ is the effective distance between the point target and the phase center, 
+computed with the law of cosines on the green triangle of \autoref{fig:real_aperture_signal_model_geometry} with the included angle $\theta_r$, one  side $L_{ant} = \sqrt{L_{arm}^2 + L_{ph}^2}$ and the other $c = L_{ant} + R_0$:
 \begin{equation}\label{eq:range}
-	R = \sqrt{ c^2 +  L_{ant}^2 - 2 c L_{ant} \cos{\left(\theta_r - \alpha\right)}}.
+	R\left(\theta_r\right) = \sqrt{ c^2 +  L_{ant}^2 - 2 c L_{ant} \cos{\left(\theta_r - \alpha\right)}}.
 \end{equation}
-$L_{ant}$ is interpreted as the equivalent lever arm of an antenna without the horizontal phase center shift that would produce the same phase variation as a system with a nonzero $L_{ph}$ and a shorter lever arm.
+$L_{ant}$ is interpreted as the equivalent lever arm of an antenna without the horizontal phase center shift that would produce the same phase variation as a system with a nonzero $L_{ph}$ and a shorter lever arm.\\
 The function is shifted by the angle  $\alpha = \operatorname{\arctan}\left({\frac{L_{ph}}{L_{arm}}}\right)$ that describes the additional rotation needed for an antenna with nonzero $L_{ph}$ to be at closest approach. This shift is necessary because the azimuth angle is measured assuming a zero $L_{ph}$: the reading given by the angle encoder does not correspond to the angular position of the phase center.\\
-The complete characterization of the phase ramp requires the knowledge of the antenna phase center displacement $L_{ph}$. Normally, it is assumed that the phase center is at the midpoint of the antenna. However, when the experimental data was analyzed using this assumption (which implies $L_{ant} = L_{arm}$),  \eqref{eq:range} failed to model the observed azimuth phase variation. The model was thus extended to account for the possibility of a displaced antenna phase center, which is presumed to describe physical differences in the antennas, which would explain the presence of the azimuth phase in the VV channel only.\\ $L_{ph}$ is estimated using the measured phase of a point target by minimizing the squared distance between it an the phase simulated according to \eqref{eq:range}.
+The complete characterization of the phase ramp requires the knowledge of the antenna phase center displacement $L_{ph}$. Normally, it is assumed that the phase center is at the midpoint of the antenna. However, when the experimental data was analyzed using this assumption (which implies $L_{ant} = L_{arm}$),  \eqref{eq:range} failed to model the observed azimuth phase variation and possibility of a displaced antenna phase center was included. This displacement is used to describe physical differences in the antennas, which could explain the larger azimuth phase in the VV channel.\\ $L_{ph}$ is estimated using the measured phase of a point target by minimizing the squared distance between it an the phase simulated according to \eqref{eq:range}.
 \begin{equation}\label{eq:rph_estimation}
 	\hat{L}_{ph} = \underset{\left(L_{ph}, \phi_{off}\right)}{\operatorname{argmax}}{\vert\vert\phi_{meas} - \phi_{scan}\vert\vert}^2,
 \end{equation}
@@ -206,7 +205,7 @@ Because of the difficulty of placing and correctly orienting a cross-polarizing 
 \end{equation}
 and:
 \begin{equation}
-	\phi_t - \phi_r =\operatorname{arg}\left( \left<C_{HVVH}^{\prime}\right>\right).
+	\phi_t - \phi_r =\operatorname{arg}\left( \left<C_{VVHV}^{\prime}\right>\right).
 \end{equation}
 When $\mathbf{D}$ is estimated~\eqref{eq:covariance_distortion} is inverted to obtain a calibrated covariance matrix.\\
 If radiometric calibration is desired, the value of $A$ can be determined after imbalance correction from the ratio of the expected and the measured RCS.
