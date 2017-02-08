@@ -11,12 +11,12 @@
 			"decimated_sample_spacing":		0.1
 	},
 	"list_of_reflectors": [
-		{"ridx":32, "azidx":5192,"type":"cubic", "side":0.4, "name":"CR1"},
+		{"ridx":32, "azidx":5172,"type":"cubic", "side":0.4, "name":"CR1"},
 		{"ridx":830, "azidx":3484,"type":"triangular", "side":0.4, "name":"CR2"},
 		{"ridx":1032, "azidx":5703,"type":"cubic", "side":0.4, "name":"CR3"},
 		{"ridx":1051, "azidx":5617,"type":"triangular", "side":0.4, "name":"CR4"},
 		{"ridx":1331, "azidx":1466,"type":"cubic", "side":0.4, "name":"CR5"},
-		{"ridx":3518, "azidx":3522,"type":"triangular", "side":0.4, "name":"CR6"}
+		{"ridx":3766, "azidx":3960,"type":"triangular", "side":0.4, "name":"CR6"}
 							],
 	"crosspolarizer_index": [3409, 2790, "o"],
     "channel_mapping":{
@@ -62,9 +62,10 @@
 			"azwin":	250
 	},
 	"calibration":			{
-			"reflector_index":		4,
+			"reflector_index":		3,
 			"correct_HV":           "False",
-			"search_window":		[2,10]
+			"search_window":		[2,10],
+			"averaging_window":		[5,5]
 	},
 	"geocoding":			{
 			"scan_heading":	"58",
