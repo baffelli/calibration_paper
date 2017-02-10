@@ -78,8 +78,8 @@ The ability of the phase model described in \autoref{sec:methods:azimuth_process
 	\label{tab:rph_fit}
 \end{table}
 The resulting model parameters fit values for the H and V antennas are shown in \autoref{tab:rph_fit} alongside with the distance from the radar and the name of the reflector, defined in \autoref{tab:reflectors}. Owing to the lack of sufficiently bright crosspolarizing point targets, the equivalent horizontal phase center locations for HV and VH channels were not estimated from the data and are therefore not displayed in the table. In the following, their location it assumed to be at the midpoint between $L_{ph}^{H}$ and $L_{ph}^{V}$, the theoretical equivalent phase center for these channels.\\
-The result of applying the correction of \eqref{eq:correction} to the TCR "CR2" at 673 m is displayed in panels (c) and (f) of \autoref{fig:tcr_mph}, this plot is produced by oversampling the SLC data around the location of the reflector using a cubic spline interpolator.
-In \autoref{fig:phase_response_VV:corrected} the phase and amplitude response in both the HH and VV channel is plotted for all reflectors. To produce the plot, all responses were aligned in azimuth, normalized to the maximum and the phase referenced to the phase at closest approach. In this way, an easier comparison of the azimuthal phase variation is facilitated.
+The result of applying the correction of \eqref{eq:correction} to the TCR "CR2" at 673 m is displayed in panels (c) and (f) of \autoref{fig:tcr_mph}. This plot is produced by oversampling the SLC data around the location of the reflector using a cubic spline interpolator and displaying its phase and amplitude response as a HSV composite.
+In \autoref{fig:phase_response_VV:corrected} the phase response in both the HH and VV channel is plotted for all reflectors. To produce the plot, all responses were aligned in azimuth, normalized to the maximum and the phase referenced to the phase at closest approach. In this way, an easier comparison of the azimuthal phase variation is facilitated.
 \subsection{Antenna Pattern Misalignment}\label{sec:results:misalignment}
 \begin{figure}[Ht!]
 	\centering
