@@ -298,3 +298,4 @@ TSWLatexianTemp*
 
 #Data
 /data/*
+*.snakemake
