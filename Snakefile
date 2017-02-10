@@ -90,6 +90,31 @@ def select_style(wildcards):
         return 'slides_style.rc'
 
 
+
+###############################################################################
+#Utility rule to select location of TCR
+rule select_TCR_location:
+    input:
+        slc = new_data("slc_desq/20160914_145059_AAAl.slc_dec"),
+        slc_par = new_data("slc_desq/20160914_145059_AAAl.slc_dec.par"),
+        map = 'data/geo/pk25krel_latest_Clip.tif',
+        C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
+        LUT = new_data('geo/Chutzen.gpri_to_dem'),
+        sh_map = new_data('geo/Chutzen.sh_map_gc'),
+        dem_seg_par = new_data('geo/Chutzen.dem_seg.par'),
+        LUT1 = new_data('geo/Chutzen.dem_to_gpri'),
+        ref_mli_par = new_data('geo/Chutzen.mli.par'),
+        dem_seg = new_data('geo/Chutzen.dem_seg.tif'),
+    params:
+        ref = list_of_reflectors
+#    output:
+#        paper_fig = 'fig/{ext}/figure_7.{ext}',
+#        pres_fig = 'fig/{ext}/figure_7_full.{ext}'
+    script:
+        'scripts/select_reflectors.py'
+
+
+
 ###############################################################################
 #Plot figure 1: Oversampled magnitude/phase response of a TCR
 rule fig1:
@@ -182,14 +207,17 @@ rule fig7:
         map = 'data/geo/pk25krel_latest_Clip.tif',
         C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
         LUT = new_data('geo/Chutzen.gpri_to_dem'),
+        LUT_inv = new_data('geo/Chutzen.dem_to_gpri'),
         sh_map = new_data('geo/Chutzen.sh_map_gc'),
         dem_seg_par = new_data('geo/Chutzen.dem_seg.par'),
-        style = select_style
+        style = select_style,
+        dem_seg = new_data('geo/Chutzen.dem_seg.tif'),
     params:
         ref = list_of_reflectors
     output:
         paper_fig = 'fig/{ext}/figure_7.{ext}',
-        pres_fig = 'fig/{ext}/figure_7_full.{ext}'
+        pres_fig = 'fig/{ext}/figure_7_full.{ext}',
+        tif = 'fig/{ext}/gc_pauli.tif'
     script:
         'scripts/figure_7.py'
 
