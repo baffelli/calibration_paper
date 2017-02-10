@@ -46,6 +46,8 @@ def plot_figure_7(inputs, outputs, threads, config, params, wildcards):
 
     #load map
     map_ds = gdal.Open(inputs.map)
+    #Load dem segment
+    dem_ds = gdal.Open(inputs.dem_seg)
     #Create spatial reference
     ref = osr.SpatialReference()
     ref.ImportFromWkt(map_ds.GetProjection())
@@ -56,19 +58,18 @@ def plot_figure_7(inputs, outputs, threads, config, params, wildcards):
     f, ax = plt.subplots(figsize=(fig_w, fig_h*2))
 
     #Geocode
-    LUT = geo.GeocodingTable(inputs.dem_seg_par, inputs.LUT)
+    LUT = geo.GeocodingTable(inputs.dem_seg_par, inputs.LUT, inputs.C_cal_par, inputs.LUT_inv)
 
     #Decimate reflector location
     for ref in params['ref']:
         ref['azidx_dec'] = C_cal.azidx_dec(ref['azidx'])
-        ref['geo_coord'] = LUT.dem_coord_to_geo_coord(LUT.radar_coord_to_dem_coord([ref['ridx'], ref['azidx_dec']]))
+        ref['geo_coord'] = LUT.radar_coord_to_geo_coord([ref['ridx'], ref['azidx_dec']])[0]
         ref['marker_color'] = 'orange' if ref['name'] == params['ref'][config['calibration']['reflector_index']]['name'] else '#43a2ca'
-    print(params['ref'])
-
-    #Geocode
+    # #Geocode
     C_cal_geo = LUT.geocode_data(C_cal)
     C_cal_geo = C_cal_geo.boxcar_filter([3,3])
     C_cal_rgb = C_cal_geo.pauli_image(k=0.4, sf=0.25, common=False, peak=False)
+    #Save RGB as a tif
     C_cal_alpha = np.ones(C_cal_rgb[:,:,0].shape)
     #Mask Nans
     C_cal_span = C_cal_geo.span()
@@ -77,21 +78,23 @@ def plot_figure_7(inputs, outputs, threads, config, params, wildcards):
     C_cal_alpha[np.isnan(C_cal_geo[:,:,0,0])] = 0
     #Convert to rgba
     C_cal_rgb = np.dstack((C_cal_rgb,C_cal_alpha))
+    #Save as rif
+    geo.raster_to_geotiff(C_cal_geo.pauli_image(k=0.4, sf=0.25, common=False).transpose((1,0,2)), dem_ds, outputs.tif)
     #Plot map
     ext1=geo.get_ds_extent(map_ds)
     ext2=LUT.get_extent()
     ax.imshow(map_ds.ReadAsArray().transpose((1, 2, 0)), extent=ext1)
-    ax.imshow(C_cal_rgb.transpose(1,0,2), extent=ext2)
-    # ax.imshow(sh_map.transpose((1, 0)
-    #                            ), extent=LUT.get_extent())
+    ax.imshow(C_cal_rgb.transpose(1,0,2), extent=ext2, alpha=0.95)
     #annotate scatters
     annotate_axis(ax, params)
     ext = LUT.get_geocoded_extent(C_cal)
     ax.set_xlim([606637,609660])
-    ax.set_ylim(ext[2:])
+    ax.set_xlim(ext[0:2])
+    ax.set_ylim(ext[2::])
     ax.set_aspect(1)
     # f.subplots_adjust(left=0,right=1)
     ax.axis('off')
+    plt.show()
     f.savefig(outputs['paper_fig'], bbox_inches='tight', pad_inches=0)
     #Add axis
     f1, ax1 =  plt.subplots(figsize=( fig_w, fig_w))
