@@ -88,10 +88,9 @@ def plot_figure_7(inputs, outputs, threads, config, params, wildcards):
     #annotate scatters
     annotate_axis(ax, params)
     ext = LUT.get_geocoded_extent(C_cal)
-    # ax.set_xlim([606637,609660])
-    ax.set_xlim(ext[0:2])
-    ax.set_ylim(ext[2::])
-    ax.set_aspect(1)
+    ax.set_xlim([606480,609800])
+    ax.set_ylim(ext[2:4])
+    # ax.set_aspect(1)
     # f.subplots_adjust(left=0,right=1)
     ax.axis('off')
     plt.show()
