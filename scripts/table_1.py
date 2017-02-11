@@ -9,7 +9,7 @@ import pyrat.geo.geofun as geo
 def table_1(inputs, outputs, threads, config, params, wildcards):
     #Geocoding table to compute location of reflectors
     #Geocode
-    LUT = geo.GeocodingTable(inputs.dem_seg_par, inputs.LUT)
+    LUT = geo.GeocodingTable(inputs.dem_seg_par, inputs.LUT, inputs.slc_par, inputs.LUT_inv)
 
     # list of reflectors
     refl_list = [ref for ref in params['ref'] if ref['type'] == "cubic" or ref['type'] == 'triangular']
@@ -30,7 +30,8 @@ def table_1(inputs, outputs, threads, config, params, wildcards):
             azidx_dec = current_reflector['azidx'] // slc.GPRI_decimation_factor
             ridx =  current_reflector['ridx']
             #Compute geographical location
-            geo_coord = LUT.dem_coord_to_geo_coord(LUT.radar_coord_to_dem_coord([ridx, azidx_dec]))
+            geo_coord = LUT.radar_coord_to_geo_coord([ridx, azidx_dec])[0]
+            print(geo_coord)
             row = [current_reflector.get('name', "N/A"), slc.r_vec[current_reflector['ridx']], current_reflector['type'], RCS, current_reflector['ridx'],
                    azidx_dec, geo_coord[0], geo_coord[1]]
             res_list.append(row)
