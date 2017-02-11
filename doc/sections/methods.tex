@@ -25,7 +25,7 @@ In the radar, $s_r$ is mixed with the transmitted chirp $s_t$  to remove the lin
 \end{equation} 
 The dechirped signal is a complex sinusoidal whose frequency $f_{b} = \frac{4 R B}{c t_{chirp}}$ is proportional to the slant range $R$;
 two phase terms can be identified: $ e^{j 4 \pi \frac{R}{c}f_c}$ is the two way propagation phase, the quantity of interest for  interferometric measurements. The second component, proportional to the squared distance, is named "range video phase" in SAR processing, where its variation over the aperture length may causes defocussing. Although KAPRI is a real-aperture system, a SAR-like azimuth processing step is required to correct a residual azimuth phase ramp, as described in \autoref{sec:methods:azimuth_processing}. However, in this case the variation of $R$ during the aperture length is minimal and the range video term can be ignored.\\
-From \autoref{eq:deramp} an by the linearity of the Fourier transform, it follows that the range profile $\hat{\rho}\left(R, \theta\right)$ of a collection of scatterers with complex reflectivity $\rho_i$ at ranges $R_{i}$ can be estimated by the Fourier transform of $s_{d}\left(t\right)$.\\
+From \eqref{eq:deramp} an by the linearity of the Fourier transform, it follows that the range profile $\hat{\rho}\left(R, \theta\right)$ of a collection of scatterers with complex reflectivity $\rho_i$ at ranges $R_{i}$ can be estimated by the Fourier transform of $s_{d}\left(t\right)$.\\
 As in pulsed radars, the range resolution using FMCW signals is inversely proportional to the bandwidth:
 \begin{equation}\label{eq:range_resolution_theoretical}
 	\delta_{r} = \frac{c}{2 B}.
@@ -73,7 +73,7 @@ The availability of raw data oversampled in azimuth is key to mitigate the effec
 	\theta_{sq} = \sin^{-1}\left(\frac{\lambda}{\lambda_{g_{ij}}} + \frac{k \lambda}{s}\right),
 \end{equation}
 here ${\lambda_g}_{ij}$ is the wavelength for the $ij$-TE mode of the waveguide, $\lambda$ is the freespace wavelength, $s$ is the element spacing and $k$ is the mode number. In this case, the waveguide mode used is $TE_{01}$ and $k=0$ is assumed because all the slots are to be transmitting in phase\cite{kraus88} to direct the main beam at the antenna broadside.\\
-Instead of using the above expresison, a linear approximation for the squint relative to the pointing direction at the design frequency $f_c$ is used to process KAPRI data:
+Instead of using the above expression, a linear approximation for the squint relative to the pointing direction at the design frequency $f_c$ is used to process KAPRI data:
 \begin{equation}\label{eq:squint_linearised}
 	\theta_{sq} - \theta_{sq}^{f_{c}}  =  a f.
 \end{equation}
@@ -109,11 +109,11 @@ The complete characterization of the phase ramp requires the knowledge of the an
 \end{equation}
 where $\phi_{sim} = \phi_{scan} + \phi_{off}$ is the simulated phase with an additional offset that accounts for noise and the intrinsic scattering phase and the system.\\
 As seen in \eqref{eq:range}, the distance of each scatterer is a function of the relative rotation angle $\theta_r$ of the antenna. Thus azimuth and distance are coupled, an effect know as Range Cell Migration . In this case, the range resolution is significantly smaller than the amount of RCM and only affects the phase (\eqref{eq:range_phase}).\\
-When $L_{ph}$ is known, the azimuth phase variation is corrected in each range line $R_{i}$ using \eqref{eq:range} as a matched filter:
+When $L_{ph}$ is known, the azimuth phase variation is corrected in the range compressed data $\hat{\rho}$ by convolution of each range $R_{i}$ with the phase of \eqref{eq:range} used as a matched filter:
 \begin{equation}\label{eq:correction}
 	\begin{aligned}
-		s_{d}^{corr}\left(\theta, R_{i}\right) = &\int\limits_{-\frac{\theta_{int}}{2}}^{\frac{\theta_{int}}{2}}e^{\jmath \frac{4\pi}{\lambda}R\left(\theta - \theta^{\prime}, R_{i}\right)}\\
-		&s_{d}\left(\theta^\prime\right) d\theta^\prime.
+		\hat{\rho}^{corr}\left(\theta, R_{i}\right) = &\int\limits_{-\frac{\theta_{int}}{2}}^{\frac{\theta_{int}}{2}}e^{\jmath \frac{4\pi}{\lambda}R\left(\theta - \theta^{\prime}, R_{i}\right)}\\
+		&\hat{\rho}\left(\theta^\prime\right) d\theta^\prime.
 	\end{aligned}
 \end{equation}
 The formula replaces the azimuth averaging described in \autoref{sec:methods:signal_model}: the samples are now averaged with the appropriate phase factor so that the SNR improvement and the correction of the azimuth trend are combined in a single step. Usually, after convolution only the central pixel of the integration window is kept, to reduce the amount of data, as the original acquisition is always oversampled in azimuth. Because the model only describes the variation of the phase relative to closest approach $R_{0}$, the absolute phase is preserved; this is very important for interferometric applications.\\
