@@ -172,7 +172,7 @@ For the analysis of the topographic phase contribution removal, as described \au
 		columns/name/.style={column name={Name} ,string type, column type = {l}},
 		columns/slant range/.style={precision=1, column name=\makecell{$R_{0} [m]$\\ Range distance}},
 		columns/HH-VV amplitude imbalance/.style={precision=2, column name={$f$}},
-		columns/HH-VV phase imbalance/.style={precision=2, column name={$\phi_r + \phi_t [^\circ]$}},
+		columns/HH-VV phase imbalance/.style={precision=2, fixed, column name={$\phi_r + \phi_t [^\circ]$}},
 		columns/Polarization purity/.style={precision=1, column name={Purity $[dB]$}}
 	]{../tab/table_3.csv}
 	\caption{Copolar phase ($\phi_r + \phi_t$), amplitude imbalance ($f$)  and polarization purity (VV/HV ratio) computed on the reflectors using the calibrated dataset. The calibration reflector has been excluded from the table.}
