@@ -27,7 +27,7 @@
               "RX_Al_position": 0.725,
               "RX_Bl_position": 0.85 },
 	"desquint":				{
-			"AAA_squint_rate":	4e-9,
+			"AAA_squint_rate":	4.2e-9,
 			"BBB_squint_rate":	3.9e-9,
 			"BAA_squint_rate":	3.9e-9,
 			"ABB_squint_rate":	3.9e-9,
