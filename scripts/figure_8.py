@@ -3,11 +3,14 @@ import numpy as np
 import pandas as pd
 import pyrat.fileutils.gpri_files as gpf
 
+import matplotlib.ticker as tick
 
 # Return the decimated azimuth position
 def az_idx(ds, idx):
     return idx / ds.azimuth_looks
 
+x_box = 0.1
+y_box = 0.2
 
 def plot_figure_8(inputs, outputs, threads, config, params, wildcards):
     C_par = gpf.par_to_dict(inputs.C_cal_par)
@@ -25,18 +28,20 @@ def plot_figure_8(inputs, outputs, threads, config, params, wildcards):
     xlabel = r'Local incidence angle $[^\circ]$'
     f, (ph_ax, amp_ax) = plt.subplots(2, 1, figsize=(fig_w, fig_h))
     ph_ax.scatter(inc_ref, residuals['HH-VV phase imbalance'])
-    ph_ax.xaxis.set_label_text(xlabel)
+    # ph_ax.xaxis.set_label_text(xlabel)
     ph_ax.yaxis.set_label_text(r'Calibrated $\phi_r + \phi_t [^\circ]$')
     bbox_props = dict(boxstyle="square", fc="white", ec="black", lw=0.5)
-    ph_ax.text(0.2, 0.2, r"RMS {:.2f}$^\circ$, Mean {:.2f}$^\circ$".format(phase_rms, phase_mean),
+    ph_ax.text(x_box, y_box, r"RMS {:.2f}$^\circ$, Mean {:.2f}$^\circ$".format(phase_rms, phase_mean),
                transform=ph_ax.transAxes, bbox=bbox_props)
     ph_ax.set_ylim([-20, 20])
+    ph_ax.yaxis.set_major_locator(tick.MultipleLocator(10))
     amp_ax.scatter(inc_ref, residuals['HH-VV amplitude imbalance'])
     amp_ax.xaxis.set_label_text(xlabel)
     amp_ax.yaxis.set_label_text(r'Calibrated $f$')
-    amp_ax.text(0.2, 0.2, r"RMS {:.2f}, Mean {:.2f}".format(amp_rms, amp_mean),
+    amp_ax.text(x_box, y_box, r"RMS {:.2f}, Mean {:.2f}".format(amp_rms, amp_mean),
                transform=amp_ax.transAxes, bbox=bbox_props)
-    f.subplots_adjust(hspace=0.35)
+    amp_ax.set_ylim([0.9,1.2])
+    f.subplots_adjust(hspace=0.35, right=0.85)
     f.savefig(outputs[0])
 
 
