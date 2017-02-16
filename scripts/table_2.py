@@ -11,6 +11,7 @@ import pyrat.gpri_utils.calibration as cal
 import numpy as np
 import csv
 
+
 def table_2(inputs, outputs, threads, config, params, wildcards):
     #list of reflectors
     refl_list = [ref for ref in params['ref'] if ref['type'] == "cubic" or ref['type'] == 'triangular']
@@ -23,13 +24,16 @@ def table_2(inputs, outputs, threads, config, params, wildcards):
     with open(outputs[0], 'w+') as of:
         tabwrite = csv.writer(of, delimiter=',')
         tabwrite.writerow(
-            ['name' ,'rsl',"LphVV", "LphHH" ,'resVV', 'resHH', 'rcmHH', 'rcmVV', "ridx", "azidx"])
+            ['name' ,'rsl',"LphVV", "LphHH" ,'resVV', 'resHH', 'rcmHH', 'rcmVV', 'rvpPTPHH', 'rvpPTPVV', "ridx", "azidx"])
         for ref in refl_list:
             ridx = ref['ridx']
             azidx = ref['azidx'] / slc_VV.azimuth_looks
             ph_shift_VV, res_HH, r_sl_VV, meas_ph_VV, sim_ph_VV, rvp_HH, rcm_HH =  cal.measure_phase_center_location(slc_VV, ridx, azidx, sw=(2,25), aw=60)
             ph_shift_HH, res_VV, r_sl_HH, meas_ph_HH, sim_ph_HH, rvp_VV, rcm_VV =  cal.measure_phase_center_location(slc_HH, ridx, azidx, sw=(2,25), aw=60)
-            row = [ref['name'], r_sl_HH, ph_shift_VV, ph_shift_HH, res_VV, res_HH, rcm_HH , rcm_VV , ridx, azidx]
+            #Simulate RVP
+            rvp_HH_pp = np.ptp(np.rad2deg(np.angle(rvp_HH)))
+            rvp_VV_pp = np.ptp(np.rad2deg(np.angle(rvp_VV)))
+            row = [ref['name'], r_sl_HH, ph_shift_VV, ph_shift_HH, res_VV, res_HH, rcm_HH , rcm_VV, rvp_HH_pp, rvp_VV_pp , ridx, azidx]
             res_list.append(row)
             print(row)
             tabwrite.writerow(row)
