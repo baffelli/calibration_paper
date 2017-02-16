@@ -14,7 +14,7 @@ perc = 20
 # Coherence threshold
 coh_thresh = 0.6
 
-win = [5, 3]  # multilooking window
+win = [5, 2]  # multilooking window
 
 
 # Return the decimated azimuth position
@@ -47,8 +47,8 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     perc_r, perc_az = np.nonzero((copol_span > bright_percentile) * (np.abs(HHVV) > coh_thresh) * (theta != 0))
     # Create RGB
     # Property of the mph image
-    mph_dict = {'k': 0.08, 'sf': 0.9, 'coherence': True, 'peak': False, 'mli': mli[sl_image], 'coherence_threshold': 0.4,
-                'coherence_slope': 6}
+    mph_dict = {'k': 0.15, 'sf': 0.9, 'coherence': True, 'peak': False, 'mli': mli[sl_image], 'coherence_threshold': 0.4,
+                'coherence_slope': 6, 'N':256}
     HHVV_im = HHVV[sl_image]
     az_vec = HHVV_im.az_vec
     r_vec = HHVV_im.r_vec
@@ -65,7 +65,7 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     aspect = fig_h / fig_w
     slc_ext = [az_vec[0], az_vec[-1], r_vec[-1], r_vec[1]]
     # Show the phase
-    im_ax.imshow(mph, extent=slc_ext, aspect=vf.fixed_aspect(slc_ext, aspect), origin='upper')
+    im_ax.imshow(mph, extent=slc_ext, aspect=vf.fixed_aspect(slc_ext, aspect), origin='upper', interpolation='none')
     # Show the indices of bright targets
     # im_ax.scatter(az_vec[perc_az], r_vec[perc_r], facecolors='none', edgecolors='cyan')
     im_ax.yaxis.set_label_text(r'Range [m]')
@@ -84,18 +84,18 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     #                                xytext=pos_list.get(ref['name'], (0, -15)), textcoords='offset points', bbox=box,
     #                                horizontalalignment='center')
     # plot palette
-    pal_ax = f.add_subplot(gs[-1, 0])
-    pal_ax.imshow(pal, aspect=1 / 30.0, extent=[0, 1, -np.pi, np.pi, ])
-    pal_ax.set_ylabel(r'Phase')
-    pal_ax.set_xlabel(r'Intensity')
+    pal_ax = f.add_subplot(gs[-1, 0:1])
+    pal_ax.imshow(pal.transpose([1,0,2])[::-1,:], aspect=1/2, extent=[-np.pi, np.pi, 0, 1])
+    pal_ax.set_xlabel(r'Phase')
+    pal_ax.set_ylabel(r'Intensity')
     pal_ax.grid(b=False)
-    pal_ax.set_yticks([-np.pi, 0, np.pi])
-    pal_ax.set_yticklabels([r"$-\pi$", r"$0$", r"$\pi$"])
+    pal_ax.set_xticks([-np.pi, 0, np.pi])
+    pal_ax.set_xticklabels([r"$-\pi$", r"$0$", r"$\pi$"])
     ext_list = [ext[0], (ext[0] + ext[1]) / 2, ext[1]]
-    pal_ax.set_xticks([])
+    # pal_ax.set_xticks([])
     # pal_ax.set_xticklabels([r"{{val:.2f}}".format(val=val) for val in ext_list])
     # Plot coherence
-    coh_ax = f.add_subplot(gs[-1,1])
+    coh_ax = f.add_subplot(gs[-1,-1])
     c = np.linspace(0, 1)
     c_scale = vf.scale_coherence(c, threshold=mph_dict['coherence_threshold'], slope=mph_dict['coherence_slope'])
     coh_ax.plot(c, c_scale)
