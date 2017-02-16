@@ -1,13 +1,14 @@
 \section{Methods and Data}\label{sec:methods}
 \subsection{KAPRI: FMCW Radar Signal Model}\label{sec:methods:signal_model}
-A fundamental requirement to generate calibrated polarimetric data is the availability of properly processed SLC images for all elements of the polarimetric scattering matrix. To process them, it necessary to understand the data acquisition and correct several effects specific to KAPRI.  
-For this purpose a signal model for type II\cite{Caduff2015} radar data using the deramp-on-receive FMCW architecture\cite{Stove1992} is introduced.\\
-\begin{figure}[h]
+\begin{figure*}[Ht!]
 	\centering
 	\includegraphics[scale=1]{real_aperture_signal_model_geometry}
-	\caption{Geometric description of the displaced phase center with all relevant parameters. $R$ is the slant range from the radar to the point scatterer, $\theta_{3dB}$ is the antenna half power beamwidth, which is represented by the gray triangle. The size of the antenna aperture is $L_{wg}$, the corresponding azimuth resolution (in distance units) is $\delta_{az}$. The inset figure is used to derive the azimuth phase variation. $L_{ph}$ is the phase center displacement, $L_{arm}$ is the antenna rotation lever arm, $R_{0}$ the range of closest approach and $\alpha$ the additional rotation angle necessary to obtain closest approach when the phase center is not in the midpoint of the array but the rotation angle is measured assuming $L_{ph}=0$.}
+	\caption{Geometrical description of the displaced phase center with all relevant parameters. $R$ is the slant range from the radar to the point scatterer, $L_{ph}$ is the phase center displacement, $L_{wg}$ the length of the antenna, $L_{arm}$ is the antenna rotation lever arm, $R_{0}$ the range of closest approach and $\alpha$ the additional rotation angle necessary to obtain closest approach when the phase center is not in the midpoint of the array but the rotation angle is measured assuming $L_{ph}=0$.}
 	\label{fig:real_aperture_signal_model_geometry}
-\end{figure}
+\end{figure*}
+A fundamental requirement to generate calibrated polarimetric data is the availability of properly processed SLC images for all elements of the polarimetric scattering matrix. To process them, it necessary to understand the data acquisition and correct several effects specific to KAPRI.  
+For this purpose a signal model for type II\cite{Caduff2015} radar data using the deramp-on-receive FMCW architecture\cite{Stove1992} is introduced.\\
+
 Consider a coordinate system having its origin at the location of a radar, as depicted in \autoref{fig:real_aperture_signal_model_geometry}. In this system the antenna is mounted on a lever arm of length $L_{arm}$; its mainlobe is parallel to the $x$ axis when the pointing angle $\theta$ is 0. The radar images a scene with a complex reflectivity distribution $\sigma\left(x,y\right)$ by measuring range profiles $\hat{\sigma}\left(R, \theta\right)$ for a number of antenna azimuths angles $\theta = \operatorname{arctan}\left(\frac{y}{x}\right)$ by rotating the antenna assembly with angular speed $\omega$. Each profile is measured by transmitting a linearly modulated signal of duration $t_{chirp}$ with bandwidth $B$ and center frequency $f_c$:
 \begin{equation}
 	s_t\left(t\right) = e^{j 2 \pi \left( t f_{c} +  \frac{B}{t_{chirp}} t^2 \right)}.
