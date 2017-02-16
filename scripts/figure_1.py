@@ -42,10 +42,10 @@ def plot_figure_1(inputs, outputs, threads, config, params, wildcards):
             ptarg_zoom, r_plot, az_plot, mx_pos, res_dict, r_vec, az_vec = cf.ptarg(current_slc, params['ridx'],
                                                                                     params['azidx'],
                                                                                     azwin=azwin, rwin=rwin, osf=32,
-                                                                                    sw=(4, sw_idx))
+                                                                                    sw=(4, sw_idx), polar=True)
             # remove phase at maximum
             ptarg_zoom *= np.exp(1j * np.angle(ptarg_zoom[mx_pos].conj()))
-            mph_dict = {'k':0.2, 'sf':0.8, 'coherence':False, 'peak':True}
+            mph_dict = {'k':0.15, 'sf':0.8, 'coherence':False, 'peak':True, 'N':256}
             mph, rgb, norm = vf.dismph(ptarg_zoom, **mph_dict)  # create rgb image
             pal, ext = vf.dismph_palette(ptarg_zoom, **mph_dict)
             aspect = fig_h / fig_w
@@ -59,7 +59,7 @@ def plot_figure_1(inputs, outputs, threads, config, params, wildcards):
                                                                az_res=res_dict['azimuth_resolution'][
                                                                    0])
             bbox_props = dict(boxstyle="square", fc="white", ec="w", lw=2)
-            t = current_ax.text(0.1, 0.1, resolution_text, size=8, bbox=bbox_props, horizontalalignment='left',
+            t = current_ax.text(0.08, 0.07, resolution_text, size=8, bbox=bbox_props, horizontalalignment='left',
                                 transform=current_ax.transAxes)  # set label
             if idx_chan == 1 and idx_proc == 0:
                 current_ax.set_xlabel(xlabel)
