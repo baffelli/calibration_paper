@@ -33,7 +33,7 @@ In this case, the deramped signal for a point target at $R,\theta_t$ is:
 \begin{equation}\label{eq:signal_model}
 	\begin{aligned}
 	& s_{d}\left(t,\theta\right) = \sigma e^{j 2 \pi f_b t}   \\
-	& e^{j 4 \pi \frac{R}{\lambda}}  e^{j 4 \pi \frac{\gamma B}{c^2}} P\left(\theta - \theta_t\right),
+	& e^{j 4 \pi \frac{R}{\lambda}}  e^{j 4 \pi \frac{\gamma R^2}{c^2}} P\left(\theta - \theta_t\right),
 	\end{aligned}
 \end{equation} 
 where $t$ is the fast time,  $\theta = n \omega \tau$ is the azimuth scan angle and $P\left(\theta\right)$ describes the two way antenna pattern with beamwidth:
@@ -65,7 +65,7 @@ Due to diffraction, the radiation beam emitted by the antenna broadens linearly 
 \end{figure*}
  To obtain the desired cross-range resolution at the distances of interest a sufficiently narrow antenna beamwidth is required. To do so, KAPRI employs a 2 meter long traveling wave slotted waveguide antennas\cite{Hines1953a,Granet2007}. They are constructed by cutting slots resonating at the design frequency in a section of rectangular waveguide. When the slots are appropriately spaced the fields emitted by the cuts combine in phase, producing a narrow beam in the desired direction.\\ Two types of slotted waveguide antenna exist\cite{Enjiu2013}: the resonant and the traveling wave design. The second type has been chosen because it can be operated with a larger bandwidth; achieving a finer range resolution. The main drawback of this antenna design is its frequency-dependent beam squint: when it is operated at frequency differing from the design value, the phase differences at the slots change; altering the direction of the mainlobe. When a chirped signal is transmitted, the mainlobe direction continuously changes during the pulse. This effect has been used for imaging radars where a mechanical antenna rotation would not be possible\cite{Yang2014,Yang2012,Mayer2003,Alvarez2013}. In the case of KAPRI the beam squint is undesired: the large angular deviation relative to the beamwidth causes the mainlobe to be centered on a scatterer during a fraction of $t_{chirp}$ only, decreasing the effective transmitted bandwidth and the range resolution.\\ 
 In dechirped data acquired with sufficent level of azimuth oversampling, the effect of beam squint is visible as skewed point target responses, as illustrated in~\autoref{fig:squint_correction}. During the chirp, the target is only at the center of the beamwidth when the antenna rotation angle matches the beam squint angle. 
-The availability of raw data oversampled in azimuth is key to mitigate the effect of the beam squint:\\ For each chirp frequency $f$, the data at the corresponding fast time $t_{f} = t_{chirp}\frac{f - f_c}{B}$  is shifted by the opposite of the squint angle, predicted by:
+The availability of raw data oversampled in azimuth is key to mitigate the effect of the beam squint:\\ For each chirp frequency $f$, the data at the corresponding fast time $t_{f} = \frac{f - f_c}{\gamma}$  is shifted by the opposite of the squint angle, predicted by:
 \begin{equation}\label{eq:squint_exact}
 	\theta_{sq} = \sin^{-1}\left(\frac{\lambda}{\lambda_{g_{ij}}} + \frac{k \lambda}{s}\right),
 \end{equation}
@@ -107,8 +107,8 @@ where $\phi_{sim} = \phi_{scan} + \phi_{off}$ is the simulated phase with an add
 When $L_{ph}$ is known, the azimuth phase variation is corrected in the range compressed data $\hat{\sigma}$ by convolution of each range $R_{i}$ with the phase of \eqref{eq:range} used as a matched filter:
 \begin{equation}\label{eq:correction}
 	\begin{aligned}
-		\hat{\sigma}^{corr}\left(\theta, R_{i}\right) = &\int\limits_{-\frac{\theta_{int}}{2}}^{\frac{\theta_{int}}{2}}e^{\jmath \frac{4\pi}{\lambda}R\left(\theta - \theta^{\prime}, R_{i}\right)}\\
-		&\hat{\sigma}\left(\theta^\prime\right) d\theta^\prime.
+		\hat{\sigma}^{corr}\left(R_{i}, \theta\right) = &\int\limits_{-\frac{\theta_{int}}{2}}^{\frac{\theta_{int}}{2}}e^{\jmath \frac{4\pi}{\lambda}R\left(\theta - \theta^{\prime}, R_{i}\right)}\\
+		&\hat{\sigma}\left(R_{i}, \theta^\prime\right) d\theta^\prime.
 	\end{aligned}
 \end{equation}
 This expression replaces the azimuth presum described in \autoref{sec:methods:signal_model}: the samples are now averaged with an appropriate phase factor; this combines SNR improvement and the correction of the azimuth trend in a single step. Because the model only describes the variation of the phase relative to closest approach $R_{0}$, the absolute phase is preserved; this is very important for interferometry and polarimetry.\\
