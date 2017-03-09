@@ -14,7 +14,7 @@ Consider a coordinate system having its origin at the location of a radar, as de
 	s_t\left(t\right) = e^{j 2 \pi \left( t f_{c} + \frac{\gamma}{2} t^2 \right)}.
 \end{equation}
 with $\gamma = \frac{B}{\tau}$.
-The backscattered signal $s_r$ for a scatterer at range $R$ is $s_t$ delayed by $t_{c} = \frac{2 R}{c}$ and scaled by the complex reflectivity of the scatterer $\sigma$.
+The backscattered signal $s_r$ for a scatterer at range $R$ is $s_t$ delayed by $\frac{2 R}{c}$ and scaled by  $\sigma$, the complex reflectivity of the scatterer.
 \begin{equation}
 		s_r\left(t\right) = \sigma e^{j 2 \pi \left( \left(t - \frac{2 R}{c}\right) f_{c} +  \frac{\gamma}{2} \left(t - \frac{2 R}{c}\right)^2 \right)}.
 \end{equation}
@@ -33,7 +33,7 @@ In this case, the deramped signal for a point target at $R,\theta_t$ is:
 \begin{equation}\label{eq:signal_model}
 	\begin{aligned}
 	& s_{d}\left(t,\theta\right) = \sigma e^{j 2 \pi f_b t}   \\
-	& e^{j 4 \pi \frac{R}{\lambda}}  e^{j 4 \pi \frac{\gamma R^2}{c^2}} P\left(\theta - \theta_t\right),
+	& e^{j 4 \pi \frac{R}{\lambda}}  e^{-j 4 \pi \frac{\gamma R^2}{c^2}} P\left(\theta - \theta_t\right),
 	\end{aligned}
 \end{equation} 
 where $t$ is the fast time,  $\theta = n \omega \tau$ is the azimuth scan angle and $P\left(\theta\right)$ describes the two way antenna pattern with beamwidth:
@@ -41,7 +41,7 @@ where $t$ is the fast time,  $\theta = n \omega \tau$ is the azimuth scan angle 
 	\theta_{3dB} = \frac{\lambda}{L_{wg}},
 \end{equation}
 where $L_{wg}$ is the size of the antenna aperture and $\lambda$ is the wavelength employed.
-If the rotation speed is chosen such that $\omega \tau \ll \theta_{3dB}$, the acquisition is oversampled in azimuth; several range profiles are samples of the same target. Their average in slow time  ---called azimuth presum or azimuth decimation--- produces measurements with an increased signal to noise ratio, assuming all range profile to be affected by the same uncorrelated noise process.\\
+If the rotation speed is chosen such that $\omega \tau \ll \theta_{3dB}$, the acquisition is oversampled in azimuth; several range profiles are samples of the same target. Their average in slow time  ---called azimuth presum or azimuth decimation--- produces measurements with an increased signal to noise ratio, assuming all range profile to be affected by a white noise process.\\
 Due to diffraction, the radiation beam emitted by the antenna broadens linearly with increasing distance; consequently the spatial resolution in cross-range $\delta_{az}$ increases with distance:
 \begin{equation}\label{eq:azimuth_ground_resolution}
 	\delta_{az} = \frac{R \lambda}{L_{wg}},
@@ -107,7 +107,7 @@ where $\phi_{sim} = \phi_{scan} + \phi_{off}$ is the simulated phase with an add
 When $L_{ph}$ is known, the azimuth phase variation is corrected in the range compressed data $\hat{\sigma}$ by convolution of each range $R_{i}$ with the phase of \eqref{eq:range} used as a matched filter:
 \begin{equation}\label{eq:correction}
 	\begin{aligned}
-		\hat{\sigma}^{corr}\left(R_{i}, \theta\right) = &\int\limits_{-\frac{\theta_{int}}{2}}^{\frac{\theta_{int}}{2}}e^{\jmath \frac{4\pi}{\lambda}R\left(\theta - \theta^{\prime}, R_{i}\right)}\\
+		\hat{\sigma}^{corr}\left(R_{i}, \theta\right) = &\int\limits_{-\frac{\theta_{int}}{2}}^{\frac{\theta_{int}}{2}}e^{-\jmath \frac{4\pi}{\lambda}R\left(\theta - \theta^{\prime}, R_{i}\right)}\\
 		&\hat{\sigma}\left(R_{i}, \theta^\prime\right) d\theta^\prime.
 	\end{aligned}
 \end{equation}
