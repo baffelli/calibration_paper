@@ -1,6 +1,6 @@
 \section{Results}\label{sec:results}
 \subsection{Beam Squint Correction}\label{sec:results:squint_correction}
-\begin{figure*}[Ht!]
+\begin{figure*}[ht!]
 	\centering
 	\includegraphics{figure_12}
 	\caption{Azimuth-frequency response of the "CR2" TCR: the raw data samples around the reflectors azimuth location were extracted, then filtered in range by Fourier transforming them along the frequency axis, appliyng an Hamming window about the range location and converting them  back into the time domain with an inverse Fourier transform. By doing so, only the portion of the range spectrum close to the reflectors location was kept. Finally, the complex envelope of the data was extracted using a discrete Hilbert transform. This is conceptually equivalent to the plot of \autoref{fig:squint_correction}. (a) for the HH channel, (b) for the VV channel, (c) for the HH channel after the interpolation described in \autoref{sec:methods:squint_correction}  and (d) the same for the VV channel.}
@@ -8,7 +8,7 @@
 \end{figure*}
 \autoref{fig:raw_squint} shows the frequency-azimuth response relative to the pointing at the center frequency for the "CR2" TCR. This plot was generated with the procedure described in \autoref{sec:methods:squint_correction} by filtering the range compressed data around the location of the reflector and converting it back to the time domain by an inverse Fourier transform. In (a) and (b), the procedure was applied to the HH and VV channel data before any squint correction was applied. In  (b) and (c) the same is shown after applying the interpolation described in \autoref{sec:methods:squint_correction} using $a = 4.2 \frac{\circ}{GHz}$ and $a = 3.9 \frac{\circ}{GHz}$ for the HH and VV channels. In each plot, a line shows the results of the linear model fit described by \eqref{eq:squint_linearised}, the estimated $a$ parameter is overlaid to the plot.\\
 The same fit procedure is applied to all reflectors for both the HH and the VV data; the results are shown in \autoref{tab:a_squint_fit}.\\
-\begin{table*}[Ht!]
+\begin{table*}[ht!]
 	\centering
 	\pgfplotstabletypesetfile[			col sep=comma,
 										columns={name, a_HH, a_VV, a_res_HH, a_res_VV},
@@ -32,9 +32,8 @@ In \autoref{fig:tcr_mph}, panels (a),(b), (d) and (e) the effect of frequency de
 	The phase of each response is referenced to the phase at the peak.}
 	\label{fig:tcr_mph}
 \end{figure*}
-
 \subsection{Azimuth Processing}\label{sec:results:azimuth_processing}
-\begin{figure}[Ht!]
+\begin{figure}[ht!]
 	\centering
 	\begin{subfigure}[t]{\columnwidth}
 		\centering
@@ -54,7 +53,7 @@ In \autoref{fig:tcr_mph}, panels (a),(b), (d) and (e) the effect of frequency de
 	\label{fig:phase_response_VV}
 \end{figure}
 The ability of the phase model described in \autoref{sec:methods:azimuth_processing} to explain the observed phase variation  on the $VV$ channel response is tested on each reflector in the array: the maximum in range and azimuth was identified and the samples corresponding to the half power beamwidth were extracted at the range of maximum intensity. The unwrapped phase is used to estimate $L_{ph}$ according to \eqref{eq:rph_estimation}.
-\begin{table}[Ht!]
+\begin{table}[ht!]
 	\centering
 	\pgfplotstabletypesetfile[			col sep=comma,
 										columns={name, rsl, LphHH, LphVV},
@@ -73,7 +72,7 @@ The resulting model parameters fit values for the H and V antennas are shown in 
 The result of applying the correction of \eqref{eq:correction} to the TCR "CR2" at 673 m is displayed in panels (c) and (f) of \autoref{fig:tcr_mph}.\\
 In \autoref{fig:phase_response_VV:corrected} the phase response in both the HH and VV channel is plotted for all reflectors. To produce the plot, all responses were aligned in azimuth, normalized to the maximum, finally their phase was referenced to the phase at closest approach; this corresponds to the phase of \eqref{eq:range_phase}. This allows an easier comparison of the azimuthal phase variation.
 \subsection{Antenna Pattern Misalignment}\label{sec:results:misalignment}
-\begin{figure}[Ht!]
+\begin{figure}[ht!]
 	\centering
 	\includegraphics{figure_4}
 	\caption{Oversampled azimuth power response of a dihedral corner reflector, before (green line) and after the correction of antenna pattern mispointing (orange line). The observed gain is in good agreement with the loss computed using the antenna patterns provided by the manufacturer and the azimuth shift determined using intensity correlation of HH and VV point target responses.}
@@ -86,7 +85,7 @@ To verify the impact of the H-V pattern pointing shift as described in \autoref{
 \end{enumerate}
 In \autoref{fig:hv_power}, the result of the above experiment is shown as the oversampled, coregistered azimuth response in the HV channel.
 \subsection{Removal of Topographic Phase}\label{sec:results:topo_removal}
-\begin{figure*}[Ht!]
+\begin{figure*}[ht!]
 	\centering
 	\begin{subfigure}[t]{\textwidth}
 	\centering
@@ -105,37 +104,15 @@ In \autoref{fig:hv_power}, the result of the above experiment is shown as the ov
 	\caption{HH-VV phase difference in radar coordinates, (a) before and (b)  after the removal of the topographic phase term as described in \autoref{sec:methods:topo_removal}. The hue of the image is modulated by the covariance phase, the intensity by the magnitude, the saturation by the copolar coherence magnitude, as shown in the bottom colorbar and plot. The interferometric fringe pattern visible in (a) is removed by the proposed correction, as plotted in (b).}
 	\label{fig:topo_phase}
 \end{figure*}
-%\begin{figure}[Ht!]	
-%	\centering
-%	\begin{subfigure}[t]{\columnwidth}
-%	\centering
-%	\includegraphics{figure_9_b}
-%	%\subcaption{Joint histogram of HHVV phase and look vector elevation angle, before the topographic phase removal.}
-%	\label{fig:topo_correlation:uncorrected}
-%	\end{subfigure}\\
-%	\begin{subfigure}[t]{\columnwidth}
-%	\centering
-%	\includegraphics{figure_10_b}
-%	%\subcaption{Joint histogram of HHVV phase and look vector elevation angle, after the topographic phase removal.}
-%	\label{fig:topo_correlation:corrected}
-%	\end{subfigure}
-%	\caption{Plot of the joint histogram of the HH-VV phase difference versus the look vector elevation angle for  80-th percentile brightest pixels with a copolar coherence higher than 0.6. (a) before the topographic phase removal, (b) the same analysis is repeated after the correction. In the latter plot, the correlation coefficient is shown.}
-%	\label{fig:topo_correlation}
-%\end{figure}
-
 For the analysis of the topographic phase contribution removal, as described \autoref{sec:methods:topo_removal}, the copolar (HH-VV) phase is chosen because it is the covariance element affected by an interferometric baseline that shows the highest overall coherence, making the effect of the baseline easier to visualize. An excerpt of the copolar phase difference is visualized in  \autoref{fig:topo_phase} in radar coordinates; the phase assigned to the hue, the intensity to the corresponding $\mathbf{C}$ matrix element magnitude and by setting the saturation of the image with a sigmoid transformation of the copolar coherence magnitude, estimated using a $\mathrm{5 \times 2}$ window.\\ 
-%In~\autoref{fig:topo_correlation} a second verification of the phase trend removal is carried out by plotting the joint histogram of the HH-VV phase versus the sine of the look vector elevation angle$\sin{\theta_{l}}$ for the 80-th percentile brightest pixels with a copolar coherence higher than 0.6. The elevation angle is determined by the geocoding procedure using an external DEM. The idea behind this plot is to visualize functional relationships between topography and the HH-VV phase difference since they are assumed to be independent after the removal of the topographic phase contribution. The correlation coefficient between the copolar phase and the elevation angle is shown in \autoref{fig:topo_correlation:corrected}; this information only gives an indication of the presence of \emph{linear} relationships between the two quantities, 
-
 \subsection{Polarimetric Calibration}\label{sec:results:proc_polcal}
-
-\begin{figure}[Ht!]
+\begin{figure}[ht!]
 	\centering
 	\includegraphics{figure_8}
 	\caption{Dependence of the residual copolar phase ($\phi_r + \phi_t$) and amplitude  ($f$) imbalances on the local incidence angle. The mean and RMS imbalances are shown in each plot. The reflector used for the determination of calibration parameters has been excluded from the plot.}
 	\label{fig:inc_angle_trend}
-\end{figure}
-				
-\begin{figure*}[Ht!]
+\end{figure}	
+\begin{figure*}[ht!]
 	\centering
 	\begin{subfigure}[t]{\textwidth}
 	\centering
@@ -151,9 +128,7 @@ For the analysis of the topographic phase contribution removal, as described \au
 	\end{subfigure}
 	\caption{Polarization signatures for two trihedral corner reflectors at the locations (a) "CR2" and (b) "CR6" . For both plots, each panel shows: (a) uncalibrated copolar signature, (b) uncalibrated crosspolar signature; (c) calibrated copolar signature,(d): calibrated crosspolar signature. The power of each response is normalized to the corresponding maximum. A distinct change in signature is observed after the calibration; it is mostly due to the removal of the HH-VV phase offset.}
 	\label{fig:signatures}
-\end{figure*}
-
-				
+\end{figure*}	
 \begin{table}[ht!]
 	\centering
 	\pgfplotstabletypesetfile[
