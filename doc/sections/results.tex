@@ -3,7 +3,7 @@
 \begin{figure*}[ht!]
 	\centering
 	\includegraphics{figure_12}
-	\caption{Azimuth-frequency response of the "CR2" TCR: the raw data samples around the reflectors azimuth location were extracted, then filtered in range by Fourier transforming them along the frequency axis, appliyng an Hamming window about the range location and converting them  back into the time domain with an inverse Fourier transform. By doing so, only the portion of the range spectrum close to the reflectors location was kept. Finally, the complex envelope of the data was extracted using a discrete Hilbert transform. This is conceptually equivalent to the plot of \autoref{fig:squint_correction}. (a) for the HH channel, (b) for the VV channel, (c) for the HH channel after the interpolation described in \autoref{sec:methods:squint_correction}  and (d) the same for the VV channel.}
+	\caption{Azimuth-frequency response of the "CR2" TCR: the raw data samples around the reflectors azimuth location were extracted, then filtered in range by Fourier transforming them along the frequency axis, applying an Hamming window about the range location and converting them  back into the time domain with an inverse Fourier transform. By doing so, only the portion of the range spectrum close to the reflectors location was kept. Finally, the complex envelope of the data was extracted using a discrete Hilbert transform. This is conceptually equivalent to the plot of \autoref{fig:squint_correction}. (a) for the HH channel, (b) for the VV channel, (c) for the HH channel after the interpolation described in \autoref{sec:methods:squint_correction}  and (d) the same for the VV channel.}
 	\label{fig:raw_squint}
 \end{figure*}
 \autoref{fig:raw_squint} shows the frequency-azimuth response relative to the pointing at the center frequency for the "CR2" TCR. This plot was generated with the procedure described in \autoref{sec:methods:squint_correction} by filtering the range compressed data around the location of the reflector and converting it back to the time domain by an inverse Fourier transform. In (a) and (b), the procedure was applied to the HH and VV channel data before any squint correction was applied. In  (b) and (c) the same is shown after applying the interpolation described in \autoref{sec:methods:squint_correction} using $a = 4.2 \frac{\circ}{GHz}$ and $a = 3.9 \frac{\circ}{GHz}$ for the HH and VV channels. In each plot, a line shows the results of the linear model fit described by \eqref{eq:squint_linearised}, the estimated $a$ parameter is overlaid to the plot.\\
@@ -33,7 +33,7 @@ In \autoref{fig:tcr_mph}, panels (a),(b), (d) and (e) the effect of frequency de
 	\label{fig:tcr_mph}
 \end{figure*}
 \subsection{Azimuth Processing}\label{sec:results:azimuth_processing}
-\begin{figure}[ht!]
+\begin{figure}[H]
 	\centering
 	\begin{subfigure}[t]{\columnwidth}
 		\centering
@@ -106,7 +106,7 @@ In \autoref{fig:hv_power}, the result of the above experiment is shown as the ov
 \end{figure*}
 For the analysis of the topographic phase contribution removal, as described \autoref{sec:methods:topo_removal}, the copolar (HH-VV) phase is chosen because it is the covariance element affected by an interferometric baseline that shows the highest overall coherence, making the effect of the baseline easier to visualize. An excerpt of the copolar phase difference is visualized in  \autoref{fig:topo_phase} in radar coordinates; the phase assigned to the hue, the intensity to the corresponding $\mathbf{C}$ matrix element magnitude and by setting the saturation of the image with a sigmoid transformation of the copolar coherence magnitude, estimated using a $\mathrm{5 \times 2}$ window.\\ 
 \subsection{Polarimetric Calibration}\label{sec:results:proc_polcal}
-\begin{figure}[ht!]
+\begin{figure}[H]
 	\centering
 	\includegraphics{figure_8}
 	\caption{Dependence of the residual copolar phase ($\phi_r + \phi_t$) and amplitude  ($f$) imbalances on the local incidence angle. The mean and RMS imbalances are shown in each plot. The reflector used for the determination of calibration parameters has been excluded from the plot.}
