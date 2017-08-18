@@ -20,7 +20,7 @@ def center_width_from_slice(sl):
 
 
 width = (4, 150)
-shp = (2, 2)
+shp = (3, 2)
 # range window for filter in pizzels
 # Pixels to discard at beginning and end of chirp
 z = 2500
@@ -41,14 +41,14 @@ def plot_figure_12(inputs, outputs, threads, config, params, wildcards):
     fig_w, fig_h = plt.rcParams['figure.figsize']
     f = plt.figure(figsize=(fig_w * 2, fig_h * 2))
     # Grid of plots for figures
-    gs = gridspec.GridSpec(*shp, height_ratios=[1, 1])
-    gs.update(hspace=0.3, wspace=0.4)
+    gs = gridspec.GridSpec(*shp, height_ratios=[1, 1, 0.07],)
+    gs.update(hspace=0.5, wspace=0.4)
     # data to plot
     for idx_chan, chan in enumerate(('HH', 'VV')):
         for idx_proc, proc in enumerate(('', '_desq')):
             raw = inputs[chan + proc]
             raw_par = raw + '_par'
-            raw_data = gpf.rawData(raw_par, raw)
+            raw_data = gpf.rawData.fromfile(raw_par, raw)
             # Read range and azimuth indices
             ridx = params.ref['azidx']
             azidx = params.ref['azidx']
@@ -68,7 +68,7 @@ def plot_figure_12(inputs, outputs, threads, config, params, wildcards):
             t = ax.text(0.1, 0.1, "$a=${:.2f} $\\frac{{\circ}}{{GHz}}$".format(sq_par[0] / 1e-9), size=8,
                         bbox=bbox_props, horizontalalignment='left',
                         transform=ax.transAxes)  # set label
-            if idx_chan == idx_proc == 0:
+            if idx_chan == 0 and idx_proc == 1:
                 ax.set_xlabel(xlabel)
                 ax.set_ylabel(ylabel)
             fm_func = lambda x, pos: format_freq(raw_data, x, pos)
@@ -84,11 +84,14 @@ def plot_figure_12(inputs, outputs, threads, config, params, wildcards):
             # ax.xaxis.set_major_locator(tick.MultipleLocator(0.5))
             # New figure to plot subplots
             f1, ax1 = plt.subplots(figsize=(fig_w, fig_h))
-            ax1.imshow(np.abs(raw_filt).T, aspect=1e7, extent=ext_vec[::-1])
+            im_mappable = ax1.imshow(np.abs(raw_filt).T, aspect=1e7, extent=ext_vec[::-1])
             ax1.plot(raw_data.freqvec, squint_fit)
             ax1.set_xlabel(ylabel)
             ax1.set_ylabel(r'$\theta_{sq}$ [$^\circ$]')
             f1.savefig(outputs['pres_fig'][current_idx])
+
+        cax = f.add_subplot(gs[-1, :])
+        cbar = f.colorbar(im_mappable, cax=cax, orientation='horizontal', label="Intensity [arbitrary units]")
         f.savefig(outputs['paper_fig'])
 
 
