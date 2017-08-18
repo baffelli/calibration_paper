@@ -59,9 +59,9 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     fig_w, fig_h = plt.rcParams['figure.figsize']
     f = plt.figure(figsize=(fig_w*2, fig_h*2))
     # Create grid of plots
-    gs = gridspec.GridSpec(*(3, 2), height_ratios=[1, 1, 0.2])
+    gs = gridspec.GridSpec(*(3, 4), height_ratios=[1, 1, 0.2])
     gs.update(hspace=0.3, wspace=0.1)
-    im_ax = f.add_subplot(gs[0:2, ::])
+    im_ax = f.add_subplot(gs[0:2, 0:2])
     aspect = fig_h / fig_w
     slc_ext = [az_vec[0], az_vec[-1], r_vec[-1], r_vec[1]]
     # Show the phase
@@ -73,16 +73,12 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     im_ax.yaxis.set_major_locator(tick.MultipleLocator(500))
     im_ax.xaxis.set_major_locator(tick.MultipleLocator(20))
     im_ax.set_title('HH-VV Phase')
+
+    coh_ax = f.add_subplot(gs[0:2, 2::])
+    coh_ax.imshow(np.abs(HHVV), extent=slc_ext, aspect=vf.fixed_aspect(slc_ext, aspect), origin='upper', interpolation='none')
     # # Plot reflectors
     # pos_list = {'Simmleremoos 2': (-20, 15), 'Simmleremoos 1': (-15, -15)}  # position to avoid overlapping
     box = dict(boxstyle="round", fc="w", lw=0.2)
-    # for ref in params['ref']:
-    #     dec_pos = (int(ref['ridx']) / win[0], HHVV.azidx_dec(int(ref['azidx'])))
-    #     grid_pos = (az_vec[dec_pos[1]], r_vec[dec_pos[0]])
-    #     im_ax.plot(*grid_pos, marker='o', markeredgecolor='#feb24c', mfc='none', mew=1, ms=10)
-    #     annotations = plt.annotate(ref['name'], xy=grid_pos, color='black', size=7,
-    #                                xytext=pos_list.get(ref['name'], (0, -15)), textcoords='offset points', bbox=box,
-    #                                horizontalalignment='center')
     # plot palette
     pal_ax = f.add_subplot(gs[-1, 0:1])
     pal_ax.imshow(pal.transpose([1,0,2])[::-1,:], aspect=1/2, extent=[-np.pi, np.pi, 0, 1])
