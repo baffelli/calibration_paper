@@ -45,7 +45,7 @@ def plot_figure_1(inputs, outputs, threads, config, params, wildcards):
                                                                                     sw=(4, sw_idx), polar=True)
             # remove phase at maximum
             ptarg_zoom *= np.exp(1j * np.angle(ptarg_zoom[mx_pos].conj()))
-            mph_dict = {'k':0.15, 'sf':0.8, 'coherence':False, 'peak':True, 'N':256}
+            mph_dict = {'k':0.09, 'sf':0.9, 'coherence':False, 'peak':True, 'N':256}
             mph, rgb, norm = vf.dismph(ptarg_zoom, **mph_dict)  # create rgb image
             pal, ext = vf.dismph_palette(ptarg_zoom, **mph_dict)
             aspect = fig_h / fig_w
