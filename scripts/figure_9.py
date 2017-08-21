@@ -7,12 +7,17 @@ import pyrat.fileutils.gpri_files as gpf
 import pyrat.visualization.visfun as vf
 from matplotlib import gridspec
 
+from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes, inset_axes
+from mpl_toolkits.axes_grid1.inset_locator import mark_inset
+
+
+
 from matplotlib.patches import Ellipse
 
 # Percentile
 perc = 20
 # Coherence threshold
-coh_thresh = 0.6
+coh_thresh = 0.7
 
 win = [5, 2]  # multilooking window
 
@@ -47,7 +52,7 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     perc_r, perc_az = np.nonzero((copol_span > bright_percentile) * (np.abs(HHVV) > coh_thresh) * (theta != 0))
     # Create RGB
     # Property of the mph image
-    mph_dict = {'k': 0.15, 'sf': 0.9, 'coherence': True, 'peak': False, 'mli': mli[sl_image], 'coherence_threshold': 0.4,
+    mph_dict = {'k': 0.1, 'sf': 0.9, 'coherence': True, 'peak': False, 'mli': mli[sl_image], 'coherence_threshold': 0.4,
                 'coherence_slope': 6, 'N':256}
     HHVV_im = HHVV[sl_image]
     az_vec = HHVV_im.az_vec
@@ -59,9 +64,9 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     fig_w, fig_h = plt.rcParams['figure.figsize']
     f = plt.figure(figsize=(fig_w*2, fig_h*2))
     # Create grid of plots
-    gs = gridspec.GridSpec(*(3, 4), height_ratios=[1, 1, 0.2])
-    gs.update(hspace=0.3, wspace=0.1)
-    im_ax = f.add_subplot(gs[0:2, 0:2])
+    gs = gridspec.GridSpec(*(3, 3), height_ratios=[1, 1, 0.2])
+    gs.update(hspace=0.2, wspace=0.1)
+    im_ax = f.add_subplot(gs[0:2, 0:3])
     aspect = fig_h / fig_w
     slc_ext = [az_vec[0], az_vec[-1], r_vec[-1], r_vec[1]]
     # Show the phase
@@ -73,9 +78,13 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     im_ax.yaxis.set_major_locator(tick.MultipleLocator(500))
     im_ax.xaxis.set_major_locator(tick.MultipleLocator(20))
     im_ax.set_title('HH-VV Phase')
-
-    coh_ax = f.add_subplot(gs[0:2, 2::])
-    coh_ax.imshow(np.abs(HHVV), extent=slc_ext, aspect=vf.fixed_aspect(slc_ext, aspect), origin='upper', interpolation='none')
+    #Add separate axes for coherence
+    coh_ax = inset_axes(im_ax, width="30%", height=1, loc=4)
+    coh_ax.axes.xaxis.set_ticklabels([])
+    coh_ax.axes.yaxis.set_ticklabels([])
+    coh_ax.imshow(np.abs(HHVV_im), extent=slc_ext, aspect=vf.fixed_aspect(slc_ext, aspect), 
+    origin='upper', interpolation='none', cmap='gray')
+    # coh_ax.set_title("Coherence")
     # # Plot reflectors
     # pos_list = {'Simmleremoos 2': (-20, 15), 'Simmleremoos 1': (-15, -15)}  # position to avoid overlapping
     box = dict(boxstyle="round", fc="w", lw=0.2)
