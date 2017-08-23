@@ -64,9 +64,9 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     fig_w, fig_h = plt.rcParams['figure.figsize']
     f = plt.figure(figsize=(fig_w*2, fig_h*2))
     # Create grid of plots
-    gs = gridspec.GridSpec(*(3, 3), height_ratios=[1, 1, 0.2])
-    gs.update(hspace=0.2, wspace=0.1)
-    im_ax = f.add_subplot(gs[0:2, 0:3])
+    gs = gridspec.GridSpec(*(3, 3), width_ratios=[1, 1, 0.05])
+    gs.update(hspace=0.2, wspace=0.3)
+    im_ax = f.add_subplot(gs[::, 0:2])
     aspect = fig_h / fig_w
     slc_ext = [az_vec[0], az_vec[-1], r_vec[-1], r_vec[1]]
     # Show the phase
@@ -89,25 +89,25 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     # pos_list = {'Simmleremoos 2': (-20, 15), 'Simmleremoos 1': (-15, -15)}  # position to avoid overlapping
     box = dict(boxstyle="round", fc="w", lw=0.2)
     # plot palette
-    pal_ax = f.add_subplot(gs[-1, 0:1])
-    pal_ax.imshow(pal.transpose([1,0,2])[::-1,:], aspect=1/2, extent=[-np.pi, np.pi, 0, 1])
-    pal_ax.set_xlabel(r'Phase')
-    pal_ax.set_ylabel(r'Intensity')
+    pal_ax = f.add_subplot(gs[::, -1])
+    pal_ax.imshow(pal[:,:], aspect=2, extent=[0, 1, -np.pi, np.pi])
+    pal_ax.set_ylabel(r'Phase')
+    pal_ax.set_xlabel(r'Intensity', labelpad=1)
     pal_ax.grid(b=False)
-    pal_ax.set_xticks([-np.pi, 0, np.pi])
-    pal_ax.set_xticklabels([r"$-\pi$", r"$0$", r"$\pi$"])
+    pal_ax.set_yticks([-np.pi, 0, np.pi])
+    pal_ax.set_yticklabels([r"$-\pi$", r"$0$", r"$\pi$"])
     ext_list = [ext[0], (ext[0] + ext[1]) / 2, ext[1]]
-    # pal_ax.set_xticks([])
-    # pal_ax.set_xticklabels([r"{{val:.2f}}".format(val=val) for val in ext_list])
+    pal_ax.set_xticks([])
+    pal_ax.set_xticklabels([r"{{val:.2f}}".format(val=val) for val in ext_list])
     # Plot coherence
-    coh_ax = f.add_subplot(gs[-1,-1])
-    c = np.linspace(0, 1)
-    c_scale = vf.scale_coherence(c, threshold=mph_dict['coherence_threshold'], slope=mph_dict['coherence_slope'])
-    coh_ax.plot(c, c_scale)
-    coh_ax.set_yticks([0, 0.5, 1])
-    coh_ax.xaxis.set_label_text(r'Coherence')
-    coh_ax.yaxis.set_label_text(r'Saturation')
-    coh_ax.set_aspect(1)
+    # coh_ax = f.add_subplot(gs[-1,-1])
+    # c = np.linspace(0, 1)
+    # c_scale = vf.scale_coherence(c, threshold=mph_dict['coherence_threshold'], slope=mph_dict['coherence_slope'])
+    # coh_ax.plot(c, c_scale)
+    # coh_ax.set_yticks([0, 0.5, 1])
+    # coh_ax.xaxis.set_label_text(r'Coherence')
+    # coh_ax.yaxis.set_label_text(r'Saturation')
+    # coh_ax.set_aspect(1)
 
 
     # Plot correlation of height with copol phase
