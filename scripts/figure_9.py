@@ -64,7 +64,7 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     fig_w, fig_h = plt.rcParams['figure.figsize']
     f = plt.figure(figsize=(fig_w*2, fig_h*2))
     # Create grid of plots
-    gs = gridspec.GridSpec(*(3, 3), width_ratios=[1, 1, 0.05])
+    gs = gridspec.GridSpec(*(3, 3), width_ratios=[1, 1, 0.08])
     gs.update(hspace=0.2, wspace=0.3)
     im_ax = f.add_subplot(gs[::, 0:2])
     aspect = fig_h / fig_w
@@ -90,9 +90,9 @@ def plot_figure_9(inputs, outputs, threads, config, params, wildcards):
     box = dict(boxstyle="round", fc="w", lw=0.2)
     # plot palette
     pal_ax = f.add_subplot(gs[::, -1])
-    pal_ax.imshow(pal[:,:], aspect=2, extent=[0, 1, -np.pi, np.pi])
+    pal_ax.imshow(pal[:,:], aspect=3, extent=[0, 1, -np.pi, np.pi])
     pal_ax.set_ylabel(r'Phase')
-    pal_ax.set_xlabel(r'Intensity', labelpad=1)
+    pal_ax.set_xlabel(r'Intensity', labelpad=3)
     pal_ax.grid(b=False)
     pal_ax.set_yticks([-np.pi, 0, np.pi])
     pal_ax.set_yticklabels([r"$-\pi$", r"$0$", r"$\pi$"])
