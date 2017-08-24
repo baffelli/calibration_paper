@@ -51,6 +51,7 @@ rule all:
     input:
         #figures from data
         expand('fig/{ext}/figure_{r}.{ext}',r=range(1,13), ext=[ 'pdf']),
+        #expand('fig/{ext}/figure_17.{ext}', ext='pdf'),
         #tables
         'tab/table_1.csv',
         'tab/table_2.csv',
@@ -128,7 +129,8 @@ rule fig1:
         VV_desq = new_data('slc_desq/20160914_145059_BBBl.slc'),
         HH_corr = new_data('slc_corr/20160914_145059_AAAl.slc'),
         VV_corr = new_data('slc_corr/20160914_145059_BBBl.slc'),
-        style = select_style
+        style = select_style,
+        script = 'scripts/figure_1.py'
     params:
         ridx = list_of_reflectors[1]['ridx'],
         azidx = list_of_reflectors[1]['azidx']
@@ -259,6 +261,7 @@ rule fig9:
         style = select_style,
         C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
         theta = new_data('geo/Chutzen.lv_theta_fgc'),
+        script = 'scripts/figure_9.py'
     output:
         fig_a ='fig/{ext}/figure_9.{ext}',
         fig_b = 'fig/{ext}/figure_9_b.{ext}'
@@ -275,6 +278,7 @@ rule fig10:
         style = select_style,
         C_cal_par = new_data("cov_cal/20160914_145059_l.par"),
         theta = new_data('geo/Chutzen.lv_theta_fgc'),
+        script = 'scripts/figure_9.py'
     output:
         fig_a ='fig/{ext}/figure_10.{ext}',
         fig_b = 'fig/{ext}/figure_10_b.{ext}'
@@ -320,7 +324,8 @@ rule fig12:
         HH_desq = new_data("raw_desq/20160914_145059_AAAl.raw"),
         VV_desq = new_data("raw_desq/20160914_145059_BBBl.raw"),
         style = select_style,
-        slc_par = new_data("slc_chan/20160914_145059_BBBl.slc.par")
+        slc_par = new_data("slc_chan/20160914_145059_BBBl.slc.par"),
+        script = 'scripts/figure_12.py'
     params:
         ref = list_of_reflectors[1]
     output:
@@ -404,12 +409,29 @@ rule fig16:
     script:
         'scripts/figure_16.py'
 
+###############################################################################
+#Plot figure: phase center location as a function of frequency
+rule fig17:
+    input:
+        slc_VV = new_data("slc_coreg/20160914_145059_BBBl.slc"),
+        slc_VV_par = new_data("slc_coreg/20160914_145059_BBBl.slc.par"),
+        slc_HH = new_data("slc_coreg/20160914_145059_AAAl.slc"),
+        slc_HH_par = new_data("slc_coreg/20160914_145059_AAAl.slc.par"),
+        style = select_style
+    output:
+        paper_fig = 'fig/{ext}/figure_17.{ext}'
+    params:
+        ref = lambda wildcards: list_of_reflectors
+    script:
+        'scripts/figure_17.py'
+
 
 ###############################################################################
 #Make table 1: Location and RCS for all reflectors
 rule table1:
     input:
         LUT = new_data('geo/Chutzen.gpri_to_dem'),
+        LUT_inv = new_data('geo/Chutzen.dem_to_gpri'),
         dem_seg_par = new_data('geo/Chutzen.dem_seg.par'),
         slc_par = new_data("slc_corr/20160914_145059_BBBl.slc_dec.par"),
         slc = new_data("slc_corr/20160914_145059_BBBl.slc_dec"),
@@ -505,9 +527,9 @@ rule pull_bib:
 ##the other unecessary things
 rule cleanup_bibtex:
     input:
-        bib = 'doc/biblography/library.bib'
+        bib = 'doc/library.bib'
     output:
-        'doc/library.bib'
+        'doc/library_clean.bib'
     run:
         import re
         url_re = re.compile(r"url = .+,")
@@ -526,10 +548,11 @@ rule paper:
     input:
         sections = glob.glob('doc/sections/*.tex'),
         main_paper = 'doc/calibration_paper.tex',
-        figures = expand('fig/pdf/figure_{n}.pdf', n=range(1,12)),
+        #figures = expand('fig/pdf/figure_{n}.pdf', n=range(1,12)),
         tables = glob.glob('tab/*.csv'),
+        figures = glob.glob('fig/*/*.pdf'),
         drawings = glob.glob('drawings/pdf/*.pdf'),
-        library = 'doc/library.bib'
+        library = 'doc/library_clean.bib'
     output:
         paper_pdf = 'doc/calibration_paper.pdf'
     shell:
